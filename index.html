@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leng Family — Weekly Calendar</title>
+  <style>
+    :root {
+      --bg: #fff9f3;
+      --bg-alt: #ffe9d6;
+      --text-main: #2b2432;
+      --accent: #f5b98f;
+      --accent-soft: #ffe1c4;
+      --border-soft: rgba(80, 60, 40, 0.15);
+      --shadow-soft: 0 14px 30px rgba(0, 0, 0, 0.06);
+      --papa: #214a89;     /* deep blue */
+      --mimi: #e36d94;     /* rose pink */
+      --mahmah: #a569bd;   /* warm purple */
+      --xiao: #f59e0b;     /* orange */
+      --han: #4caf50;      /* green */
+      --jue: #f6c453;      /* yellow */
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #ffe8d7 0, #fff9f3 45%, #fff 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1120px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      padding: 20px 18px 24px;
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(16px);
+    }
+
+    @media (min-width: 768px) {
+      .page {
+        padding: 26px 28px 30px;
+        border-radius: 24px;
+      }
+    }
+
+    .header {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    @media (min-width: 640px) {
+      .header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .title {
+      font-size: 1.5rem;
+      letter-spacing: 0.03em;
+      font-weight: 650;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: #766a5a;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255, 240, 225, 0.9), rgba(255, 252, 244, 0.95));
+      border: 1px solid rgba(255, 193, 140, 0.5);
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: #5a4f45;
+      white-space: nowrap;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9);
+    }
+
+    .dot-papa { background: var(--papa); }
+    .dot-mimi { background: var(--mimi); }
+    .dot-mahmah { background: var(--mahmah); }
+    .dot-xiao { background: var(--xiao); }
+    .dot-han { background: var(--han); }
+    .dot-jue { background: var(--jue); }
+
+    .calendar-shell {
+      margin-top: 6px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #fff8ee, #fffaf5);
+      border: 1px solid var(--border-soft);
+      overflow: hidden;
+    }
+
+    .calendar-header-row {
+      display: grid;
+      grid-template-columns: minmax(92px, 120px) repeat(7, minmax(92px, 1fr));
+      background: linear-gradient(90deg, rgba(255, 199, 155, 0.18), rgba(255, 237, 201, 0.6));
+      border-bottom: 1px solid rgba(255, 193, 140, 0.7);
+    }
+
+    .calendar-header-cell {
+      padding: 10px 10px 9px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #7c5a3a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .calendar-header-cell:first-child {
+      justify-content: flex-start;
+      padding-left: 14px;
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      opacity: 0.85;
+    }
+
+    .calendar-header-cell:last-child {
+      border-right: none;
+    }
+
+    .calendar-body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .member-row {
+      display: grid;
+      grid-template-columns: minmax(92px, 120px) repeat(7, minmax(92px, 1fr));
+      border-top: 1px solid rgba(255, 255, 255, 0.7);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.02);
+    }
+
+    .member-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 12px;
+      font-size: 0.88rem;
+      font-weight: 550;
+      border-right: 1px solid rgba(255, 255, 255, 0.8);
+      background: linear-gradient(180deg, rgba(255, 243, 226, 0.7), rgba(255, 251, 245, 0.9));
+      position: sticky;
+      left: 0;
+      z-index: 1;
+    }
+
+    .member-label .name {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+    }
+
+    .member-label .name-main {
+      font-size: 0.86rem;
+    }
+
+    .member-label .name-note {
+      font-size: 0.7rem;
+      color: #8c8170;
+      font-weight: 500;
+    }
+
+    .member-pill {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.8);
+    }
+
+    .member-papa  { background: var(--papa); }
+    .member-mimi  { background: var(--mimi); }
+    .member-mahmah{ background: var(--mahmah); }
+    .member-xiao  { background: var(--xiao); }
+    .member-han   { background: var(--han); }
+    .member-jue   { background: var(--jue); }
+
+    .day-cell {
+      padding: 8px 8px 10px;
+      border-right: 1px solid rgba(255, 255, 255, 0.9);
+      min-height: 70px;
+      display: flex;
+      align-items: stretch;
+      justify-content: stretch;
+      background: rgba(255, 255, 255, 0.65);
+    }
+
+    .day-cell:last-child {
+      border-right: none;
+    }
+
+    .day-cell-inner {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px dashed rgba(0, 0, 0, 0.04);
+      background: rgba(255, 255, 255, 0.8);
+      padding: 6px 7px 7px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.76rem;
+      color: #5e5246;
+    }
+
+    .day-cell-inner.has-event {
+      border-style: solid;
+      border-width: 1px;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.04);
+    }
+
+    .day-cell-inner.papa {
+      border-color: rgba(33, 74, 137, 0.35);
+      background: linear-gradient(145deg, rgba(33, 74, 137, 0.07), rgba(255, 255, 255, 0.95));
+    }
+
+    .day-cell-inner.mimi {
+      border-color: rgba(227, 109, 148, 0.35);
+      background: linear-gradient(145deg, rgba(227, 109, 148, 0.09), rgba(255, 255, 255, 0.96));
+    }
+
+    .day-cell-inner.mahmah {
+      border-color: rgba(165, 105, 189, 0.35);
+      background: linear-gradient(145deg, rgba(165, 105, 189, 0.09), rgba(255, 255, 255, 0.96));
+    }
+
+    .day-cell-inner.xiao {
+      border-color: rgba(245, 158, 11, 0.38);
+      background: linear-gradient(145deg, rgba(245, 158, 11, 0.08), rgba(255, 255, 255, 0.96));
+    }
+
+    .day-cell-inner.han {
+      border-color: rgba(76, 175, 80, 0.4);
+      background: linear-gradient(145deg, rgba(76, 175, 80, 0.08), rgba(255, 255, 255, 0.96));
+    }
+
+    .day-cell-inner.jue {
+      border-color: rgba(246, 196, 83, 0.58);
+      background: linear-gradient(145deg, rgba(246, 196, 83, 0.1), rgba(255, 255, 255, 0.96));
+    }
+
+    .event-title {
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .event-time {
+      font-size: 0.74rem;
+      color: #8b7c6a;
+    }
+
+    .event-note {
+      font-size: 0.72rem;
+      color: #9a8b7a;
+    }
+
+    .everyone-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.7rem;
+      color: #7b5b34;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(246, 196, 83, 0.22);
+      border: 1px solid rgba(246, 196, 83, 0.6);
+      margin-bottom: 2px;
+      align-self: flex-start;
+    }
+
+    .everyone-tag-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #f97316;
+    }
+
+    /* Mobile: stack as list of days */
+    @media (max-width: 720px) {
+      .calendar-shell {
+        border-radius: 18px;
+        overflow: hidden;
+      }
+
+      .calendar-header-row {
+        display: none;
+      }
+
+      .calendar-body {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px 10px 12px;
+      }
+
+      .member-row {
+        display: block;
+        border: none;
+        background: transparent;
+      }
+
+      .member-label {
+        position: static;
+        border-radius: 999px;
+        margin-bottom: 6px;
+      }
+
+      .member-day-group {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .day-cell {
+        border: none;
+        padding: 0;
+        min-height: 0;
+        background: transparent;
+      }
+
+      .day-cell-inner {
+        min-height: 64px;
+      }
+
+      .day-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #b09273;
+        margin-bottom: 1px;
+      }
+    }
+
+    @media (max-width: 460px) {
+      .member-day-group {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <div class="title-block">
+        <div class="title">Leng Family — Week of <span id="week-label">[current date]</span></div>
+        <div class="subtitle">A cosy snapshot of this week together.</div>
+      </div>
+
+      <div class="legend" aria-label="Family member colours">
+        <div class="legend-item">
+          <span class="legend-dot dot-papa"></span>
+          <span>Papa (Hoelon)</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot dot-mimi"></span>
+          <span>Mimi (Hsin)</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot dot-mahmah"></span>
+          <span>Mahmah (Fly)</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot dot-xiao"></span>
+          <span>Xiao</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot dot-han"></span>
+          <span>Han</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot dot-jue"></span>
+          <span>Jue</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="calendar-shell" aria-label="Weekly calendar">
+      <!-- Desktop / tablet grid -->
+      <div class="calendar-header-row" aria-hidden="true">
+        <div class="calendar-header-cell">Family</div>
+        <div class="calendar-header-cell">Mon</div>
+        <div class="calendar-header-cell">Tue</div>
+        <div class="calendar-header-cell">Wed</div>
+        <div class="calendar-header-cell">Thu</div>
+        <div class="calendar-header-cell">Fri</div>
+        <div class="calendar-header-cell">Sat</div>
+        <div class="calendar-header-cell">Sun</div>
+      </div>
+
+      <div class="calendar-body">
+        <!-- Papa (Hoelon) -->
+        <article class="member-row">
+          <div class="member-label">
+            <span class="member-pill member-papa"></span>
+            <span class="name">
+              <span class="name-main">Hoelon</span>
+              <span class="name-note">Papa</span>
+            </span>
+          </div>
+
+          <!-- Desktop: day by day -->
+          <div class="day-cell" data-day="mon">
+            <div class="day-cell-inner papa has-event">
+              <div class="day-label">Mon</div>
+              <div class="event-title">Meetings all day</div>
+              <div class="event-note">Back-to-back calls and planning.</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="tue">
+            <div class="day-cell-inner">
+              <div class="day-label">Tue</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="wed">
+            <div class="day-cell-inner">
+              <div class="day-label">Wed</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="thu">
+            <div class="day-cell-inner papa has-event">
+              <div class="day-label">Thu</div>
+              <div class="event-title">Dinner with CJ</div>
+              <div class="event-time">Crystal Jade Takashimaya · 7:00pm</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="fri">
+            <div class="day-cell-inner">
+              <div class="day-label">Fri</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="sat">
+            <div class="day-cell-inner has-event papa">
+              <div class="day-label">Sat</div>
+              <div class="everyone-tag">
+                <span class="everyone-tag-dot"></span>
+                <span>Everyone</span>
+              </div>
+              <div class="event-title">Family dinner at home</div>
+              <div class="event-time">7:00pm</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="sun">
+            <div class="day-cell-inner">
+              <div class="day-label">Sun</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Mimi (Hsin) -->
+        <article class="member-row">
+          <div class="member-label">
+            <span class="member-pill member-mimi"></span>
+            <span class="name">
+              <span class="name-main">Hsin</span>
+              <span class="name-note">Mimi</span>
+            </span>
+          </div>
+
+          <div class="day-cell" data-day="mon">
+            <div class="day-cell-inner">
+              <div class="day-label">Mon</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="tue">
+            <div class="day-cell-inner">
+              <div class="day-label">Tue</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="wed">
+            <div class="day-cell-inner mimi has-event">
+              <div class="day-label">Wed</div>
+              <div class="event-title">Lunch with friends</div>
+              <div class="event-time">12:00pm</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="thu">
+            <div class="day-cell-inner">
+              <div class="day-label">Thu</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="fri">
+            <div class="day-cell-inner">
+              <div class="day-label">Fri</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="sat">
+            <div class="day-cell-inner mimi has-event">
+              <div class="day-label">Sat</div>
+              <div class="everyone-tag">
+                <span class="everyone-tag-dot"></span>
+                <span>Everyone</span>
+              </div>
+              <div class="event-title">Family dinner at home</div>
+              <div class="event-time">7:00pm</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="sun">
+            <div class="day-cell-inner">
+              <div class="day-label">Sun</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Mahmah (Fly) -->
+        <article class="member-row">
+          <div class="member-label">
+            <span class="member-pill member-mahmah"></span>
+            <span class="name">
+              <span class="name-main">Fly</span>
+              <span class="name-note">Mahmah</span>
+            </span>
+          </div>
+
+          <div class="day-cell" data-day="mon">
+            <div class="day-cell-inner">
+              <div class="day-label">Mon</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="tue">
+            <div class="day-cell-inner">
+              <div class="day-label">Tue</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="wed">
+            <div class="day-cell-inner">
+              <div class="day-label">Wed</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="thu">
+            <div class="day-cell-inner">
+              <div class="day-label">Thu</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="fri">
+            <div class="day-cell-inner">
+              <div class="day-label">Fri</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="sat">
+            <div class="day-cell-inner has-event mahmah">
+              <div class="day-label">Sat</div>
+              <div class="everyone-tag">
+                <span class="everyone-tag-dot"></span>
+                <span>Everyone</span>
+              </div>
+              <div class="event-title">Family dinner at home</div>
+              <div class="event-time">7:00pm</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="sun">
+            <div class="day-cell-inner">
+              <div class="day-label">Sun</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Xiao -->
+        <article class="member-row">
+          <div class="member-label">
+            <span class="member-pill member-xiao"></span>
+            <span class="name">
+              <span class="name-main">Xiao</span>
+            </span>
+          </div>
+
+          <div class="day-cell" data-day="mon">
+            <div class="day-cell-inner">
+              <div class="day-label">Mon</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="tue">
+            <div class="day-cell-inner">
+              <div class="day-label">Tue</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="wed">
+            <div class="day-cell-inner">
+              <div class="day-label">Wed</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="thu">
+            <div class="day-cell-inner">
+              <div class="day-label">Thu</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="fri">
+            <div class="day-cell-inner">
+              <div class="day-label">Fri</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="sat">
+            <div class="day-cell-inner has-event xiao">
+              <div class="day-label">Sat</div>
+              <div class="everyone-tag">
+                <span class="everyone-tag-dot"></span>
+                <span>Everyone</span>
+              </div>
+              <div class="event-title">Family dinner at home</div>
+              <div class="event-time">7:00pm</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="sun">
+            <div class="day-cell-inner xiao has-event">
+              <div class="day-label">Sun</div>
+              <div class="event-title">Football with friends</div>
+              <div class="event-time">Afternoon</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Han -->
+        <article class="member-row">
+          <div class="member-label">
+            <span class="member-pill member-han"></span>
+            <span class="name">
+              <span class="name-main">Han</span>
+            </span>
+          </div>
+
+          <div class="day-cell" data-day="mon">
+            <div class="day-cell-inner">
+              <div class="day-label">Mon</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="tue">
+            <div class="day-cell-inner">
+              <div class="day-label">Tue</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="wed">
+            <div class="day-cell-inner">
+              <div class="day-label">Wed</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="thu">
+            <div class="day-cell-inner">
+              <div class="day-label">Thu</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="fri">
+            <div class="day-cell-inner">
+              <div class="day-label">Fri</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="sat">
+            <div class="day-cell-inner han has-event">
+              <div class="day-label">Sat</div>
+              <div class="everyone-tag">
+                <span class="everyone-tag-dot"></span>
+                <span>Everyone</span>
+              </div>
+              <div class="event-title">Family dinner at home</div>
+              <div class="event-time">7:00pm</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="sun">
+            <div class="day-cell-inner">
+              <div class="day-label">Sun</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Jue -->
+        <article class="member-row">
+          <div class="member-label">
+            <span class="member-pill member-jue"></span>
+            <span class="name">
+              <span class="name-main">Jue</span>
+            </span>
+          </div>
+
+          <div class="day-cell" data-day="mon">
+            <div class="day-cell-inner">
+              <div class="day-label">Mon</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="tue">
+            <div class="day-cell-inner">
+              <div class="day-label">Tue</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="wed">
+            <div class="day-cell-inner">
+              <div class="day-label">Wed</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="thu">
+            <div class="day-cell-inner">
+              <div class="day-label">Thu</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="fri">
+            <div class="day-cell-inner">
+              <div class="day-label">Fri</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="sat">
+            <div class="day-cell-inner jue has-event">
+              <div class="day-label">Sat</div>
+              <div class="everyone-tag">
+                <span class="everyone-tag-dot"></span>
+                <span>Everyone</span>
+              </div>
+              <div class="event-title">Family dinner at home</div>
+              <div class="event-time">7:00pm</div>
+            </div>
+          </div>
+          <div class="day-cell" data-day="sun">
+            <div class="day-cell-inner">
+              <div class="day-label">Sun</div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const now = new Date();
+      const day = now.getDay(); // 0 (Sun) - 6 (Sat)
+      const diffToMonday = (day === 0 ? -6 : 1) - day;
+      const monday = new Date(now);
+      monday.setDate(now.getDate() + diffToMonday);
+
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      const label = monday.toLocaleDateString(undefined, options);
+
+      const el = document.getElementById('week-label');
+      if (el) el.textContent = label;
+    })();
+  </script>
+</body>
+</html>
+
