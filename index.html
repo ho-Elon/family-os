@@ -375,6 +375,157 @@
         grid-template-columns: minmax(0, 1fr);
       }
     }
+
+    /* Admin controls */
+    .admin-toggle {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      z-index: 20;
+      padding: 6px 10px;
+      font-size: 0.72rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: rgba(255, 255, 255, 0.9);
+      color: #7c5a3a;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+      cursor: pointer;
+      opacity: 0.85;
+      backdrop-filter: blur(10px);
+    }
+
+    .admin-toggle:hover {
+      opacity: 1;
+    }
+
+    .admin-panel {
+      position: fixed;
+      bottom: 56px;
+      right: 16px;
+      z-index: 19;
+      width: 260px;
+      max-width: calc(100% - 32px);
+      padding: 10px 12px 12px;
+      border-radius: 14px;
+      background: rgba(255, 252, 246, 0.98);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      font-size: 0.78rem;
+      color: var(--text-main);
+      display: none;
+    }
+
+    .admin-panel.is-open {
+      display: block;
+    }
+
+    .admin-panel h2 {
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #8b7458;
+      margin-bottom: 6px;
+    }
+
+    .admin-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+
+    .admin-row label {
+      font-size: 0.7rem;
+      color: #8c8170;
+    }
+
+    .admin-row select,
+    .admin-row input {
+      width: 100%;
+      padding: 4px 6px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      font-size: 0.76rem;
+      font-family: inherit;
+      background: rgba(255, 255, 255, 0.95);
+      color: inherit;
+    }
+
+    .admin-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .admin-actions button {
+      flex: 1;
+      padding: 5px 6px;
+      border-radius: 999px;
+      border: none;
+      font-size: 0.7rem;
+      cursor: pointer;
+      font-weight: 500;
+      font-family: inherit;
+    }
+
+    .admin-save {
+      background: var(--accent-soft);
+      color: #5a422a;
+      border: 1px solid rgba(255, 193, 140, 0.7);
+    }
+
+    .admin-logout {
+      background: #f3f0ea;
+      color: #7a6b5d;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .admin-hint {
+      font-size: 0.65rem;
+      color: #a09180;
+      margin-top: 2px;
+    }
+
+    .event-card-dynamic {
+      margin-top: 3px;
+      padding-top: 2px;
+      border-top: 1px dashed rgba(0, 0, 0, 0.05);
+      position: relative;
+    }
+
+    .event-card-dynamic .event-title {
+      padding-right: 16px;
+    }
+
+    .event-delete {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      border: none;
+      background: rgba(0, 0, 0, 0.06);
+      color: #6b5b4a;
+      font-size: 0.6rem;
+      line-height: 1;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    body.is-admin .event-delete {
+      display: inline-flex;
+    }
+
+    .event-card-dynamic:hover {
+      background: rgba(255, 244, 231, 0.5);
+      border-radius: 6px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -767,6 +918,306 @@
 
       const el = document.getElementById('week-label');
       if (el) el.textContent = label;
+    })();
+
+    (function () {
+      const PASSWORD = 'leng2026';
+      const STORAGE_KEY = 'lengCalendarEventsV1';
+
+      const body = document.body;
+
+      const memberRows = Array.prototype.slice.call(
+        document.querySelectorAll('.member-row')
+      );
+
+      const members = memberRows.map(function (row) {
+        const nameEl = row.querySelector('.name-main');
+        const name = nameEl ? nameEl.textContent.trim() : '';
+        return { name: name, row: row };
+      });
+
+      const memberKeyForName = function (name) {
+        switch (name) {
+          case 'Hoelon':
+            return 'papa';
+          case 'Hsin':
+            return 'mimi';
+          case 'Fly':
+            return 'mahmah';
+          case 'Xiao':
+            return 'xiao';
+          case 'Han':
+            return 'han';
+          case 'Jue':
+            return 'jue';
+          default:
+            return '';
+        }
+      };
+
+      const findCellInner = function (memberName, dayKey) {
+        const member = members.find(function (m) {
+          return m.name === memberName;
+        });
+        if (!member) return null;
+        const cell = member.row.querySelector('.day-cell[data-day="' + dayKey + '"]');
+        if (!cell) return null;
+        return cell.querySelector('.day-cell-inner');
+      };
+
+      var events = [];
+      var editingId = null;
+
+      const loadEvents = function () {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return [];
+          const parsed = JSON.parse(raw);
+          if (!Array.isArray(parsed)) return [];
+          return parsed;
+        } catch (e) {
+          return [];
+        }
+      };
+
+      const saveEvents = function () {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
+        } catch (e) {
+          // ignore
+        }
+      };
+
+      const clearRenderedDynamicEvents = function () {
+        const inners = document.querySelectorAll('.day-cell-inner');
+        Array.prototype.forEach.call(inners, function (inner) {
+          const dynamic = inner.querySelectorAll('.event-card-dynamic');
+          Array.prototype.forEach.call(dynamic, function (node) {
+            node.parentNode.removeChild(node);
+          });
+        });
+      };
+
+      const renderEvents = function () {
+        clearRenderedDynamicEvents();
+
+        events.forEach(function (evt) {
+          const inner = findCellInner(evt.member, evt.day);
+          if (!inner) return;
+
+          inner.classList.add('has-event');
+          const memberKey = memberKeyForName(evt.member);
+          if (memberKey) {
+            inner.classList.add(memberKey);
+          }
+
+          const wrapper = document.createElement('div');
+          wrapper.className = 'event-card-dynamic';
+          wrapper.setAttribute('data-event-id', String(evt.id));
+
+          const titleEl = document.createElement('div');
+          titleEl.className = 'event-title';
+          titleEl.textContent = evt.title;
+          wrapper.appendChild(titleEl);
+
+          if (evt.time) {
+            const timeEl = document.createElement('div');
+            timeEl.className = 'event-time';
+            timeEl.textContent = evt.time;
+            wrapper.appendChild(timeEl);
+          }
+
+          const deleteBtn = document.createElement('button');
+          deleteBtn.type = 'button';
+          deleteBtn.className = 'event-delete';
+          deleteBtn.setAttribute('aria-label', 'Delete event');
+          deleteBtn.textContent = '×';
+          deleteBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            deleteEvent(evt.id);
+          });
+          wrapper.appendChild(deleteBtn);
+
+          wrapper.addEventListener('click', function () {
+            if (!body.classList.contains('is-admin')) return;
+            startEdit(evt.id);
+          });
+
+          inner.appendChild(wrapper);
+        });
+      };
+
+      const deleteEvent = function (id) {
+        events = events.filter(function (e) {
+          return e.id !== id;
+        });
+        if (editingId === id) {
+          clearForm();
+        }
+        saveEvents();
+        renderEvents();
+      };
+
+      // Admin UI
+      const adminToggle = document.createElement('button');
+      adminToggle.type = 'button';
+      adminToggle.className = 'admin-toggle';
+      adminToggle.textContent = 'Admin';
+      body.appendChild(adminToggle);
+
+      const adminPanel = document.createElement('section');
+      adminPanel.className = 'admin-panel';
+      adminPanel.innerHTML =
+        '<h2>Admin events</h2>' +
+        '<div class="admin-row">' +
+        '<label for="admin-member">Family member</label>' +
+        '<select id="admin-member">' +
+        '<option value="Hoelon">Hoelon</option>' +
+        '<option value="Hsin">Hsin</option>' +
+        '<option value="Fly">Fly</option>' +
+        '<option value="Xiao">Xiao</option>' +
+        '<option value="Han">Han</option>' +
+        '<option value="Jue">Jue</option>' +
+        '</select>' +
+        '</div>' +
+        '<div class="admin-row">' +
+        '<label for="admin-day">Day of week</label>' +
+        '<select id="admin-day">' +
+        '<option value="mon">Mon</option>' +
+        '<option value="tue">Tue</option>' +
+        '<option value="wed">Wed</option>' +
+        '<option value="thu">Thu</option>' +
+        '<option value="fri">Fri</option>' +
+        '<option value="sat">Sat</option>' +
+        '<option value="sun">Sun</option>' +
+        '</select>' +
+        '</div>' +
+        '<div class="admin-row">' +
+        '<label for="admin-title">Event title</label>' +
+        '<input id="admin-title" type="text" />' +
+        '</div>' +
+        '<div class="admin-row">' +
+        '<label for="admin-time">Time (optional)</label>' +
+        '<input id="admin-time" type="text" />' +
+        '</div>' +
+        '<div class="admin-actions">' +
+        '<button type="button" class="admin-save">Save</button>' +
+        '<button type="button" class="admin-logout">Logout</button>' +
+        '</div>' +
+        '<div class="admin-hint">Tip: click an event (in admin mode) to edit it.</div>';
+      body.appendChild(adminPanel);
+
+      const memberSelect = adminPanel.querySelector('#admin-member');
+      const daySelect = adminPanel.querySelector('#admin-day');
+      const titleInput = adminPanel.querySelector('#admin-title');
+      const timeInput = adminPanel.querySelector('#admin-time');
+      const saveBtn = adminPanel.querySelector('.admin-save');
+      const logoutBtn = adminPanel.querySelector('.admin-logout');
+
+      const openAdmin = function () {
+        body.classList.add('is-admin');
+        adminPanel.classList.add('is-open');
+      };
+
+      const closeAdmin = function () {
+        body.classList.remove('is-admin');
+        adminPanel.classList.remove('is-open');
+        clearForm();
+      };
+
+      const requireLogin = function () {
+        if (body.classList.contains('is-admin')) {
+          if (adminPanel.classList.contains('is-open')) {
+            adminPanel.classList.remove('is-open');
+          } else {
+            adminPanel.classList.add('is-open');
+          }
+          return;
+        }
+        const input = window.prompt('Enter admin password');
+        if (input === null) return;
+        if (input === PASSWORD) {
+          openAdmin();
+        } else {
+          window.alert('Incorrect password.');
+        }
+      };
+
+      adminToggle.addEventListener('click', requireLogin);
+
+      const clearForm = function () {
+        editingId = null;
+        if (titleInput) titleInput.value = '';
+        if (timeInput) timeInput.value = '';
+      };
+
+      const startEdit = function (id) {
+        const evt = events.find(function (e) {
+          return e.id === id;
+        });
+        if (!evt) return;
+        editingId = id;
+        if (memberSelect) memberSelect.value = evt.member;
+        if (daySelect) daySelect.value = evt.day;
+        if (titleInput) titleInput.value = evt.title;
+        if (timeInput) timeInput.value = evt.time || '';
+        if (!adminPanel.classList.contains('is-open')) {
+          adminPanel.classList.add('is-open');
+        }
+      };
+
+      if (saveBtn) {
+        saveBtn.addEventListener('click', function () {
+          const member =
+            memberSelect && memberSelect.value ? memberSelect.value : 'Hoelon';
+          const day = daySelect && daySelect.value ? daySelect.value : 'mon';
+          const title = titleInput ? titleInput.value.trim() : '';
+          const time = timeInput ? timeInput.value.trim() : '';
+
+          if (!title) {
+            window.alert('Please enter an event title.');
+            return;
+          }
+
+          if (editingId != null) {
+            events = events.map(function (e) {
+              if (e.id === editingId) {
+                return {
+                  id: e.id,
+                  member: member,
+                  day: day,
+                  title: title,
+                  time: time
+                };
+              }
+              return e;
+            });
+          } else {
+            const newEvent = {
+              id: Date.now() + Math.random(),
+              member: member,
+              day: day,
+              title: title,
+              time: time
+            };
+            events.push(newEvent);
+          }
+
+          saveEvents();
+          renderEvents();
+          clearForm();
+        });
+      }
+
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function () {
+          closeAdmin();
+        });
+      }
+
+      // initial load
+      events = loadEvents();
+      renderEvents();
     })();
   </script>
 </body>
