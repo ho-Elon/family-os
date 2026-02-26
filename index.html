@@ -904,7 +904,8 @@
       </div>
     </section>
   </main>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- UMD build so `window.supabase` is available -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
   <script>
     (function () {
@@ -925,7 +926,18 @@
       const PASSWORD = 'leng2026';
       const SUPABASE_URL = 'https://bdvqzrhwwdeuqxkephze.supabase.co';
       const SUPABASE_KEY = 'sb_publishable_L0wLjOOFt6yyqVI0PbWfXA_-ygVBicg';
+      console.log('[supabase] window.supabase present?', Boolean(window.supabase));
+      console.log('[supabase] url', SUPABASE_URL);
+      console.log('[supabase] key prefix', String(SUPABASE_KEY || '').slice(0, 14) + '…');
+
+      if (!window.supabase || typeof window.supabase.createClient !== 'function') {
+        console.error('[supabase] Supabase library not loaded. Expected `window.supabase.createClient`.');
+        window.alert('Supabase failed to load. Check internet connection / script tag.');
+        return;
+      }
+
       const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      console.log('[supabase] client initialised', supabaseClient);
 
       const body = document.body;
 
@@ -973,16 +985,31 @@
 
       const fetchEventsFromSupabase = async function () {
         try {
+          console.log('[supabase] fetching events...');
           const { data, error } = await supabaseClient
             .from('events')
             .select('id, member, day, title, time')
             .order('created_at', { ascending: true });
 
           if (error) {
-            console.error('Error loading events from Supabase', error);
-            return [];
+            console.error('[supabase] error loading events (ordered by created_at)', error);
+            console.log('[supabase] retrying fetch without created_at order...');
+
+            const retry = await supabaseClient.from('events').select('id, member, day, title, time');
+            if (retry.error) {
+              console.error('[supabase] error loading events (no order)', retry.error);
+              return [];
+            }
+
+            console.log(
+              '[supabase] fetched events count (no order)',
+              Array.isArray(retry.data) ? retry.data.length : 0,
+              retry.data
+            );
+            return Array.isArray(retry.data) ? retry.data : [];
           }
 
+          console.log('[supabase] fetched events count', Array.isArray(data) ? data.length : 0, data);
           return Array.isArray(data) ? data : [];
         } catch (e) {
           console.error('Unexpected error loading events from Supabase', e);
@@ -990,7 +1017,7 @@
         }
       };
 
-      const upsertEventInSupabase = async function (evt) {
+      const insertEventInSupabase = async function (evt) {
         try {
           const payload = {
             member: evt.member,
@@ -999,25 +1026,49 @@
             time: evt.time || null
           };
 
-          if (evt.id != null) {
-            payload.id = evt.id;
-          }
-
-          const { data, error } = await supabaseClient
-            .from('events')
-            .upsert(payload)
-            .select()
-            .single();
+          console.log('[supabase] inserting event payload', payload);
+          const { error } = await supabaseClient.from('events').insert(payload);
 
           if (error) {
-            console.error('Error saving event to Supabase', error);
+            console.error('[supabase] insert error', error);
             window.alert('Sorry, there was a problem saving this event.');
             return null;
           }
 
-          return data;
+          console.log('[supabase] insert ok (no row returned)');
+          return { ok: true };
         } catch (e) {
-          console.error('Unexpected error saving event to Supabase', e);
+          console.error('[supabase] unexpected insert error', e);
+          window.alert('Sorry, there was a problem saving this event.');
+          return null;
+        }
+      };
+
+      const updateEventInSupabase = async function (evt) {
+        try {
+          const payload = {
+            member: evt.member,
+            day: evt.day,
+            title: evt.title,
+            time: evt.time || null
+          };
+
+          console.log('[supabase] updating event id', evt.id, 'payload', payload);
+          const { error } = await supabaseClient
+            .from('events')
+            .update(payload)
+            .eq('id', evt.id);
+
+          if (error) {
+            console.error('[supabase] update error', error);
+            window.alert('Sorry, there was a problem saving this event.');
+            return null;
+          }
+
+          console.log('[supabase] update ok (no row returned)');
+          return { ok: true };
+        } catch (e) {
+          console.error('[supabase] unexpected update error', e);
           window.alert('Sorry, there was a problem saving this event.');
           return null;
         }
@@ -1025,20 +1076,22 @@
 
       const deleteEventFromSupabase = async function (id) {
         try {
+          console.log('[supabase] deleting event id', id);
           const { error } = await supabaseClient
             .from('events')
             .delete()
             .eq('id', id);
 
           if (error) {
-            console.error('Error deleting event from Supabase', error);
+            console.error('[supabase] delete error', error);
             window.alert('Sorry, there was a problem deleting this event.');
             return false;
           }
 
+          console.log('[supabase] delete ok', id);
           return true;
         } catch (e) {
-          console.error('Unexpected error deleting event from Supabase', e);
+          console.error('[supabase] unexpected delete error', e);
           window.alert('Sorry, there was a problem deleting this event.');
           return false;
         }
@@ -1255,14 +1308,12 @@
               time: time
             };
 
-            savedEvent = await upsertEventInSupabase(updated);
+            savedEvent = await updateEventInSupabase(updated);
             if (!savedEvent) {
               return;
             }
 
-            events = events.map(function (e) {
-              return e.id === savedEvent.id ? savedEvent : e;
-            });
+            events = await fetchEventsFromSupabase();
           } else {
             const toInsert = {
               member: member,
@@ -1271,12 +1322,12 @@
               time: time
             };
 
-            savedEvent = await upsertEventInSupabase(toInsert);
+            savedEvent = await insertEventInSupabase(toInsert);
             if (!savedEvent) {
               return;
             }
 
-            events.push(savedEvent);
+            events = await fetchEventsFromSupabase();
           }
 
           renderEvents();
