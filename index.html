@@ -173,6 +173,11 @@
       border-right: 1px solid rgba(255, 255, 255, 0.6);
     }
 
+    .calendar-header-cell.is-today {
+      background: linear-gradient(180deg, rgba(245, 185, 143, 0.3), rgba(255, 245, 232, 0.95));
+      color: #5e3a1a;
+    }
+
     .calendar-header-cell:first-child {
       justify-content: flex-start;
       padding-left: 14px;
@@ -482,6 +487,29 @@
       color: inherit;
     }
 
+    .admin-recurring-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .admin-recurring-checkbox {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.7rem;
+      color: #8c8170;
+      white-space: nowrap;
+    }
+
+    .admin-recurring-checkbox input {
+      margin: 0;
+    }
+
+    .admin-frequency {
+      flex: 1;
+    }
+
     .admin-actions {
       display: flex;
       justify-content: space-between;
@@ -603,13 +631,13 @@
       <!-- Desktop / tablet grid -->
       <div class="calendar-header-row" aria-hidden="true">
         <div class="calendar-header-cell">Family</div>
-        <div class="calendar-header-cell">Sun</div>
-        <div class="calendar-header-cell">Mon</div>
-        <div class="calendar-header-cell">Tue</div>
-        <div class="calendar-header-cell">Wed</div>
-        <div class="calendar-header-cell">Thu</div>
-        <div class="calendar-header-cell">Fri</div>
-        <div class="calendar-header-cell">Sat</div>
+        <div class="calendar-header-cell" data-day="sun">Sun</div>
+        <div class="calendar-header-cell" data-day="mon">Mon</div>
+        <div class="calendar-header-cell" data-day="tue">Tue</div>
+        <div class="calendar-header-cell" data-day="wed">Wed</div>
+        <div class="calendar-header-cell" data-day="thu">Thu</div>
+        <div class="calendar-header-cell" data-day="fri">Fri</div>
+        <div class="calendar-header-cell" data-day="sat">Sat</div>
       </div>
 
       <div class="calendar-body">
@@ -954,6 +982,10 @@
         Array.prototype.forEach.call(inners, function (inner) {
           inner.classList.remove('is-today');
         });
+        const headerCells = document.querySelectorAll('.calendar-header-cell');
+        Array.prototype.forEach.call(headerCells, function (cell) {
+          cell.classList.remove('is-today');
+        });
       };
 
       const syncWeekState = function () {
@@ -961,6 +993,41 @@
         currentWeekStart.setDate(baseWeekStart.getDate() + currentWeekOffset * 7);
         currentWeekStart.setHours(0, 0, 0, 0);
         currentWeekKey = formatWeekKey(currentWeekStart);
+      };
+
+      const updateDayHeadersAndLabels = function () {
+        const weekDates = dayKeys.map(function (_dayKey, index) {
+          const d = new Date(currentWeekStart);
+          d.setDate(currentWeekStart.getDate() + index);
+          d.setHours(0, 0, 0, 0);
+          return d;
+        });
+
+        weekDates.forEach(function (date, index) {
+          const dayKey = dayKeys[index];
+          const weekdayShort = date
+            .toLocaleDateString(undefined, { weekday: 'short' })
+            .toUpperCase();
+          const dayNum = date.getDate();
+          const monthShort = date.toLocaleDateString(undefined, {
+            month: 'short'
+          });
+          const label = weekdayShort + ' ' + dayNum + ' ' + monthShort;
+
+          const headerCell = document.querySelector(
+            '.calendar-header-cell[data-day="' + dayKey + '"]'
+          );
+          if (headerCell) {
+            headerCell.textContent = label;
+          }
+
+          const dayLabels = document.querySelectorAll(
+            '.day-cell[data-day="' + dayKey + '"] .day-label'
+          );
+          Array.prototype.forEach.call(dayLabels, function (labelEl) {
+            labelEl.textContent = label;
+          });
+        });
       };
 
       const updateTodayHighlights = function () {
@@ -977,6 +1044,13 @@
             inner.classList.add('is-today');
           }
         });
+
+        const headerCell = document.querySelector(
+          '.calendar-header-cell[data-day="' + todayDayKey + '"]'
+        );
+        if (headerCell) {
+          headerCell.classList.add('is-today');
+        }
       };
 
       const updateWeekLabelAndButtons = function () {
@@ -990,6 +1064,7 @@
         if (nextWeekBtn) {
           nextWeekBtn.disabled = currentWeekOffset >= 2;
         }
+        updateDayHeadersAndLabels();
         updateTodayHighlights();
       };
 
@@ -1037,6 +1112,56 @@
       var events = [];
       var editingId = null;
 
+      const parseWeekKeyToDate = function (key) {
+        if (!key) return null;
+        const parts = String(key).split('-');
+        if (parts.length !== 3) return null;
+        const year = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1;
+        const day = parseInt(parts[2], 10);
+        if (isNaN(year) || isNaN(month) || isNaN(day)) return null;
+        const d = new Date(year, month, day);
+        d.setHours(0, 0, 0, 0);
+        return d;
+      };
+
+      const weeksBetween = function (start, end) {
+        const msPerWeek = 7 * 24 * 60 * 60 * 1000;
+        return Math.round((end.getTime() - start.getTime()) / msPerWeek);
+      };
+
+      const eventAppliesToWeek = function (evt, weekStartDate, weekKeyForNonRecurring) {
+        if (!evt) return false;
+
+        const isRecurring = evt.recurring === true;
+
+        if (!isRecurring) {
+          return evt.week_key === weekKeyForNonRecurring;
+        }
+
+        const eventStart = parseWeekKeyToDate(evt.week_key);
+        if (!eventStart) {
+          return true;
+        }
+
+        const diff = weeksBetween(eventStart, weekStartDate);
+        if (diff < 0) {
+          return false;
+        }
+
+        const frequency = (evt.frequency || '').toLowerCase();
+        if (!frequency || frequency === 'weekly') {
+          return true;
+        }
+        if (frequency === 'biweekly') {
+          return diff % 2 === 0;
+        }
+        if (frequency === 'monthly') {
+          return diff % 4 === 0;
+        }
+        return true;
+      };
+
       const fetchEventsFromSupabase = async function (weekKey) {
         const keyToUse = weekKey || currentWeekKey;
         if (!keyToUse) {
@@ -1044,43 +1169,86 @@
           return [];
         }
 
+        const baseSelect =
+          'id, member, day, title, time, week_key, recurring, frequency';
+
         try {
           console.log('[supabase] fetching events for week', keyToUse);
+
           const baseQuery = supabaseClient
             .from('events')
-            .select('id, member, day, title, time, week_key')
+            .select(baseSelect)
             .eq('week_key', keyToUse);
 
-          const { data, error } = await baseQuery.order('created_at', { ascending: true });
+          const { data: baseData, error: baseError } = await baseQuery.order(
+            'created_at',
+            { ascending: true }
+          );
 
-          if (error) {
-            console.error('[supabase] error loading events (ordered by created_at)', error);
+          let baseEvents = [];
+
+          if (baseError) {
+            console.error(
+              '[supabase] error loading events (ordered by created_at)',
+              baseError
+            );
             console.log('[supabase] retrying fetch without created_at order...');
 
             const retry = await supabaseClient
               .from('events')
-              .select('id, member, day, title, time, week_key')
+              .select(baseSelect)
               .eq('week_key', keyToUse);
             if (retry.error) {
-              console.error('[supabase] error loading events (no order)', retry.error);
-              return [];
+              console.error(
+                '[supabase] error loading events (no order)',
+                retry.error
+              );
+              baseEvents = [];
+            } else {
+              baseEvents = Array.isArray(retry.data) ? retry.data : [];
             }
-
-            console.log(
-              '[supabase] fetched events count (no order)',
-              Array.isArray(retry.data) ? retry.data.length : 0,
-              retry.data
-            );
-            return Array.isArray(retry.data) ? retry.data : [];
+          } else {
+            baseEvents = Array.isArray(baseData) ? baseData : [];
           }
+
+          const { data: recurringData, error: recurringError } =
+            await supabaseClient
+              .from('events')
+              .select(baseSelect)
+              .eq('recurring', true);
+
+          if (recurringError) {
+            console.error(
+              '[supabase] error loading recurring events',
+              recurringError
+            );
+          }
+
+          const recurringEvents = Array.isArray(recurringData)
+            ? recurringData
+            : [];
+
+          const combinedById = {};
+          baseEvents.concat(recurringEvents).forEach(function (evt) {
+            if (!evt || evt.id == null) return;
+            combinedById[evt.id] = evt;
+          });
+
+          const allEvents = Object.keys(combinedById).map(function (id) {
+            return combinedById[id];
+          });
+
+          const filtered = allEvents.filter(function (evt) {
+            return eventAppliesToWeek(evt, currentWeekStart, keyToUse);
+          });
 
           console.log(
             '[supabase] fetched events count for week',
             keyToUse,
-            Array.isArray(data) ? data.length : 0,
-            data
+            filtered.length,
+            filtered
           );
-          return Array.isArray(data) ? data : [];
+          return filtered;
         } catch (e) {
           console.error('Unexpected error loading events from Supabase', e);
           return [];
@@ -1099,7 +1267,9 @@
             day: evt.day,
             title: evt.title,
             time: evt.time || null,
-            week_key: evt.week_key
+            week_key: evt.week_key,
+            recurring: evt.recurring === true,
+            frequency: evt.frequency || null
           };
 
           console.log('[supabase] inserting event payload', payload);
@@ -1127,7 +1297,9 @@
             day: evt.day,
             title: evt.title,
             time: evt.time || null,
-            week_key: evt.week_key
+            week_key: evt.week_key,
+            recurring: evt.recurring === true,
+            frequency: evt.frequency || null
           };
 
           console.log('[supabase] updating event id', evt.id, 'payload', payload);
@@ -1313,6 +1485,20 @@
         '<label for="admin-time">Time (optional)</label>' +
         '<input id="admin-time" type="text" />' +
         '</div>' +
+        '<div class="admin-row">' +
+        '<label for="admin-recurring">Recurring</label>' +
+        '<div class="admin-recurring-controls">' +
+        '<label class="admin-recurring-checkbox">' +
+        '<input id="admin-recurring" type="checkbox" />' +
+        '<span>Recurring</span>' +
+        '</label>' +
+        '<select id="admin-frequency" class="admin-frequency" disabled>' +
+        '<option value="weekly">Weekly</option>' +
+        '<option value="biweekly">Biweekly</option>' +
+        '<option value="monthly">Monthly</option>' +
+        '</select>' +
+        '</div>' +
+        '</div>' +
         '<div class="admin-actions">' +
         '<button type="button" class="admin-save">Save</button>' +
         '<button type="button" class="admin-logout">Logout</button>' +
@@ -1324,8 +1510,23 @@
       const daySelect = adminPanel.querySelector('#admin-day');
       const titleInput = adminPanel.querySelector('#admin-title');
       const timeInput = adminPanel.querySelector('#admin-time');
+      const recurringCheckbox = adminPanel.querySelector('#admin-recurring');
+      const frequencySelect = adminPanel.querySelector('#admin-frequency');
       const saveBtn = adminPanel.querySelector('.admin-save');
       const logoutBtn = adminPanel.querySelector('.admin-logout');
+
+      if (recurringCheckbox && frequencySelect) {
+        recurringCheckbox.addEventListener('change', function () {
+          if (recurringCheckbox.checked) {
+            frequencySelect.disabled = false;
+            if (!frequencySelect.value) {
+              frequencySelect.value = 'weekly';
+            }
+          } else {
+            frequencySelect.disabled = true;
+          }
+        });
+      }
 
       const openAdmin = function () {
         body.classList.add('is-admin');
@@ -1362,6 +1563,11 @@
         editingId = null;
         if (titleInput) titleInput.value = '';
         if (timeInput) timeInput.value = '';
+        if (recurringCheckbox) recurringCheckbox.checked = false;
+        if (frequencySelect) {
+          frequencySelect.value = 'weekly';
+          frequencySelect.disabled = true;
+        }
       };
 
       const startEdit = function (id) {
@@ -1374,6 +1580,23 @@
         if (daySelect) daySelect.value = evt.day;
         if (titleInput) titleInput.value = evt.title;
         if (timeInput) timeInput.value = evt.time || '';
+        if (recurringCheckbox) {
+          const isRecurring = evt.recurring === true;
+          recurringCheckbox.checked = isRecurring;
+        }
+        if (frequencySelect) {
+          let freqValue = (evt.frequency || '').toLowerCase();
+          if (
+            freqValue !== 'weekly' &&
+            freqValue !== 'biweekly' &&
+            freqValue !== 'monthly'
+          ) {
+            freqValue = 'weekly';
+          }
+          frequencySelect.value = freqValue;
+          frequencySelect.disabled =
+            !recurringCheckbox || !recurringCheckbox.checked;
+        }
         if (!adminPanel.classList.contains('is-open')) {
           adminPanel.classList.add('is-open');
         }
@@ -1386,6 +1609,12 @@
           const day = daySelect && daySelect.value ? daySelect.value : 'mon';
           const title = titleInput ? titleInput.value.trim() : '';
           const time = timeInput ? timeInput.value.trim() : '';
+           const isRecurring =
+             recurringCheckbox && recurringCheckbox.checked ? true : false;
+           let frequency = null;
+           if (isRecurring && frequencySelect) {
+             frequency = frequencySelect.value || 'weekly';
+           }
 
           if (!title) {
             window.alert('Please enter an event title.');
@@ -1408,7 +1637,9 @@
               day: day,
               title: title,
               time: time,
-              week_key: existing.week_key || currentWeekKey
+              week_key: existing.week_key || currentWeekKey,
+              recurring: isRecurring,
+              frequency: frequency
             };
 
             savedEvent = await updateEventInSupabase(updated);
@@ -1423,7 +1654,9 @@
               day: day,
               title: title,
               time: time,
-              week_key: currentWeekKey
+              week_key: currentWeekKey,
+              recurring: isRecurring,
+              frequency: frequency
             };
 
             savedEvent = await insertEventInSupabase(toInsert);
