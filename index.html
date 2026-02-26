@@ -58,7 +58,7 @@
       display: flex;
       flex-direction: column;
       gap: 14px;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
     }
 
     @media (min-width: 640px) {
@@ -76,40 +76,82 @@
     }
 
     .title {
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       letter-spacing: 0.03em;
       font-weight: 650;
+      line-height: 1.2;
     }
 
     .subtitle {
-      font-size: 0.9rem;
+      font-size: 0.92rem;
       color: #766a5a;
     }
 
+    .title #week-label {
+      display: inline-block;
+      margin-left: 4px;
+      font-weight: 700;
+      font-size: 1.02rem;
+      color: #5e3a1a;
+    }
+
     .week-nav {
-      margin-top: 4px;
+      margin-top: 6px;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       color: #7c5a3a;
       flex-wrap: wrap;
+      padding: 4px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255, 236, 215, 0.9), rgba(255, 249, 237, 0.95));
+      border: 1px solid rgba(255, 193, 140, 0.5);
     }
 
     .week-nav-button {
-      padding: 3px 8px;
+      padding: 6px 12px;
       border-radius: 999px;
       border: 1px solid rgba(255, 193, 140, 0.9);
       background: rgba(255, 248, 236, 0.95);
       color: #7c5a3a;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       cursor: pointer;
       font-family: inherit;
+      font-weight: 600;
+      transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease, color 0.15s ease;
     }
 
     .week-nav-button:disabled {
       opacity: 0.45;
       cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .week-nav-button:not(:disabled):hover {
+      background: rgba(255, 242, 225, 0.95);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .week-nav-button-primary {
+      background: var(--accent);
+      color: #3f2a18;
+      box-shadow: 0 8px 16px rgba(245, 185, 143, 0.7);
+      border-color: rgba(199, 136, 92, 0.95);
+    }
+
+    .week-nav-button-primary:not(:disabled):hover {
+      background: #f3a96e;
+    }
+
+    .week-nav-button-secondary {
+      background: transparent;
+    }
+
+    .week-nav-button-secondary:not(:disabled):hover {
+      background: rgba(255, 242, 225, 0.9);
     }
 
     .legend {
@@ -170,12 +212,18 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border-right: 1px solid rgba(255, 255, 255, 0.6);
+      border-right: 1px solid rgba(255, 255, 255, 0.65);
     }
 
     .calendar-header-cell.is-today {
-      background: linear-gradient(180deg, rgba(245, 185, 143, 0.3), rgba(255, 245, 232, 0.95));
-      color: #5e3a1a;
+      background: var(--accent);
+      color: #3f2a18;
+      box-shadow: inset 0 -3px 0 rgba(255, 255, 255, 0.45);
+    }
+
+    .calendar-header-cell[data-day="sat"],
+    .calendar-header-cell[data-day="sun"] {
+      background: linear-gradient(180deg, rgba(255, 226, 199, 0.9), rgba(255, 244, 224, 0.95));
     }
 
     .calendar-header-cell:first-child {
@@ -200,6 +248,14 @@
       grid-template-columns: minmax(92px, 120px) repeat(7, minmax(92px, 1fr));
       border-top: 1px solid rgba(255, 255, 255, 0.7);
       border-bottom: 1px solid rgba(0, 0, 0, 0.02);
+    }
+
+    .member-row:nth-of-type(odd) .day-cell {
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .member-row:nth-of-type(even) .day-cell {
+      background: rgba(255, 246, 234, 0.7);
     }
 
     .member-label {
@@ -247,13 +303,14 @@
     .member-jue   { background: var(--jue); }
 
     .day-cell {
-      padding: 8px 8px 10px;
+      padding: 10px 9px 12px;
       border-right: 1px solid rgba(255, 255, 255, 0.9);
-      min-height: 70px;
+      min-height: 78px;
       display: flex;
       align-items: stretch;
       justify-content: stretch;
       background: rgba(255, 255, 255, 0.65);
+      position: relative;
     }
 
     .day-cell:last-child {
@@ -262,14 +319,14 @@
 
     .day-cell-inner {
       width: 100%;
-      border-radius: 10px;
+      border-radius: 12px;
       border: 1px dashed rgba(0, 0, 0, 0.04);
-      background: rgba(255, 255, 255, 0.8);
-      padding: 6px 7px 7px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 7px 8px 8px;
       display: flex;
       flex-direction: column;
       gap: 4px;
-      font-size: 0.76rem;
+      font-size: 0.78rem;
       color: #5e5246;
     }
 
@@ -316,12 +373,13 @@
 
     .event-title {
       font-weight: 600;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
     }
 
     .event-time {
-      font-size: 0.74rem;
+      font-size: 0.76rem;
       color: #8b7c6a;
+      margin-top: 1px;
     }
 
     .event-note {
@@ -547,27 +605,35 @@
     }
 
     .event-card-dynamic {
-      margin-top: 3px;
-      padding-top: 2px;
-      border-top: 1px dashed rgba(0, 0, 0, 0.05);
+      margin-top: 4px;
+      padding: 6px 10px 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.98);
+      border-left: 3px solid rgba(0, 0, 0, 0.06);
+      border-top: 1px solid rgba(0, 0, 0, 0.02);
       position: relative;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      transition: box-shadow 0.15s ease, transform 0.15s ease, background 0.15s ease;
     }
 
     .event-card-dynamic .event-title {
-      padding-right: 16px;
+      padding-right: 18px;
     }
 
     .event-delete {
       position: absolute;
-      top: 0;
-      right: 0;
-      width: 14px;
-      height: 14px;
+      top: 4px;
+      right: 6px;
+      width: 16px;
+      height: 16px;
       border-radius: 999px;
       border: none;
-      background: rgba(0, 0, 0, 0.06);
-      color: #6b5b4a;
-      font-size: 0.6rem;
+      background: rgba(0, 0, 0, 0.08);
+      color: #fdf8f3;
+      font-size: 0.64rem;
       line-height: 1;
       display: none;
       align-items: center;
@@ -581,9 +647,89 @@
     }
 
     .event-card-dynamic:hover {
-      background: rgba(255, 244, 231, 0.5);
-      border-radius: 6px;
+      background: rgba(255, 248, 236, 0.95);
       cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+      transform: translateY(-1px);
+    }
+
+    .event-card-papa {
+      border-left-color: rgba(33, 74, 137, 0.9);
+      background: linear-gradient(135deg, rgba(33, 74, 137, 0.1), rgba(255, 255, 255, 0.98));
+    }
+
+    .event-card-mimi {
+      border-left-color: rgba(227, 109, 148, 0.9);
+      background: linear-gradient(135deg, rgba(227, 109, 148, 0.12), rgba(255, 255, 255, 0.98));
+    }
+
+    .event-card-mahmah {
+      border-left-color: rgba(165, 105, 189, 0.9);
+      background: linear-gradient(135deg, rgba(165, 105, 189, 0.12), rgba(255, 255, 255, 0.98));
+    }
+
+    .event-card-xiao {
+      border-left-color: rgba(245, 158, 11, 0.95);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(255, 255, 255, 0.98));
+    }
+
+    .event-card-han {
+      border-left-color: rgba(76, 175, 80, 0.95);
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.12), rgba(255, 255, 255, 0.98));
+    }
+
+    .event-card-jue {
+      border-left-color: rgba(246, 196, 83, 0.95);
+      background: linear-gradient(135deg, rgba(246, 196, 83, 0.16), rgba(255, 255, 255, 0.98));
+    }
+
+    .day-cell[data-day="sat"],
+    .day-cell[data-day="sun"] {
+      background: rgba(255, 247, 235, 0.9);
+    }
+
+    .day-label {
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #b09273;
+      margin-bottom: 2px;
+    }
+
+    .day-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .day-header-main {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .day-header-weekday {
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      color: #7c5a3a;
+    }
+
+    .day-header-date {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #5a3d1f;
+    }
+
+    .calendar-header-cell.is-today .day-header-date {
+      color: #fff5ea;
+    }
+
+    .day-header-month {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #a17f57;
     }
   </style>
 </head>
@@ -594,8 +740,9 @@
         <div class="title">Leng Family — Week of <span id="week-label">[current date]</span></div>
         <div class="subtitle">A cosy snapshot of this week together.</div>
         <div class="week-nav" aria-label="Select week">
-          <button type="button" id="week-prev" class="week-nav-button">‹ Previous</button>
-          <button type="button" id="week-next" class="week-nav-button">Next ›</button>
+          <button type="button" id="week-prev" class="week-nav-button week-nav-button-secondary">‹</button>
+          <button type="button" id="week-today" class="week-nav-button week-nav-button-primary">This Week</button>
+          <button type="button" id="week-next" class="week-nav-button week-nav-button-secondary">›</button>
         </div>
       </div>
 
@@ -631,13 +778,69 @@
       <!-- Desktop / tablet grid -->
       <div class="calendar-header-row" aria-hidden="true">
         <div class="calendar-header-cell">Family</div>
-        <div class="calendar-header-cell" data-day="sun">Sun</div>
-        <div class="calendar-header-cell" data-day="mon">Mon</div>
-        <div class="calendar-header-cell" data-day="tue">Tue</div>
-        <div class="calendar-header-cell" data-day="wed">Wed</div>
-        <div class="calendar-header-cell" data-day="thu">Thu</div>
-        <div class="calendar-header-cell" data-day="fri">Fri</div>
-        <div class="calendar-header-cell" data-day="sat">Sat</div>
+        <div class="calendar-header-cell" data-day="sun">
+          <div class="day-header">
+            <div class="day-header-main">
+              <span class="day-header-weekday">SUN</span>
+              <span class="day-header-date">1</span>
+            </div>
+            <div class="day-header-month">JAN</div>
+          </div>
+        </div>
+        <div class="calendar-header-cell" data-day="mon">
+          <div class="day-header">
+            <div class="day-header-main">
+              <span class="day-header-weekday">MON</span>
+              <span class="day-header-date">2</span>
+            </div>
+            <div class="day-header-month">JAN</div>
+          </div>
+        </div>
+        <div class="calendar-header-cell" data-day="tue">
+          <div class="day-header">
+            <div class="day-header-main">
+              <span class="day-header-weekday">TUE</span>
+              <span class="day-header-date">3</span>
+            </div>
+            <div class="day-header-month">JAN</div>
+          </div>
+        </div>
+        <div class="calendar-header-cell" data-day="wed">
+          <div class="day-header">
+            <div class="day-header-main">
+              <span class="day-header-weekday">WED</span>
+              <span class="day-header-date">4</span>
+            </div>
+            <div class="day-header-month">JAN</div>
+          </div>
+        </div>
+        <div class="calendar-header-cell" data-day="thu">
+          <div class="day-header">
+            <div class="day-header-main">
+              <span class="day-header-weekday">THU</span>
+              <span class="day-header-date">5</span>
+            </div>
+            <div class="day-header-month">JAN</div>
+          </div>
+        </div>
+        <div class="calendar-header-cell" data-day="fri">
+          <div class="day-header">
+            <div class="day-header-main">
+              <span class="day-header-weekday">FRI</span>
+              <span class="day-header-date">6</span>
+            </div>
+            <div class="day-header-month">JAN</div>
+          </div>
+        </div>
+        <div class="calendar-header-cell" data-day="sat">
+          <div class="day-header">
+            <div class="day-header-main">
+              <span class="day-header-weekday">SAT</span>
+              <span class="day-header-date">7</span>
+            </div>
+            <div class="day-header-month">JAN</div>
+          </div>
+        </div>
       </div>
 
       <div class="calendar-body">
@@ -976,6 +1179,7 @@
       const weekLabelEl = document.getElementById('week-label');
       const prevWeekBtn = document.getElementById('week-prev');
       const nextWeekBtn = document.getElementById('week-next');
+      const todayWeekBtn = document.getElementById('week-today');
 
       const clearTodayHighlights = function () {
         const inners = document.querySelectorAll('.day-cell-inner');
@@ -1009,16 +1213,22 @@
             .toLocaleDateString(undefined, { weekday: 'short' })
             .toUpperCase();
           const dayNum = date.getDate();
-          const monthShort = date.toLocaleDateString(undefined, {
-            month: 'short'
-          });
+          const monthShort = date
+            .toLocaleDateString(undefined, { month: 'short' })
+            .toUpperCase();
           const label = weekdayShort + ' ' + dayNum + ' ' + monthShort;
 
           const headerCell = document.querySelector(
             '.calendar-header-cell[data-day="' + dayKey + '"]'
           );
           if (headerCell) {
-            headerCell.textContent = label;
+            const weekdayEl = headerCell.querySelector('.day-header-weekday');
+            const dateEl = headerCell.querySelector('.day-header-date');
+            const monthEl = headerCell.querySelector('.day-header-month');
+            if (weekdayEl) weekdayEl.textContent = weekdayShort;
+            if (dateEl) dateEl.textContent = String(dayNum);
+            if (monthEl) monthEl.textContent = monthShort;
+            headerCell.setAttribute('aria-label', label);
           }
 
           const dayLabels = document.querySelectorAll(
@@ -1375,6 +1585,9 @@
 
           const wrapper = document.createElement('div');
           wrapper.className = 'event-card-dynamic';
+          if (memberKey) {
+            wrapper.classList.add('event-card-' + memberKey);
+          }
           wrapper.setAttribute('data-event-id', String(evt.id));
 
           const titleEl = document.createElement('div');
@@ -1437,6 +1650,16 @@
         nextWeekBtn.addEventListener('click', async function () {
           if (currentWeekOffset >= 2) return;
           currentWeekOffset += 1;
+          syncWeekState();
+          updateWeekLabelAndButtons();
+          await loadEventsForCurrentWeek();
+        });
+      }
+
+      if (todayWeekBtn) {
+        todayWeekBtn.addEventListener('click', async function () {
+          if (currentWeekOffset === 0) return;
+          currentWeekOffset = 0;
           syncWeekState();
           updateWeekLabelAndButtons();
           await loadEventsForCurrentWeek();
