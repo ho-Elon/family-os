@@ -744,6 +744,80 @@
       border: 1px solid rgba(255, 193, 140, 0.55);
     }
 
+    .quick-add {
+      margin-top: 10px;
+      padding: 8px 10px;
+      border-radius: 14px;
+      background: rgba(255, 252, 244, 0.95);
+      border: 1px solid rgba(255, 193, 140, 0.45);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .quick-add-form {
+      display: flex;
+      align-items: stretch;
+      gap: 6px;
+    }
+
+    .quick-add-input {
+      flex: 1;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      font-size: 0.86rem;
+      font-family: inherit;
+      background: rgba(255, 255, 255, 0.96);
+      color: inherit;
+    }
+
+    .quick-add-send {
+      flex: 0 0 auto;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 193, 140, 0.9);
+      background: var(--accent);
+      color: #3f2a18;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.84rem;
+      box-shadow: 0 6px 12px rgba(245, 185, 143, 0.6);
+      transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    .quick-add-send:hover {
+      background: #f3a96e;
+      box-shadow: 0 8px 16px rgba(245, 185, 143, 0.7);
+      transform: translateY(-1px);
+    }
+
+    .quick-add-member {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.76rem;
+      color: #7c5a3a;
+    }
+
+    .quick-add-member-select {
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      font-size: 0.76rem;
+      font-family: inherit;
+      background: rgba(255, 255, 255, 0.96);
+      color: inherit;
+    }
+
+    .quick-add-helper {
+      font-size: 0.72rem;
+      color: #a09180;
+    }
+
     .topbar-left {
       display: flex;
       align-items: center;
@@ -1244,6 +1318,32 @@
       <!-- legacy label (still updated by JS), hidden -->
       <span id="week-label" style="display:none;">[current date]</span>
     </header>
+
+    <section class="quick-add" aria-label="Quick add family event">
+      <form id="quick-add-form" class="quick-add-form">
+        <input
+          id="quick-add-input"
+          class="quick-add-input"
+          type="text"
+          placeholder="Add event... e.g. Xiao football Saturday 3pm"
+          autocomplete="off"
+        />
+        <button type="submit" class="quick-add-send">Send</button>
+      </form>
+      <div class="quick-add-member" id="quick-add-member-row" style="display: none;">
+        <span>Who is this for?</span>
+        <select id="quick-add-member-select" class="quick-add-member-select">
+          <option value="">Select</option>
+          <option value="Hoelon">Hoelon (Papa)</option>
+          <option value="Hsin">Hsin (Mimi)</option>
+          <option value="Fly">Fly (Mahmah)</option>
+          <option value="Xiao">Xiao</option>
+          <option value="Han">Han</option>
+          <option value="Jue">Jue</option>
+        </select>
+      </div>
+      <div id="quick-add-helper" class="quick-add-helper"></div>
+    </section>
 
     <section id="month-view" class="view-shell is-active" aria-label="Month view">
       <div class="month-layout">
@@ -1884,6 +1984,39 @@
 
       const MEMBER_CLASSES = ['papa', 'mimi', 'mahmah', 'xiao', 'han', 'jue'];
 
+      const FAMILY_MEMBER_ALIASES = {
+        hoelon: 'Hoelon',
+        papa: 'Hoelon',
+        hsin: 'Hsin',
+        mimi: 'Hsin',
+        fly: 'Fly',
+        mahmah: 'Fly',
+        xiao: 'Xiao',
+        han: 'Han',
+        jue: 'Jue'
+      };
+
+      const DAY_ALIASES = {
+        sun: 'sun',
+        sunday: 'sun',
+        mon: 'mon',
+        monday: 'mon',
+        tue: 'tue',
+        tues: 'tue',
+        tuesday: 'tue',
+        wed: 'wed',
+        weds: 'wed',
+        wednesday: 'wed',
+        thu: 'thu',
+        thur: 'thu',
+        thurs: 'thu',
+        thursday: 'thu',
+        fri: 'fri',
+        friday: 'fri',
+        sat: 'sat',
+        saturday: 'sat'
+      };
+
       const findCellInner = function (memberName, dayKey) {
         const member = members.find(function (m) {
           return m.name === memberName;
@@ -1897,6 +2030,72 @@
       var events = [];
       var editingId = null;
       var monthEventsByDateKey = {};
+
+      const parseQuickAddText = function (raw) {
+        const result = {
+          member: null,
+          day: null,
+          time: null,
+          title: ''
+        };
+
+        if (!raw) {
+          return result;
+        }
+
+        const tokens = raw.trim().split(/\s+/);
+        const usedIndexes = { member: -1, day: -1, time: -1 };
+
+        // member
+        for (var i = 0; i < tokens.length; i += 1) {
+          var t = tokens[i];
+          var clean = t.replace(/[.,!?;:]/g, '').toLowerCase();
+          if (FAMILY_MEMBER_ALIASES.hasOwnProperty(clean)) {
+            result.member = FAMILY_MEMBER_ALIASES[clean];
+            usedIndexes.member = i;
+            break;
+          }
+        }
+
+        // day of week
+        for (var j = 0; j < tokens.length; j += 1) {
+          var td = tokens[j];
+          var cleanDay = td.replace(/[.,!?;:]/g, '').toLowerCase();
+          if (DAY_ALIASES.hasOwnProperty(cleanDay)) {
+            result.day = DAY_ALIASES[cleanDay];
+            usedIndexes.day = j;
+            break;
+          }
+        }
+
+        // time (very simple formats like 3pm, 3:30pm, 15:00)
+        var timeRegex = /^(\d{1,2})(?::(\d{2}))?\s*(am|pm)?$/i;
+        for (var k = 0; k < tokens.length; k += 1) {
+          var tt = tokens[k];
+          var cleanTime = tt.replace(/[.,!?;:]/g, '');
+          var m = cleanTime.match(timeRegex);
+          if (m) {
+            var hh = parseInt(m[1], 10);
+            var mm = m[2] != null ? m[2] : '';
+            var suffix = m[3] ? m[3].toLowerCase() : '';
+            var display = '' + hh + (mm ? ':' + mm : '') + (suffix ? suffix : '');
+            result.time = display;
+            usedIndexes.time = k;
+            break;
+          }
+        }
+
+        var titleParts = [];
+        for (var x = 0; x < tokens.length; x += 1) {
+          if (x === usedIndexes.member || x === usedIndexes.day || x === usedIndexes.time) {
+            continue;
+          }
+          titleParts.push(tokens[x]);
+        }
+        result.title = titleParts.join(' ').trim();
+
+        return result;
+      };
 
       const parseWeekKeyToDate = function (key) {
         if (!key) return null;
@@ -2816,6 +3015,118 @@
         bottomWeekBtn.addEventListener('click', async function () {
           setView('week');
           await loadEventsForCurrentWeek();
+        });
+      }
+
+      const refreshEventsAfterChange = async function () {
+        events = await fetchEventsFromSupabase(currentWeekKey);
+        renderEvents();
+        if (currentView === 'month') {
+          await renderMonth();
+        }
+      };
+
+      const quickAddForm = document.getElementById('quick-add-form');
+      const quickAddInput = document.getElementById('quick-add-input');
+      const quickAddMemberRow = document.getElementById('quick-add-member-row');
+      const quickAddMemberSelect = document.getElementById('quick-add-member-select');
+      const quickAddHelper = document.getElementById('quick-add-helper');
+
+      let pendingQuickAdd = null;
+
+      const resetQuickAddUI = function () {
+        pendingQuickAdd = null;
+        if (quickAddInput) {
+          quickAddInput.value = '';
+        }
+        if (quickAddMemberRow) {
+          quickAddMemberRow.style.display = 'none';
+        }
+        if (quickAddMemberSelect) {
+          quickAddMemberSelect.value = '';
+        }
+        if (quickAddHelper) {
+          quickAddHelper.textContent = '';
+        }
+      };
+
+      const ensureCurrentWeekKey = function () {
+        if (!currentWeekKey) {
+          syncWeekState();
+        }
+      };
+
+      const handleQuickAddSubmit = async function () {
+        if (!quickAddInput) return;
+        const text = quickAddInput.value.trim();
+        if (!text && !pendingQuickAdd) {
+          return;
+        }
+
+        ensureCurrentWeekKey();
+
+        let parsed;
+        if (pendingQuickAdd) {
+          parsed = pendingQuickAdd;
+        } else {
+          parsed = parseQuickAddText(text);
+        }
+
+        if (!parsed.title) {
+          if (quickAddHelper) {
+            quickAddHelper.textContent = 'Please include a short description for the event.';
+          }
+          return;
+        }
+
+        if (!parsed.member) {
+          pendingQuickAdd = parsed;
+          if (quickAddMemberRow) {
+            quickAddMemberRow.style.display = 'inline-flex';
+          }
+          if (quickAddHelper) {
+            quickAddHelper.textContent = 'Choose who this is for, then press Send again.';
+          }
+          if (quickAddMemberSelect) {
+            quickAddMemberSelect.focus();
+          }
+          return;
+        }
+
+        const dayKey = parsed.day || todayDayKey;
+        const evt = {
+          member: parsed.member,
+          day: dayKey,
+          title: parsed.title,
+          time: parsed.time || '',
+          week_key: currentWeekKey
+        };
+
+        const saved = await insertEventInSupabase(evt);
+        if (!saved) {
+          return;
+        }
+
+        resetQuickAddUI();
+        await refreshEventsAfterChange();
+      };
+
+      if (quickAddForm) {
+        quickAddForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+
+          if (pendingQuickAdd && quickAddMemberSelect && !pendingQuickAdd.member) {
+            const chosen = quickAddMemberSelect.value;
+            if (!chosen) {
+              if (quickAddHelper) {
+                quickAddHelper.textContent = 'Please select who this is for.';
+              }
+              return;
+            }
+            pendingQuickAdd = Object.assign({}, pendingQuickAdd, { member: chosen });
+          }
+
+          handleQuickAddSubmit();
         });
       }
 
