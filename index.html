@@ -2097,6 +2097,67 @@
         return result;
       };
 
+      const resolveRelativeDateFromText = function (rawText) {
+        if (!rawText) return null;
+        const tokens = rawText.trim().split(/\s+/);
+        if (!tokens.length) return null;
+
+        const cleaned = tokens.map(function (t) {
+          return t.replace(/[.,!?;:]/g, '').toLowerCase();
+        });
+
+        var targetDate = null;
+
+        if (cleaned.indexOf('tomorrow') !== -1) {
+          targetDate = new Date(today);
+          targetDate.setDate(today.getDate() + 1);
+        } else if (cleaned.indexOf('today') !== -1) {
+          targetDate = new Date(today);
+        } else {
+          for (var i = 0; i < cleaned.length - 1; i += 1) {
+            if (cleaned[i] === 'next') {
+              var nextWord = cleaned[i + 1];
+              if (DAY_ALIASES.hasOwnProperty(nextWord)) {
+                var canonical = DAY_ALIASES[nextWord];
+                var targetDow = dayKeys.indexOf(canonical);
+                if (targetDow !== -1) {
+                  targetDate = new Date(today);
+                  var todayDow = today.getDay();
+                  var daysAhead = (targetDow - todayDow + 7) % 7;
+                  if (daysAhead === 0) {
+                    daysAhead = 7;
+                  }
+                  targetDate.setDate(today.getDate() + daysAhead);
+                  break;
+                }
+              }
+            }
+          }
+
+          if (!targetDate) {
+            var weekendIndex = cleaned.indexOf('weekend');
+            var thisIndex = cleaned.indexOf('this');
+            if (
+              weekendIndex !== -1 &&
+              (thisIndex === -1 || thisIndex <= weekendIndex)
+            ) {
+              targetDate = new Date(today);
+              var todayDow2 = today.getDay();
+              var targetDow2 = 6; // Saturday
+              var daysAhead2 = (targetDow2 - todayDow2 + 7) % 7;
+              targetDate.setDate(today.getDate() + daysAhead2);
+            }
+          }
+        }
+
+        if (!targetDate) return null;
+        targetDate.setHours(0, 0, 0, 0);
+        var wkStart = getSundayOfWeek(targetDate);
+        var weekKey = formatWeekKey(wkStart);
+        var dayKey = dayKeys[targetDate.getDay()];
+        return { weekKey: weekKey, dayKey: dayKey };
+      };
+
       const parseWeekKeyToDate = function (key) {
         if (!key) return null;
         const parts = String(key).split('-');
@@ -2530,7 +2591,11 @@
           };
 
           console.log('[supabase] inserting event payload', payload);
-          const { error } = await supabaseClient.from('events').insert(payload);
+          const { data, error } = await supabaseClient
+            .from('events')
+            .insert(payload)
+            .select('id')
+            .single();
 
           if (error) {
             console.error('[supabase] insert error', error);
@@ -2538,8 +2603,8 @@
             return null;
           }
 
-          console.log('[supabase] insert ok (no row returned)');
-          return { ok: true };
+          console.log('[supabase] insert ok, id', data && data.id);
+          return { ok: true, id: data && data.id };
         } catch (e) {
           console.error('[supabase] unexpected insert error', e);
           window.alert('Sorry, there was a problem saving this event.');
@@ -3032,7 +3097,56 @@
       const quickAddMemberSelect = document.getElementById('quick-add-member-select');
       const quickAddHelper = document.getElementById('quick-add-helper');
 
+      let lastQuickAddUndo = null;
       let pendingQuickAdd = null;
+
+      const clearQuickAddUndo = function () {
+        if (lastQuickAddUndo && lastQuickAddUndo.timeoutId) {
+          window.clearTimeout(lastQuickAddUndo.timeoutId);
+        }
+        lastQuickAddUndo = null;
+        if (quickAddHelper) {
+          quickAddHelper.textContent = '';
+        }
+      };
+
+      const showQuickAddUndo = function (eventId) {
+        clearQuickAddUndo();
+        if (!quickAddHelper) {
+          return;
+        }
+
+        const container = document.createElement('span');
+        const textNode = document.createElement('span');
+        textNode.textContent = 'Event added.';
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = 'Undo';
+        btn.style.marginLeft = '8px';
+        btn.style.padding = '2px 8px';
+        btn.style.borderRadius = '999px';
+        btn.style.border = '1px solid rgba(0, 0, 0, 0.12)';
+        btn.style.background = '#fff';
+        btn.style.fontSize = '0.72rem';
+        btn.style.cursor = 'pointer';
+
+        btn.addEventListener('click', function () {
+          clearQuickAddUndo();
+          deleteEvent(eventId);
+        });
+
+        container.appendChild(textNode);
+        container.appendChild(btn);
+
+        quickAddHelper.innerHTML = '';
+        quickAddHelper.appendChild(container);
+
+        const timeoutId = window.setTimeout(function () {
+          clearQuickAddUndo();
+        }, 10000);
+
+        lastQuickAddUndo = { id: eventId, timeoutId: timeoutId };
+      };
 
       const resetQuickAddUI = function () {
         pendingQuickAdd = null;
@@ -3093,13 +3207,24 @@
           return;
         }
 
-        const dayKey = parsed.day || todayDayKey;
+        const resolved = resolveRelativeDateFromText(text);
+        let dayKey;
+        let weekKey;
+
+        if (resolved && resolved.dayKey && resolved.weekKey) {
+          dayKey = resolved.dayKey;
+          weekKey = resolved.weekKey;
+        } else {
+          dayKey = parsed.day || todayDayKey;
+          weekKey = currentWeekKey;
+        }
+
         const evt = {
           member: parsed.member,
           day: dayKey,
           title: parsed.title,
           time: parsed.time || '',
-          week_key: currentWeekKey
+          week_key: weekKey
         };
 
         const saved = await insertEventInSupabase(evt);
@@ -3107,8 +3232,22 @@
           return;
         }
 
+        if (weekKey && weekKey !== currentWeekKey) {
+          const newWeekStart = parseWeekKeyToDate(weekKey);
+          if (newWeekStart) {
+            currentWeekStart = newWeekStart;
+            currentWeekKey = weekKey;
+            currentWeekOffset = weeksBetween(baseWeekStart, currentWeekStart);
+            updateWeekLabelAndButtons();
+          }
+        }
+
         resetQuickAddUI();
         await refreshEventsAfterChange();
+
+        if (saved.id != null) {
+          showQuickAddUndo(saved.id);
+        }
       };
 
       if (quickAddForm) {
