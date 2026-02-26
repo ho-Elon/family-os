@@ -86,6 +86,32 @@
       color: #766a5a;
     }
 
+    .week-nav {
+      margin-top: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: #7c5a3a;
+      flex-wrap: wrap;
+    }
+
+    .week-nav-button {
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 193, 140, 0.9);
+      background: rgba(255, 248, 236, 0.95);
+      color: #7c5a3a;
+      font-size: 0.78rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .week-nav-button:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+
     .legend {
       display: flex;
       flex-wrap: wrap;
@@ -240,6 +266,11 @@
       gap: 4px;
       font-size: 0.76rem;
       color: #5e5246;
+    }
+
+    .day-cell-inner.is-today {
+      box-shadow: 0 0 0 2px rgba(245, 185, 143, 0.9);
+      border-color: rgba(245, 185, 143, 0.9);
     }
 
     .day-cell-inner.has-event {
@@ -534,6 +565,10 @@
       <div class="title-block">
         <div class="title">Leng Family — Week of <span id="week-label">[current date]</span></div>
         <div class="subtitle">A cosy snapshot of this week together.</div>
+        <div class="week-nav" aria-label="Select week">
+          <button type="button" id="week-prev" class="week-nav-button">‹ Previous</button>
+          <button type="button" id="week-next" class="week-nav-button">Next ›</button>
+        </div>
       </div>
 
       <div class="legend" aria-label="Family member colours">
@@ -568,13 +603,13 @@
       <!-- Desktop / tablet grid -->
       <div class="calendar-header-row" aria-hidden="true">
         <div class="calendar-header-cell">Family</div>
+        <div class="calendar-header-cell">Sun</div>
         <div class="calendar-header-cell">Mon</div>
         <div class="calendar-header-cell">Tue</div>
         <div class="calendar-header-cell">Wed</div>
         <div class="calendar-header-cell">Thu</div>
         <div class="calendar-header-cell">Fri</div>
         <div class="calendar-header-cell">Sat</div>
-        <div class="calendar-header-cell">Sun</div>
       </div>
 
       <div class="calendar-body">
@@ -588,12 +623,15 @@
             </span>
           </div>
 
-          <!-- Desktop: day by day -->
+          <!-- Desktop: day by day, Sunday to Saturday -->
+          <div class="day-cell" data-day="sun">
+            <div class="day-cell-inner">
+              <div class="day-label">Sun</div>
+            </div>
+          </div>
           <div class="day-cell" data-day="mon">
-            <div class="day-cell-inner papa has-event">
+            <div class="day-cell-inner">
               <div class="day-label">Mon</div>
-              <div class="event-title">Meetings all day</div>
-              <div class="event-note">Back-to-back calls and planning.</div>
             </div>
           </div>
           <div class="day-cell" data-day="tue">
@@ -607,10 +645,8 @@
             </div>
           </div>
           <div class="day-cell" data-day="thu">
-            <div class="day-cell-inner papa has-event">
+            <div class="day-cell-inner">
               <div class="day-label">Thu</div>
-              <div class="event-title">Dinner with CJ</div>
-              <div class="event-time">Crystal Jade Takashimaya · 7:00pm</div>
             </div>
           </div>
           <div class="day-cell" data-day="fri">
@@ -619,19 +655,8 @@
             </div>
           </div>
           <div class="day-cell" data-day="sat">
-            <div class="day-cell-inner has-event papa">
-              <div class="day-label">Sat</div>
-              <div class="everyone-tag">
-                <span class="everyone-tag-dot"></span>
-                <span>Everyone</span>
-              </div>
-              <div class="event-title">Family dinner at home</div>
-              <div class="event-time">7:00pm</div>
-            </div>
-          </div>
-          <div class="day-cell" data-day="sun">
             <div class="day-cell-inner">
-              <div class="day-label">Sun</div>
+              <div class="day-label">Sat</div>
             </div>
           </div>
         </article>
@@ -646,6 +671,11 @@
             </span>
           </div>
 
+          <div class="day-cell" data-day="sun">
+            <div class="day-cell-inner">
+              <div class="day-label">Sun</div>
+            </div>
+          </div>
           <div class="day-cell" data-day="mon">
             <div class="day-cell-inner">
               <div class="day-label">Mon</div>
@@ -657,10 +687,8 @@
             </div>
           </div>
           <div class="day-cell" data-day="wed">
-            <div class="day-cell-inner mimi has-event">
+            <div class="day-cell-inner">
               <div class="day-label">Wed</div>
-              <div class="event-title">Lunch with friends</div>
-              <div class="event-time">12:00pm</div>
             </div>
           </div>
           <div class="day-cell" data-day="thu">
@@ -674,19 +702,8 @@
             </div>
           </div>
           <div class="day-cell" data-day="sat">
-            <div class="day-cell-inner mimi has-event">
-              <div class="day-label">Sat</div>
-              <div class="everyone-tag">
-                <span class="everyone-tag-dot"></span>
-                <span>Everyone</span>
-              </div>
-              <div class="event-title">Family dinner at home</div>
-              <div class="event-time">7:00pm</div>
-            </div>
-          </div>
-          <div class="day-cell" data-day="sun">
             <div class="day-cell-inner">
-              <div class="day-label">Sun</div>
+              <div class="day-label">Sat</div>
             </div>
           </div>
         </article>
@@ -701,6 +718,11 @@
             </span>
           </div>
 
+          <div class="day-cell" data-day="sun">
+            <div class="day-cell-inner">
+              <div class="day-label">Sun</div>
+            </div>
+          </div>
           <div class="day-cell" data-day="mon">
             <div class="day-cell-inner">
               <div class="day-label">Mon</div>
@@ -727,19 +749,8 @@
             </div>
           </div>
           <div class="day-cell" data-day="sat">
-            <div class="day-cell-inner has-event mahmah">
-              <div class="day-label">Sat</div>
-              <div class="everyone-tag">
-                <span class="everyone-tag-dot"></span>
-                <span>Everyone</span>
-              </div>
-              <div class="event-title">Family dinner at home</div>
-              <div class="event-time">7:00pm</div>
-            </div>
-          </div>
-          <div class="day-cell" data-day="sun">
             <div class="day-cell-inner">
-              <div class="day-label">Sun</div>
+              <div class="day-label">Sat</div>
             </div>
           </div>
         </article>
@@ -753,6 +764,11 @@
             </span>
           </div>
 
+          <div class="day-cell" data-day="sun">
+            <div class="day-cell-inner">
+              <div class="day-label">Sun</div>
+            </div>
+          </div>
           <div class="day-cell" data-day="mon">
             <div class="day-cell-inner">
               <div class="day-label">Mon</div>
@@ -779,21 +795,8 @@
             </div>
           </div>
           <div class="day-cell" data-day="sat">
-            <div class="day-cell-inner has-event xiao">
+            <div class="day-cell-inner">
               <div class="day-label">Sat</div>
-              <div class="everyone-tag">
-                <span class="everyone-tag-dot"></span>
-                <span>Everyone</span>
-              </div>
-              <div class="event-title">Family dinner at home</div>
-              <div class="event-time">7:00pm</div>
-            </div>
-          </div>
-          <div class="day-cell" data-day="sun">
-            <div class="day-cell-inner xiao has-event">
-              <div class="day-label">Sun</div>
-              <div class="event-title">Football with friends</div>
-              <div class="event-time">Afternoon</div>
             </div>
           </div>
         </article>
@@ -807,6 +810,11 @@
             </span>
           </div>
 
+          <div class="day-cell" data-day="sun">
+            <div class="day-cell-inner">
+              <div class="day-label">Sun</div>
+            </div>
+          </div>
           <div class="day-cell" data-day="mon">
             <div class="day-cell-inner">
               <div class="day-label">Mon</div>
@@ -833,19 +841,8 @@
             </div>
           </div>
           <div class="day-cell" data-day="sat">
-            <div class="day-cell-inner han has-event">
-              <div class="day-label">Sat</div>
-              <div class="everyone-tag">
-                <span class="everyone-tag-dot"></span>
-                <span>Everyone</span>
-              </div>
-              <div class="event-title">Family dinner at home</div>
-              <div class="event-time">7:00pm</div>
-            </div>
-          </div>
-          <div class="day-cell" data-day="sun">
             <div class="day-cell-inner">
-              <div class="day-label">Sun</div>
+              <div class="day-label">Sat</div>
             </div>
           </div>
         </article>
@@ -859,6 +856,11 @@
             </span>
           </div>
 
+          <div class="day-cell" data-day="sun">
+            <div class="day-cell-inner">
+              <div class="day-label">Sun</div>
+            </div>
+          </div>
           <div class="day-cell" data-day="mon">
             <div class="day-cell-inner">
               <div class="day-label">Mon</div>
@@ -885,19 +887,8 @@
             </div>
           </div>
           <div class="day-cell" data-day="sat">
-            <div class="day-cell-inner jue has-event">
-              <div class="day-label">Sat</div>
-              <div class="everyone-tag">
-                <span class="everyone-tag-dot"></span>
-                <span>Everyone</span>
-              </div>
-              <div class="event-title">Family dinner at home</div>
-              <div class="event-time">7:00pm</div>
-            </div>
-          </div>
-          <div class="day-cell" data-day="sun">
             <div class="day-cell-inner">
-              <div class="day-label">Sun</div>
+              <div class="day-label">Sat</div>
             </div>
           </div>
         </article>
@@ -908,20 +899,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
   <script>
-    (function () {
-      const now = new Date();
-      const day = now.getDay(); // 0 (Sun) - 6 (Sat)
-      const diffToMonday = (day === 0 ? -6 : 1) - day;
-      const monday = new Date(now);
-      monday.setDate(now.getDate() + diffToMonday);
-
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      const label = monday.toLocaleDateString(undefined, options);
-
-      const el = document.getElementById('week-label');
-      if (el) el.textContent = label;
-    })();
-
     (async function () {
       const PASSWORD = 'leng2026';
       const SUPABASE_URL = 'https://bdvqzrhwwdeuqxkephze.supabase.co';
@@ -940,6 +917,81 @@
       console.log('[supabase] client initialised', supabaseClient);
 
       const body = document.body;
+
+      // Week + today logic (Sunday–Saturday)
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const getSundayOfWeek = function (date) {
+        const d = new Date(date);
+        const day = d.getDay(); // 0 (Sun) - 6 (Sat)
+        d.setDate(d.getDate() - day); // go back to Sunday
+        d.setHours(0, 0, 0, 0);
+        return d;
+      };
+
+      const dayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+      const todayDayKey = dayKeys[today.getDay()];
+      const baseWeekStart = getSundayOfWeek(today);
+
+      let currentWeekOffset = 0; // 0 = this week, -1 = previous, 1/2 = weeks ahead
+      let currentWeekStart = new Date(baseWeekStart);
+      let currentWeekKey = '';
+
+      const formatWeekKey = function (date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return y + '-' + m + '-' + d; // e.g. "2026-03-01"
+      };
+
+      const weekLabelEl = document.getElementById('week-label');
+      const prevWeekBtn = document.getElementById('week-prev');
+      const nextWeekBtn = document.getElementById('week-next');
+
+      const clearTodayHighlights = function () {
+        const inners = document.querySelectorAll('.day-cell-inner');
+        Array.prototype.forEach.call(inners, function (inner) {
+          inner.classList.remove('is-today');
+        });
+      };
+
+      const syncWeekState = function () {
+        currentWeekStart = new Date(baseWeekStart);
+        currentWeekStart.setDate(baseWeekStart.getDate() + currentWeekOffset * 7);
+        currentWeekStart.setHours(0, 0, 0, 0);
+        currentWeekKey = formatWeekKey(currentWeekStart);
+      };
+
+      const updateTodayHighlights = function () {
+        clearTodayHighlights();
+        const thisWeekStart = getSundayOfWeek(today);
+        if (currentWeekStart.getTime() !== thisWeekStart.getTime()) {
+          return;
+        }
+
+        const cells = document.querySelectorAll('.day-cell[data-day="' + todayDayKey + '"]');
+        Array.prototype.forEach.call(cells, function (cell) {
+          const inner = cell.querySelector('.day-cell-inner');
+          if (inner) {
+            inner.classList.add('is-today');
+          }
+        });
+      };
+
+      const updateWeekLabelAndButtons = function () {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        if (weekLabelEl) {
+          weekLabelEl.textContent = currentWeekStart.toLocaleDateString(undefined, options);
+        }
+        if (prevWeekBtn) {
+          prevWeekBtn.disabled = currentWeekOffset <= -1;
+        }
+        if (nextWeekBtn) {
+          nextWeekBtn.disabled = currentWeekOffset >= 2;
+        }
+        updateTodayHighlights();
+      };
 
       const memberRows = Array.prototype.slice.call(
         document.querySelectorAll('.member-row')
@@ -970,6 +1022,8 @@
         }
       };
 
+      const MEMBER_CLASSES = ['papa', 'mimi', 'mahmah', 'xiao', 'han', 'jue'];
+
       const findCellInner = function (memberName, dayKey) {
         const member = members.find(function (m) {
           return m.name === memberName;
@@ -983,19 +1037,30 @@
       var events = [];
       var editingId = null;
 
-      const fetchEventsFromSupabase = async function () {
+      const fetchEventsFromSupabase = async function (weekKey) {
+        const keyToUse = weekKey || currentWeekKey;
+        if (!keyToUse) {
+          console.warn('[supabase] fetchEventsFromSupabase called without a week key');
+          return [];
+        }
+
         try {
-          console.log('[supabase] fetching events...');
-          const { data, error } = await supabaseClient
+          console.log('[supabase] fetching events for week', keyToUse);
+          const baseQuery = supabaseClient
             .from('events')
-            .select('id, member, day, title, time')
-            .order('created_at', { ascending: true });
+            .select('id, member, day, title, time, week_key')
+            .eq('week_key', keyToUse);
+
+          const { data, error } = await baseQuery.order('created_at', { ascending: true });
 
           if (error) {
             console.error('[supabase] error loading events (ordered by created_at)', error);
             console.log('[supabase] retrying fetch without created_at order...');
 
-            const retry = await supabaseClient.from('events').select('id, member, day, title, time');
+            const retry = await supabaseClient
+              .from('events')
+              .select('id, member, day, title, time, week_key')
+              .eq('week_key', keyToUse);
             if (retry.error) {
               console.error('[supabase] error loading events (no order)', retry.error);
               return [];
@@ -1009,12 +1074,22 @@
             return Array.isArray(retry.data) ? retry.data : [];
           }
 
-          console.log('[supabase] fetched events count', Array.isArray(data) ? data.length : 0, data);
+          console.log(
+            '[supabase] fetched events count for week',
+            keyToUse,
+            Array.isArray(data) ? data.length : 0,
+            data
+          );
           return Array.isArray(data) ? data : [];
         } catch (e) {
           console.error('Unexpected error loading events from Supabase', e);
           return [];
         }
+      };
+
+      const loadEventsForCurrentWeek = async function () {
+        events = await fetchEventsFromSupabase(currentWeekKey);
+        renderEvents();
       };
 
       const insertEventInSupabase = async function (evt) {
@@ -1023,7 +1098,8 @@
             member: evt.member,
             day: evt.day,
             title: evt.title,
-            time: evt.time || null
+            time: evt.time || null,
+            week_key: evt.week_key
           };
 
           console.log('[supabase] inserting event payload', payload);
@@ -1050,7 +1126,8 @@
             member: evt.member,
             day: evt.day,
             title: evt.title,
-            time: evt.time || null
+            time: evt.time || null,
+            week_key: evt.week_key
           };
 
           console.log('[supabase] updating event id', evt.id, 'payload', payload);
@@ -1100,6 +1177,10 @@
       const clearRenderedDynamicEvents = function () {
         const inners = document.querySelectorAll('.day-cell-inner');
         Array.prototype.forEach.call(inners, function (inner) {
+          inner.classList.remove('has-event');
+          MEMBER_CLASSES.forEach(function (cls) {
+            inner.classList.remove(cls);
+          });
           const dynamic = inner.querySelectorAll('.event-card-dynamic');
           Array.prototype.forEach.call(dynamic, function (node) {
             node.parentNode.removeChild(node);
@@ -1168,6 +1249,27 @@
         }
         renderEvents();
       };
+
+      // Week navigation handlers
+      if (prevWeekBtn) {
+        prevWeekBtn.addEventListener('click', async function () {
+          if (currentWeekOffset <= -1) return;
+          currentWeekOffset -= 1;
+          syncWeekState();
+          updateWeekLabelAndButtons();
+          await loadEventsForCurrentWeek();
+        });
+      }
+
+      if (nextWeekBtn) {
+        nextWeekBtn.addEventListener('click', async function () {
+          if (currentWeekOffset >= 2) return;
+          currentWeekOffset += 1;
+          syncWeekState();
+          updateWeekLabelAndButtons();
+          await loadEventsForCurrentWeek();
+        });
+      }
 
       // Admin UI
       const adminToggle = document.createElement('button');
@@ -1305,7 +1407,8 @@
               member: member,
               day: day,
               title: title,
-              time: time
+              time: time,
+              week_key: existing.week_key || currentWeekKey
             };
 
             savedEvent = await updateEventInSupabase(updated);
@@ -1313,13 +1416,14 @@
               return;
             }
 
-            events = await fetchEventsFromSupabase();
+            events = await fetchEventsFromSupabase(currentWeekKey);
           } else {
             const toInsert = {
               member: member,
               day: day,
               title: title,
-              time: time
+              time: time,
+              week_key: currentWeekKey
             };
 
             savedEvent = await insertEventInSupabase(toInsert);
@@ -1327,7 +1431,7 @@
               return;
             }
 
-            events = await fetchEventsFromSupabase();
+            events = await fetchEventsFromSupabase(currentWeekKey);
           }
 
           renderEvents();
@@ -1342,8 +1446,9 @@
       }
 
       // initial load
-      events = await fetchEventsFromSupabase();
-      renderEvents();
+      syncWeekState();
+      updateWeekLabelAndButtons();
+      await loadEventsForCurrentWeek();
     })();
   </script>
 </body>
