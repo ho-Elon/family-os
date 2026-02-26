@@ -1136,6 +1136,7 @@
     }
 
     .event-pill {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -1737,6 +1738,7 @@
   </nav>
   <!-- UMD build so `window.supabase` is available -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chrono-node@2/dist/chrono.min.js"></script>
 
   <script>
     (async function () {
@@ -2097,65 +2099,39 @@
         return result;
       };
 
+      // Use Chrono.js for natural language date parsing (relative to today).
+      // Always prefer future dates for day-of-week references.
       const resolveRelativeDateFromText = function (rawText) {
-        if (!rawText) return null;
-        const tokens = rawText.trim().split(/\s+/);
-        if (!tokens.length) return null;
-
-        const cleaned = tokens.map(function (t) {
-          return t.replace(/[.,!?;:]/g, '').toLowerCase();
-        });
-
-        var targetDate = null;
-
-        if (cleaned.indexOf('tomorrow') !== -1) {
-          targetDate = new Date(today);
-          targetDate.setDate(today.getDate() + 1);
-        } else if (cleaned.indexOf('today') !== -1) {
-          targetDate = new Date(today);
-        } else {
-          for (var i = 0; i < cleaned.length - 1; i += 1) {
-            if (cleaned[i] === 'next') {
-              var nextWord = cleaned[i + 1];
-              if (DAY_ALIASES.hasOwnProperty(nextWord)) {
-                var canonical = DAY_ALIASES[nextWord];
-                var targetDow = dayKeys.indexOf(canonical);
-                if (targetDow !== -1) {
-                  targetDate = new Date(today);
-                  var todayDow = today.getDay();
-                  var daysAhead = (targetDow - todayDow + 7) % 7;
-                  if (daysAhead === 0) {
-                    daysAhead = 7;
-                  }
-                  targetDate.setDate(today.getDate() + daysAhead);
-                  break;
-                }
-              }
-            }
-          }
-
-          if (!targetDate) {
-            var weekendIndex = cleaned.indexOf('weekend');
-            var thisIndex = cleaned.indexOf('this');
-            if (
-              weekendIndex !== -1 &&
-              (thisIndex === -1 || thisIndex <= weekendIndex)
-            ) {
-              targetDate = new Date(today);
-              var todayDow2 = today.getDay();
-              var targetDow2 = 6; // Saturday
-              var daysAhead2 = (targetDow2 - todayDow2 + 7) % 7;
-              targetDate.setDate(today.getDate() + daysAhead2);
-            }
+        if (!rawText || typeof rawText !== 'string') return null;
+        var ref = new Date();
+        ref.setHours(0, 0, 0, 0);
+        var chrono = window.chrono || (typeof chrono !== 'undefined' ? chrono : null);
+        if (chrono && typeof chrono.parseDate === 'function') {
+          var parsedDate = chrono.parseDate(rawText, ref, { forwardDate: true });
+          if (parsedDate) {
+            var targetDate = new Date(parsedDate);
+            targetDate.setHours(0, 0, 0, 0);
+            var wkStart = getSundayOfWeek(targetDate);
+            var weekKey = formatWeekKey(wkStart);
+            var dayKey = dayKeys[targetDate.getDay()];
+            return { weekKey: weekKey, dayKey: dayKey };
           }
         }
+        return null;
+      };
 
-        if (!targetDate) return null;
+      // When only a day-of-week is given (e.g. "Sunday"), return next occurrence from today.
+      const getNextOccurrenceOfDay = function (dayKey) {
+        var targetDow = dayKeys.indexOf(dayKey);
+        if (targetDow === -1) return null;
+        var todayDow = today.getDay();
+        var daysAhead = (targetDow - todayDow + 7) % 7;
+        if (daysAhead === 0) daysAhead = 7;
+        var targetDate = new Date(today);
+        targetDate.setDate(today.getDate() + daysAhead);
         targetDate.setHours(0, 0, 0, 0);
         var wkStart = getSundayOfWeek(targetDate);
-        var weekKey = formatWeekKey(wkStart);
-        var dayKey = dayKeys[targetDate.getDay()];
-        return { weekKey: weekKey, dayKey: dayKey };
+        return { weekKey: formatWeekKey(wkStart), dayKey: dayKeys[targetDate.getDay()] };
       };
 
       const parseWeekKeyToDate = function (key) {
@@ -2404,6 +2380,18 @@
 
             pill.appendChild(main);
             pill.appendChild(badge);
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.type = 'button';
+            deleteBtn.className = 'event-delete';
+            deleteBtn.setAttribute('aria-label', 'Delete event');
+            deleteBtn.textContent = '×';
+            deleteBtn.addEventListener('click', function (e) {
+              e.stopPropagation();
+              deleteEvent(evt.id);
+            });
+            pill.appendChild(deleteBtn);
+
             dayDetailBodyEl.appendChild(pill);
           });
       };
@@ -2745,6 +2733,11 @@
           clearForm();
         }
         renderEvents();
+        if (currentView === 'month') {
+          await loadMonthEvents();
+          renderMonthDots();
+          renderDayDetail(selectedDate);
+        }
       };
 
       // Week navigation handlers
@@ -3208,14 +3201,23 @@
         }
 
         const resolved = resolveRelativeDateFromText(text);
-        let dayKey;
-        let weekKey;
+        var dayKey;
+        var weekKey;
 
         if (resolved && resolved.dayKey && resolved.weekKey) {
           dayKey = resolved.dayKey;
           weekKey = resolved.weekKey;
+        } else if (parsed.day) {
+          var nextOccurrence = getNextOccurrenceOfDay(parsed.day);
+          if (nextOccurrence) {
+            dayKey = nextOccurrence.dayKey;
+            weekKey = nextOccurrence.weekKey;
+          } else {
+            dayKey = parsed.day;
+            weekKey = currentWeekKey;
+          }
         } else {
-          dayKey = parsed.day || todayDayKey;
+          dayKey = todayDayKey;
           weekKey = currentWeekKey;
         }
 
