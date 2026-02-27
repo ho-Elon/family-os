@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Leng Family — Calendar</title>
+  <title>Leng Family OS</title>
   <style>
     :root {
       --bg: #fff9f3;
@@ -487,6 +487,9 @@
       opacity: 0.85;
       backdrop-filter: blur(10px);
     }
+    @media (max-width: 720px) {
+      .admin-toggle { bottom: 80px; }
+    }
 
     .admin-toggle:hover {
       opacity: 1;
@@ -507,6 +510,9 @@
       font-size: 0.78rem;
       color: var(--text-main);
       display: none;
+    }
+    @media (max-width: 720px) {
+      .admin-panel { bottom: 120px; }
     }
 
     .admin-panel.is-open {
@@ -623,110 +629,6 @@
       background: linear-gradient(135deg, rgba(76, 175, 80, 0.18), rgba(255, 255, 255, 0.98));
       box-shadow: 0 4px 10px rgba(76, 175, 80, 0.2);
       transform: translateY(-1px);
-    }
-
-    .admin-quote-btn {
-      width: 100%;
-      padding: 7px 10px;
-      margin-top: 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(158, 117, 225, 0.6);
-      background: linear-gradient(135deg, rgba(158, 117, 225, 0.08), rgba(255, 255, 255, 0.95));
-      color: #6b46c1;
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 0.76rem;
-      transition: all 0.15s ease;
-    }
-
-    .admin-quote-btn:hover {
-      background: linear-gradient(135deg, rgba(158, 117, 225, 0.18), rgba(255, 255, 255, 0.98));
-      box-shadow: 0 4px 10px rgba(158, 117, 225, 0.2);
-      transform: translateY(-1px);
-    }
-
-    .quote-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 10000;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .quote-modal.is-open {
-      display: flex;
-    }
-
-    .quote-content {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      max-width: 500px;
-      width: 90%;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-    }
-
-    .quote-content h3 {
-      margin: 0 0 15px 0;
-      color: #6b46c1;
-    }
-
-    .quote-preview {
-      background: rgba(158, 117, 225, 0.08);
-      border-left: 4px solid #6b46c1;
-      padding: 15px;
-      margin: 15px 0;
-      border-radius: 4px;
-      white-space: pre-wrap;
-      font-size: 0.9rem;
-      line-height: 1.5;
-    }
-
-    .quote-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .quote-actions button {
-      flex: 1;
-      padding: 10px;
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 0.85rem;
-      transition: all 0.15s ease;
-    }
-
-    .quote-send-btn {
-      background: linear-gradient(135deg, rgba(76, 175, 80, 0.9), rgba(56, 142, 60, 0.9));
-      color: white;
-    }
-
-    .quote-send-btn:hover {
-      background: linear-gradient(135deg, rgba(76, 175, 80, 1), rgba(56, 142, 60, 1));
-      transform: translateY(-1px);
-    }
-
-    .quote-close-btn {
-      background: #e0e0e0;
-      color: #666;
-    }
-
-    .quote-close-btn:hover {
-      background: #d0d0d0;
-    }
-
-    .quote-loading {
-      text-align: center;
-      padding: 20px;
-      color: #6b46c1;
     }
 
     .event-card-dynamic {
@@ -1516,6 +1418,98 @@
         display: none;
       }
     }
+    /* ===== HOME VIEW ===== */
+    .home-container { padding: 8px 0; }
+    .home-greeting { font-size: 1.5rem; font-weight: 780; color: #2b2432; line-height: 1.2; }
+    .home-date { font-size: 0.88rem; color: #766a5a; margin-top: 4px; }
+    .home-cards { margin-top: 18px; display: flex; flex-direction: column; gap: 12px; }
+    .home-card {
+      padding: 16px; border-radius: 16px;
+      background: linear-gradient(135deg, rgba(255, 248, 236, 0.95), rgba(255, 255, 255, 0.98));
+      border: 1px solid var(--border-soft); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    }
+    .home-card-label {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.12em; color: #8b7458; margin-bottom: 8px;
+    }
+    .home-card-content { font-size: 0.92rem; color: #5a4f45; line-height: 1.45; }
+    .home-card-quote {
+      background: linear-gradient(135deg, rgba(33, 74, 137, 0.06), rgba(255, 248, 236, 0.95));
+      border-left: 4px solid var(--papa);
+    }
+    .home-family-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .home-family-member {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.86rem; font-weight: 600; color: #5a4f45;
+    }
+
+    /* ===== QUOTES VIEW ===== */
+    .quotes-container { padding: 8px 0; }
+    .quotes-header { margin-bottom: 18px; }
+    .quotes-title { font-size: 1.4rem; font-weight: 780; color: #2b2432; }
+    .quotes-subtitle { font-size: 0.84rem; color: #766a5a; margin-top: 4px; }
+    .quote-card {
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(33, 74, 137, 0.05), rgba(255, 248, 236, 0.96));
+      border: 1px solid var(--border-soft); padding: 24px 20px;
+      min-height: 160px; display: flex; align-items: center; justify-content: center;
+    }
+    .quote-placeholder { text-align: center; color: #9a8b7a; font-size: 0.92rem; line-height: 1.5; }
+    .quote-placeholder-icon { font-size: 2.4rem; margin-bottom: 10px; }
+    .quote-content { width: 100%; }
+    .quote-text { font-size: 1.18rem; font-weight: 600; line-height: 1.55; color: #2b2432; font-style: italic; }
+    .quote-meaning { margin-top: 10px; font-size: 0.92rem; color: #5a4f45; line-height: 1.45; }
+    .quote-author { margin-top: 14px; font-size: 0.86rem; color: #766a5a; font-weight: 500; }
+    .quote-actions { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 10px; }
+    .quote-generate-btn { flex: 1; min-width: 180px; justify-content: center; }
+    .quote-share-btn {
+      flex: 0 0 auto;
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.12), rgba(255, 255, 255, 0.95));
+      border-color: rgba(76, 175, 80, 0.6); color: #2d5a2e;
+    }
+    .quote-share-btn:hover {
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.18), rgba(255, 255, 255, 0.98));
+      box-shadow: 0 4px 10px rgba(76, 175, 80, 0.2);
+    }
+    .quote-copy-btn { flex: 0 0 auto; }
+    .quote-generate-btn.is-loading { opacity: 0.7; pointer-events: none; }
+    .quote-history-label {
+      margin-top: 24px; font-size: 0.72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.12em; color: #8b7458; margin-bottom: 10px;
+    }
+    .quote-history { display: flex; flex-direction: column; gap: 10px; }
+    .quote-history-item {
+      padding: 12px 14px; border-radius: 14px;
+      background: rgba(255, 255, 255, 0.85); border: 1px solid rgba(0, 0, 0, 0.04);
+      font-size: 0.86rem; color: #5a4f45; line-height: 1.4;
+    }
+    .quote-history-item .quote-hist-date { font-size: 0.72rem; color: #9a8b7a; margin-top: 6px; }
+
+    /* ===== SETTINGS VIEW ===== */
+    .settings-container { padding: 8px 0; }
+    .settings-title { font-size: 1.4rem; font-weight: 780; color: #2b2432; margin-bottom: 18px; }
+    .settings-group { margin-bottom: 18px; }
+    .settings-group-label {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.12em; color: #8b7458; margin-bottom: 8px; padding-left: 4px;
+    }
+    .settings-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px; border-radius: 14px;
+      background: rgba(255, 255, 255, 0.85); border: 1px solid rgba(0, 0, 0, 0.04);
+      font-size: 0.92rem; font-weight: 550; color: #5a4f45;
+      cursor: pointer; transition: background 0.15s ease;
+      font-family: inherit; width: 100%; text-align: left;
+    }
+    button.settings-row { border: 1px solid rgba(255, 193, 140, 0.5); }
+    button.settings-row:hover { background: rgba(255, 248, 236, 0.95); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06); }
+    .settings-row-info { cursor: default; }
+    .settings-row-arrow { font-size: 1.2rem; color: #b09273; }
+    .settings-badge {
+      font-size: 0.7rem; font-weight: 700; padding: 3px 10px;
+      border-radius: 999px; background: rgba(245, 185, 143, 0.25); color: #8b7458;
+    }
+    .settings-row-detail { font-size: 0.8rem; color: #9a8b7a; font-weight: 400; }
   </style>
 </head>
 <body>
@@ -1957,12 +1951,104 @@
       </div>
       </section>
     </section>
+
+    <!-- ===== HOME VIEW ===== -->
+    <section id="home-view" class="view-shell" aria-label="Home">
+      <div class="home-container">
+        <div class="home-greeting" id="home-greeting">Good morning, Leng Family</div>
+        <div class="home-date" id="home-date"></div>
+        <div class="home-cards">
+          <div class="home-card home-card-quote" id="home-quote-card">
+            <div class="home-card-label">Today's Quote</div>
+            <div class="home-card-content" id="home-quote-preview">Tap Quotes tab to generate today's inspiration</div>
+          </div>
+          <div class="home-card home-card-events">
+            <div class="home-card-label">Today's Events</div>
+            <div class="home-card-content" id="home-today-events">Loading...</div>
+          </div>
+          <div class="home-card home-card-family">
+            <div class="home-card-label">Family</div>
+            <div class="home-family-grid">
+              <div class="home-family-member"><span class="member-pill member-papa"></span><span>Papa</span></div>
+              <div class="home-family-member"><span class="member-pill member-mimi"></span><span>Mimi</span></div>
+              <div class="home-family-member"><span class="member-pill member-mahmah"></span><span>Mahmah</span></div>
+              <div class="home-family-member"><span class="member-pill member-xiao"></span><span>Xiao</span></div>
+              <div class="home-family-member"><span class="member-pill member-han"></span><span>Han</span></div>
+              <div class="home-family-member"><span class="member-pill member-jue"></span><span>Jue</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== QUOTES VIEW ===== -->
+    <section id="quotes-view" class="view-shell" aria-label="Daily Quote">
+      <div class="quotes-container">
+        <div class="quotes-header">
+          <div class="quotes-title">Daily Family Quote</div>
+          <div class="quotes-subtitle">Powered by Claude AI — share with the family on WhatsApp</div>
+        </div>
+        <div class="quote-card" id="quote-card">
+          <div class="quote-placeholder" id="quote-placeholder">
+            <div class="quote-placeholder-icon">💬</div>
+            <div>Tap the button below to generate today's inspirational quote for the Leng family</div>
+          </div>
+          <div class="quote-content" id="quote-content" style="display:none;">
+            <div class="quote-text" id="quote-text"></div>
+            <div class="quote-meaning" id="quote-meaning"></div>
+            <div class="quote-author" id="quote-author"></div>
+          </div>
+        </div>
+        <div class="quote-actions">
+          <button type="button" id="generate-quote-btn" class="btn btn-primary quote-generate-btn">✨ Generate Today's Quote</button>
+          <button type="button" id="share-quote-btn" class="btn quote-share-btn" style="display:none;">📱 Send to Family WhatsApp</button>
+          <button type="button" id="copy-quote-btn" class="btn quote-copy-btn" style="display:none;">📋 Copy</button>
+        </div>
+        <div class="quote-history-label" id="quote-history-label" style="display:none;">Recent Quotes</div>
+        <div class="quote-history" id="quote-history"></div>
+      </div>
+    </section>
+
+    <!-- ===== SETTINGS VIEW ===== -->
+    <section id="settings-view" class="view-shell" aria-label="Settings">
+      <div class="settings-container">
+        <div class="settings-title">Settings</div>
+        <div class="settings-group">
+          <div class="settings-group-label">Admin</div>
+          <button type="button" id="settings-admin-btn" class="settings-row">
+            <span>🔐 Admin Mode</span>
+            <span class="settings-row-arrow">›</span>
+          </button>
+        </div>
+        <div class="settings-group">
+          <div class="settings-group-label">Calendar</div>
+          <div class="settings-row settings-row-info">
+            <span>📅 Google Calendar Sync (Jue)</span>
+            <span class="settings-badge">Coming Soon</span>
+          </div>
+        </div>
+        <div class="settings-group">
+          <div class="settings-group-label">Trading</div>
+          <div class="settings-row settings-row-info">
+            <span>📊 Morning General Briefing</span>
+            <span class="settings-badge">Coming Soon</span>
+          </div>
+        </div>
+        <div class="settings-group">
+          <div class="settings-group-label">About</div>
+          <div class="settings-row settings-row-info">
+            <span>Leng Family OS v1.0</span>
+            <span class="settings-row-detail">Built with ❤️ by Papa</span>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
   <nav class="bottom-nav" aria-label="Bottom navigation">
-    <button type="button" id="bottom-month" class="is-active"><span>📅 Month</span></button>
-    <button type="button" id="bottom-week"><span>📆 Week</span></button>
-    <button type="button" id="bottom-add"><span>➕ Add</span></button>
-    <button type="button" id="bottom-admin"><span>👤 Admin</span></button>
+    <button type="button" id="bottom-home"><span>🏠 Home</span></button>
+    <button type="button" id="bottom-calendar" class="is-active"><span>📅 Calendar</span></button>
+    <button type="button" id="bottom-quotes"><span>💬 Quotes</span></button>
+    <button type="button" id="bottom-settings"><span>⚙️ Settings</span></button>
   </nav>
   <!-- UMD build so `window.supabase` is available -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -2032,12 +2118,66 @@
       const dayDetailBodyEl = document.getElementById('day-detail-body');
       const monthAddBtn = document.getElementById('month-add');
 
-      const bottomMonthBtn = document.getElementById('bottom-month');
-      const bottomWeekBtn = document.getElementById('bottom-week');
-      const bottomAddBtn = document.getElementById('bottom-add');
-      const bottomAdminBtn = document.getElementById('bottom-admin');
+      const bottomHomeBtn = document.getElementById('bottom-home');
+      const bottomCalendarBtn = document.getElementById('bottom-calendar');
+      const bottomQuotesBtn = document.getElementById('bottom-quotes');
+      const bottomSettingsBtn = document.getElementById('bottom-settings');
+      const homeViewEl = document.getElementById('home-view');
+      const quotesViewEl = document.getElementById('quotes-view');
+      const settingsViewEl = document.getElementById('settings-view');
 
       let currentView = 'month'; // 'month' | 'week'
+      let currentPage = 'calendar'; // 'home' | 'calendar' | 'quotes' | 'settings'
+
+      const setPage = function (page) {
+        currentPage = page;
+        if (homeViewEl) homeViewEl.classList.remove('is-active');
+        if (monthViewEl) monthViewEl.classList.remove('is-active');
+        if (weekViewEl) weekViewEl.classList.remove('is-active');
+        if (quotesViewEl) quotesViewEl.classList.remove('is-active');
+        if (settingsViewEl) settingsViewEl.classList.remove('is-active');
+
+        var topbar = document.querySelector('.topbar');
+        var quickAdd = document.querySelector('.quick-add');
+        if (topbar) topbar.style.display = (page === 'calendar') ? '' : 'none';
+        if (quickAdd) quickAdd.style.display = (page === 'calendar') ? '' : 'none';
+
+        if (page === 'home') {
+          if (homeViewEl) homeViewEl.classList.add('is-active');
+          updateHomeView();
+        } else if (page === 'calendar') {
+          if (currentView === 'week') {
+            if (weekViewEl) weekViewEl.classList.add('is-active');
+          } else {
+            if (monthViewEl) monthViewEl.classList.add('is-active');
+          }
+        } else if (page === 'quotes') {
+          if (quotesViewEl) quotesViewEl.classList.add('is-active');
+        } else if (page === 'settings') {
+          if (settingsViewEl) settingsViewEl.classList.add('is-active');
+        }
+
+        if (bottomHomeBtn) bottomHomeBtn.classList.toggle('is-active', page === 'home');
+        if (bottomCalendarBtn) bottomCalendarBtn.classList.toggle('is-active', page === 'calendar');
+        if (bottomQuotesBtn) bottomQuotesBtn.classList.toggle('is-active', page === 'quotes');
+        if (bottomSettingsBtn) bottomSettingsBtn.classList.toggle('is-active', page === 'settings');
+      };
+
+      const setView = function (view) {
+        currentView = view === 'week' ? 'week' : 'month';
+        if (monthViewEl) monthViewEl.classList.toggle('is-active', currentView === 'month' && currentPage === 'calendar');
+        if (weekViewEl) weekViewEl.classList.toggle('is-active', currentView === 'week' && currentPage === 'calendar');
+        if (toggleMonthBtn) {
+          toggleMonthBtn.classList.toggle('is-active', currentView === 'month');
+          toggleMonthBtn.setAttribute('aria-selected', currentView === 'month' ? 'true' : 'false');
+        }
+        if (toggleWeekBtn) {
+          toggleWeekBtn.classList.toggle('is-active', currentView === 'week');
+          toggleWeekBtn.setAttribute('aria-selected', currentView === 'week' ? 'true' : 'false');
+        }
+        updateNavTitle();
+      };
+
       let currentMonthAnchor = new Date(today.getFullYear(), today.getMonth(), 1);
       let selectedDate = new Date(today);
 
@@ -2069,27 +2209,6 @@
         } else {
           navTitleEl.textContent = formatMonthTitle(currentMonthAnchor);
         }
-      };
-
-      const setView = function (view) {
-        currentView = view === 'week' ? 'week' : 'month';
-
-        if (monthViewEl) monthViewEl.classList.toggle('is-active', currentView === 'month');
-        if (weekViewEl) weekViewEl.classList.toggle('is-active', currentView === 'week');
-
-        if (toggleMonthBtn) {
-          toggleMonthBtn.classList.toggle('is-active', currentView === 'month');
-          toggleMonthBtn.setAttribute('aria-selected', currentView === 'month' ? 'true' : 'false');
-        }
-        if (toggleWeekBtn) {
-          toggleWeekBtn.classList.toggle('is-active', currentView === 'week');
-          toggleWeekBtn.setAttribute('aria-selected', currentView === 'week' ? 'true' : 'false');
-        }
-
-        if (bottomMonthBtn) bottomMonthBtn.classList.toggle('is-active', currentView === 'month');
-        if (bottomWeekBtn) bottomWeekBtn.classList.toggle('is-active', currentView === 'week');
-
-        updateNavTitle();
       };
 
       const clearTodayHighlights = function () {
@@ -3164,18 +3283,8 @@
         '<button type="button" class="admin-logout">Logout</button>' +
         '</div>' +
         '<button type="button" id="send-billy-btn" class="admin-billy-btn">📱 Send to Billy (WhatsApp)</button>' +
-        '<button type="button" id="daily-quote-btn" class="admin-quote-btn">📖 Daily Quote</button>' +
         '<div class="admin-hint">Tip: click an event (in admin mode) to edit it.</div>';
       body.appendChild(adminPanel);
-
-      const quoteModal = document.createElement('div');
-      quoteModal.className = 'quote-modal';
-      quoteModal.innerHTML =
-        '<div class="quote-content">' +
-        '<h3>📖 Daily Quote</h3>' +
-        '<div id="quote-preview-container"></div>' +
-        '</div>';
-      body.appendChild(quoteModal);
 
       const memberSelect = adminPanel.querySelector('#admin-member');
       const daySelect = adminPanel.querySelector('#admin-day');
@@ -3367,12 +3476,11 @@
           openAddForSelectedDate();
         });
       }
-      if (bottomAddBtn) {
-        bottomAddBtn.addEventListener('click', function () {
-          if (quickAddInput) {
-            quickAddInput.focus();
-            quickAddInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
+      // Settings admin button
+      var settingsAdminBtn = document.getElementById('settings-admin-btn');
+      if (settingsAdminBtn) {
+        settingsAdminBtn.addEventListener('click', function () {
+          requireLogin();
         });
       }
 
@@ -3388,21 +3496,29 @@
           await loadEventsForCurrentWeek();
         });
       }
-      if (bottomMonthBtn) {
-        bottomMonthBtn.addEventListener('click', async function () {
-          setView('month');
-          await renderMonth();
+      if (bottomHomeBtn) {
+        bottomHomeBtn.addEventListener('click', function () {
+          setPage('home');
         });
       }
-      if (bottomWeekBtn) {
-        bottomWeekBtn.addEventListener('click', async function () {
-          setView('week');
-          await loadEventsForCurrentWeek();
+      if (bottomCalendarBtn) {
+        bottomCalendarBtn.addEventListener('click', async function () {
+          setPage('calendar');
+          if (currentView === 'month') {
+            await renderMonth();
+          } else {
+            await loadEventsForCurrentWeek();
+          }
         });
       }
-      if (bottomAdminBtn) {
-        bottomAdminBtn.addEventListener('click', function () {
-          requireLogin();
+      if (bottomQuotesBtn) {
+        bottomQuotesBtn.addEventListener('click', function () {
+          setPage('quotes');
+        });
+      }
+      if (bottomSettingsBtn) {
+        bottomSettingsBtn.addEventListener('click', function () {
+          setPage('settings');
         });
       }
 
@@ -3711,84 +3827,158 @@
         });
       }
 
-      // Daily Quote functionality
-      const dailyQuoteBtn = document.getElementById('daily-quote-btn');
-      const quotePreviewContainer = document.getElementById('quote-preview-container');
-      let currentQuote = '';
+      // ===== HOME VIEW =====
+      var lastGeneratedQuote = null;
 
-      if (dailyQuoteBtn && quoteModal && quotePreviewContainer) {
-        dailyQuoteBtn.addEventListener('click', async function () {
-          quoteModal.classList.add('is-open');
-          quotePreviewContainer.innerHTML = '<div class="quote-loading">Generating quote...</div>';
+      const updateHomeView = function () {
+        var greetEl = document.getElementById('home-greeting');
+        var dateEl = document.getElementById('home-date');
+        var eventsEl = document.getElementById('home-today-events');
+
+        if (greetEl) {
+          var hour = new Date().getHours();
+          var greeting = 'Good evening';
+          if (hour < 12) greeting = 'Good morning';
+          else if (hour < 18) greeting = 'Good afternoon';
+          greetEl.textContent = greeting + ', Leng Family';
+        }
+        if (dateEl) {
+          dateEl.textContent = new Date().toLocaleDateString(undefined, {
+            weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+          });
+        }
+        if (eventsEl) {
+          var todayKey = formatDateKey(today);
+          var todayEvts = monthEventsByDateKey[todayKey] || [];
+          if (todayEvts.length === 0) {
+            eventsEl.textContent = 'No events today — enjoy the day!';
+          } else {
+            eventsEl.innerHTML = '';
+            todayEvts.slice().sort(function (a, b) {
+              return (a.time || '').localeCompare(b.time || '');
+            }).forEach(function (evt) {
+              var div = document.createElement('div');
+              div.style.cssText = 'padding:4px 0;font-size:0.88rem;';
+              div.textContent = (evt.time ? evt.time + ' — ' : '') + evt.member + ': ' + evt.title;
+              eventsEl.appendChild(div);
+            });
+          }
+        }
+        var previewEl = document.getElementById('home-quote-preview');
+        if (previewEl && lastGeneratedQuote) {
+          previewEl.textContent = '"' + lastGeneratedQuote.text.substring(0, 80) + (lastGeneratedQuote.text.length > 80 ? '...' : '') + '"';
+        }
+      };
+
+      // ===== QUOTES LOGIC =====
+      var quoteHistory = [];
+      var generateQuoteBtn = document.getElementById('generate-quote-btn');
+      var shareQuoteBtn = document.getElementById('share-quote-btn');
+      var copyQuoteBtn = document.getElementById('copy-quote-btn');
+      var quoteTextEl = document.getElementById('quote-text');
+      var quoteMeaningEl = document.getElementById('quote-meaning');
+      var quoteAuthorEl = document.getElementById('quote-author');
+      var quotePlaceholder = document.getElementById('quote-placeholder');
+      var quoteContentEl = document.getElementById('quote-content');
+      var quoteHistoryEl = document.getElementById('quote-history');
+      var quoteHistoryLabel = document.getElementById('quote-history-label');
+
+      var showQuote = function (text, meaning, author) {
+        if (quotePlaceholder) quotePlaceholder.style.display = 'none';
+        if (quoteContentEl) quoteContentEl.style.display = '';
+        if (quoteTextEl) quoteTextEl.textContent = '"' + text + '"';
+        if (quoteMeaningEl) quoteMeaningEl.textContent = meaning || '';
+        if (quoteAuthorEl) quoteAuthorEl.textContent = author ? '— ' + author : '';
+        if (shareQuoteBtn) shareQuoteBtn.style.display = '';
+        if (copyQuoteBtn) copyQuoteBtn.style.display = '';
+        lastGeneratedQuote = { text: text, meaning: meaning || '', author: author || '' };
+      };
+
+      var addToHistory = function (text, meaning, author) {
+        var now = new Date().toLocaleString(undefined, {
+          month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
+        });
+        quoteHistory.unshift({ text: text, meaning: meaning, author: author, date: now });
+        if (quoteHistory.length > 5) quoteHistory.pop();
+        renderQuoteHistory();
+      };
+
+      var renderQuoteHistory = function () {
+        if (!quoteHistoryEl) return;
+        quoteHistoryEl.innerHTML = '';
+        if (quoteHistory.length === 0) return;
+        if (quoteHistoryLabel) quoteHistoryLabel.style.display = '';
+        quoteHistory.forEach(function (q) {
+          var item = document.createElement('div');
+          item.className = 'quote-history-item';
+          item.innerHTML = '<div>"' + q.text.substring(0, 100) + (q.text.length > 100 ? '...' : '') + '"</div>' +
+            (q.author ? '<div style="font-size:0.78rem;color:#766a5a;margin-top:2px;">— ' + q.author + '</div>' : '') +
+            '<div class="quote-hist-date">' + q.date + '</div>';
+          quoteHistoryEl.appendChild(item);
+        });
+      };
+
+      if (generateQuoteBtn) {
+        generateQuoteBtn.addEventListener('click', async function () {
+          generateQuoteBtn.classList.add('is-loading');
+          generateQuoteBtn.textContent = '✨ Generating...';
 
           try {
-            const apiKey = 'sk-ant-api03-YOUR_API_KEY_HERE';
-            const response = await fetch('https://api.anthropic.com/v1/messages', {
+            var response = await fetch('/api/quote', {
               method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'x-api-key': apiKey,
-                'anthropic-version': '2023-06-01'
-              },
+              headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
-                model: 'claude-haiku-4-5-20251001',
-                max_tokens: 1024,
-                messages: [{
-                  role: 'user',
-                  content: 'Generate an inspiring quote for teenagers with a 2 sentence explanation of why it matters. Format: QUOTE: [quote] — [author]\nMEANING: [explanation]'
-                }]
+                family: 'Leng',
+                members: ['Papa (Hoelon)', 'Mimi (Hsin)', 'Mahmah (Fly)', 'Xiao (21)', 'Han (19)', 'Jue (16)']
               })
             });
 
-            if (!response.ok) {
-              throw new Error('API request failed: ' + response.status);
-            }
+            if (!response.ok) throw new Error('API error: ' + response.status);
 
-            const data = await response.json();
-            currentQuote = data.content[0].text;
-
-            quotePreviewContainer.innerHTML =
-              '<div class="quote-preview">' + currentQuote + '</div>' +
-              '<div class="quote-actions">' +
-              '<button type="button" class="quote-send-btn">📱 Send to Family</button>' +
-              '<button type="button" class="quote-close-btn">Close</button>' +
-              '</div>';
-
-            const sendBtn = quotePreviewContainer.querySelector('.quote-send-btn');
-            const closeBtn = quotePreviewContainer.querySelector('.quote-close-btn');
-
-            if (sendBtn) {
-              sendBtn.addEventListener('click', function () {
-                const message = 'Good morning Leng family! 🌅\n' + currentQuote + '\n— Papa';
-                const whatsappUrl = 'https://wa.me/6597887908?text=' + encodeURIComponent(message);
-                window.open(whatsappUrl, '_blank');
-              });
-            }
-
-            if (closeBtn) {
-              closeBtn.addEventListener('click', function () {
-                quoteModal.classList.remove('is-open');
-              });
-            }
-          } catch (error) {
-            quotePreviewContainer.innerHTML =
-              '<div class="quote-preview">Error: ' + error.message + '</div>' +
-              '<div class="quote-actions">' +
-              '<button type="button" class="quote-close-btn">Close</button>' +
-              '</div>';
-
-            const closeBtn = quotePreviewContainer.querySelector('.quote-close-btn');
-            if (closeBtn) {
-              closeBtn.addEventListener('click', function () {
-                quoteModal.classList.remove('is-open');
-              });
-            }
+            var data = await response.json();
+            showQuote(data.quote || '', data.meaning || '', data.author || '');
+            addToHistory(data.quote || '', data.meaning || '', data.author || '');
+          } catch (err) {
+            console.error('[quotes] Error generating quote:', err);
+            var fallbacks = [
+              { text: 'The love of a family is life\'s greatest blessing.', meaning: 'No matter what happens in the world, family love is the foundation that keeps us strong.', author: 'Eva Burrows' },
+              { text: 'In family life, love is the oil that eases friction.', meaning: 'When we lead with love, even disagreements become opportunities to grow closer.', author: 'Friedrich Nietzsche' },
+              { text: 'The family is one of nature\'s masterpieces.', meaning: 'Each family is unique and beautiful — cherish what makes yours special.', author: 'George Santayana' }
+            ];
+            var fb = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+            showQuote(fb.text, fb.meaning, fb.author);
+            addToHistory(fb.text, fb.meaning, fb.author);
+          } finally {
+            generateQuoteBtn.classList.remove('is-loading');
+            generateQuoteBtn.textContent = '✨ Generate Another Quote';
           }
         });
+      }
 
-        quoteModal.addEventListener('click', function (e) {
-          if (e.target === quoteModal) {
-            quoteModal.classList.remove('is-open');
+      if (shareQuoteBtn) {
+        shareQuoteBtn.addEventListener('click', function () {
+          if (!lastGeneratedQuote) return;
+          var msg = 'Good morning Leng family! 🌅\n\n"' + lastGeneratedQuote.text + '"' +
+            (lastGeneratedQuote.author ? '\n— ' + lastGeneratedQuote.author : '') +
+            (lastGeneratedQuote.meaning ? '\n\n' + lastGeneratedQuote.meaning : '') +
+            '\n\n— Papa';
+          var whatsappUrl = 'https://wa.me/6597887908?text=' + encodeURIComponent(msg);
+          window.open(whatsappUrl, '_blank');
+        });
+      }
+
+      if (copyQuoteBtn) {
+        copyQuoteBtn.addEventListener('click', async function () {
+          if (!lastGeneratedQuote) return;
+          var msg = '"' + lastGeneratedQuote.text + '"' +
+            (lastGeneratedQuote.author ? '\n— ' + lastGeneratedQuote.author : '') +
+            (lastGeneratedQuote.meaning ? '\n\n' + lastGeneratedQuote.meaning : '');
+          try {
+            await navigator.clipboard.writeText(msg);
+            copyQuoteBtn.textContent = '✓ Copied!';
+            setTimeout(function () { copyQuoteBtn.textContent = '📋 Copy'; }, 2000);
+          } catch (e) {
+            window.prompt('Copy this quote:', msg);
           }
         });
       }
@@ -3799,6 +3989,7 @@
       await loadEventsForCurrentWeek();
       clearDayDetail();
       setView('month');
+      setPage('calendar');
       await renderMonth();
     })();
   </script>
