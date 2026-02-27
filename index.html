@@ -604,12 +604,33 @@
       margin-top: 2px;
     }
 
+    .admin-billy-btn {
+      width: 100%;
+      padding: 7px 10px;
+      margin-top: 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(76, 175, 80, 0.6);
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.12), rgba(255, 255, 255, 0.95));
+      color: #2d5a2e;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: inherit;
+      font-size: 0.76rem;
+      transition: all 0.15s ease;
+    }
+
+    .admin-billy-btn:hover {
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.18), rgba(255, 255, 255, 0.98));
+      box-shadow: 0 4px 10px rgba(76, 175, 80, 0.2);
+      transform: translateY(-1px);
+    }
+
     .event-card-dynamic {
       margin-top: 4px;
       padding: 6px 10px 7px;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.98);
-      border-left: 3px solid rgba(0, 0, 0, 0.06);
+      border-left: 4px solid rgba(0, 0, 0, 0.06);
       border-top: 1px solid rgba(0, 0, 0, 0.02);
       position: relative;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
@@ -621,6 +642,14 @@
 
     .event-card-dynamic .event-title {
       padding-right: 18px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .recurring-symbol {
+      font-size: 0.9em;
+      opacity: 0.75;
     }
 
     .event-delete {
@@ -686,6 +715,21 @@
     .day-cell[data-day="sat"],
     .day-cell[data-day="sun"] {
       background: rgba(255, 247, 235, 0.9);
+    }
+
+    /* Today column highlight in week view */
+    .day-cell.is-today-column {
+      background: rgba(255, 242, 225, 0.95) !important;
+    }
+
+    .calendar-header-cell.is-today-column {
+      background: rgba(255, 235, 210, 0.85);
+    }
+
+    .calendar-header-cell.is-today-column .day-header-date {
+      font-weight: 900;
+      color: var(--accent);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
 
     .day-label {
@@ -759,6 +803,7 @@
       display: flex;
       align-items: stretch;
       gap: 6px;
+      position: relative;
     }
 
     .quick-add-input {
@@ -770,6 +815,42 @@
       font-family: inherit;
       background: rgba(255, 255, 255, 0.96);
       color: inherit;
+    }
+
+    .quick-add-voice {
+      flex: 0 0 auto;
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 193, 140, 0.7);
+      background: rgba(255, 248, 236, 0.96);
+      color: #7c5a3a;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    .quick-add-voice:hover {
+      background: rgba(255, 242, 225, 0.95);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .quick-add-voice.is-listening {
+      background: #ff6b6b;
+      color: white;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
     }
 
     .quick-add-send {
@@ -1083,6 +1164,37 @@
       min-height: 14px;
     }
 
+    .month-event-titles {
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 0.7rem;
+    }
+
+    .month-event-item {
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .month-event-item.papa { color: var(--papa); }
+    .month-event-item.mimi { color: var(--mimi); }
+    .month-event-item.mahmah { color: var(--mahmah); }
+    .month-event-item.xiao { color: var(--xiao); }
+    .month-event-item.han { color: var(--han); }
+    .month-event-item.jue { color: var(--jue); }
+
+    .month-event-more {
+      font-size: 0.68rem;
+      color: #9a8b7a;
+      font-weight: 500;
+    }
+
     .dot {
       width: 9px;
       height: 9px;
@@ -1231,8 +1343,8 @@
       bottom: 12px;
       z-index: 18;
       display: none;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
       padding: 10px;
       border-radius: 18px;
       background: rgba(255, 255, 255, 0.9);
@@ -1248,12 +1360,13 @@
       background: rgba(255, 248, 236, 0.96);
       font-family: inherit;
       font-weight: 850;
+      font-size: 0.8rem;
       color: #5a3d1f;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.01em;
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -1288,6 +1401,15 @@
       }
       .page {
         padding-bottom: 84px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .bottom-nav button {
+        font-size: 1.1rem;
+      }
+      .bottom-nav button span {
+        display: none;
       }
     }
   </style>
@@ -1329,6 +1451,7 @@
           placeholder="Add event... e.g. Xiao football Saturday 3pm"
           autocomplete="off"
         />
+        <button type="button" id="voice-btn" class="quick-add-voice" aria-label="Voice input">🎤</button>
         <button type="submit" class="quick-add-send">Send</button>
       </form>
       <div class="quick-add-member" id="quick-add-member-row" style="display: none;">
@@ -1732,9 +1855,10 @@
     </section>
   </main>
   <nav class="bottom-nav" aria-label="Bottom navigation">
-    <button type="button" id="bottom-month" class="is-active">Month</button>
-    <button type="button" id="bottom-week">Week</button>
-    <button type="button" id="bottom-add">Add Event</button>
+    <button type="button" id="bottom-month" class="is-active"><span>📅 Month</span></button>
+    <button type="button" id="bottom-week"><span>📆 Week</span></button>
+    <button type="button" id="bottom-add"><span>➕ Add</span></button>
+    <button type="button" id="bottom-admin"><span>👤 Admin</span></button>
   </nav>
   <!-- UMD build so `window.supabase` is available -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -1807,6 +1931,7 @@
       const bottomMonthBtn = document.getElementById('bottom-month');
       const bottomWeekBtn = document.getElementById('bottom-week');
       const bottomAddBtn = document.getElementById('bottom-add');
+      const bottomAdminBtn = document.getElementById('bottom-admin');
 
       let currentView = 'month'; // 'month' | 'week'
       let currentMonthAnchor = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -1868,9 +1993,14 @@
         Array.prototype.forEach.call(inners, function (inner) {
           inner.classList.remove('is-today');
         });
+        const cells = document.querySelectorAll('.day-cell');
+        Array.prototype.forEach.call(cells, function (cell) {
+          cell.classList.remove('is-today-column');
+        });
         const headerCells = document.querySelectorAll('.calendar-header-cell');
         Array.prototype.forEach.call(headerCells, function (cell) {
           cell.classList.remove('is-today');
+          cell.classList.remove('is-today-column');
         });
       };
 
@@ -1935,6 +2065,7 @@
           if (inner) {
             inner.classList.add('is-today');
           }
+          cell.classList.add('is-today-column');
         });
 
         const headerCell = document.querySelector(
@@ -1942,6 +2073,7 @@
         );
         if (headerCell) {
           headerCell.classList.add('is-today');
+          headerCell.classList.add('is-today-column');
         }
       };
 
@@ -2368,6 +2500,9 @@
             const title = document.createElement('div');
             title.className = 'event-pill-title';
             title.textContent = evt.title;
+            if (evt.recurring === true) {
+              title.textContent += ' ∞';
+            }
             main.appendChild(title);
 
             const meta = document.createElement('div');
@@ -2412,10 +2547,14 @@
         Array.prototype.forEach.call(nodes, function (node) {
           const key = node.getAttribute('data-date') || '';
           const dotsWrap = node.querySelector('.month-dots');
+          const titlesWrap = node.querySelector('.month-event-titles');
           if (!dotsWrap) return;
 
           dotsWrap.innerHTML = '';
+          if (titlesWrap) titlesWrap.innerHTML = '';
+
           const dayEvents = Array.isArray(monthEventsByDateKey[key]) ? monthEventsByDateKey[key] : [];
+          
           const memberKeys = {};
           dayEvents.forEach(function (evt) {
             const mk = evt.__memberKey || memberKeyForName(evt.member);
@@ -2427,24 +2566,81 @@
             dot.setAttribute('aria-label', mk);
             dotsWrap.appendChild(dot);
           });
+
+          if (titlesWrap && dayEvents.length > 0) {
+            const sorted = dayEvents.slice().sort(function (a, b) {
+              const ta = (a.time || '').toLowerCase();
+              const tb = (b.time || '').toLowerCase();
+              if (ta < tb) return -1;
+              if (ta > tb) return 1;
+              return String(a.title || '').localeCompare(String(b.title || ''));
+            });
+
+            const toShow = sorted.slice(0, 2);
+            toShow.forEach(function (evt) {
+              const item = document.createElement('div');
+              item.className = 'month-event-item';
+              const mk = evt.__memberKey || memberKeyForName(evt.member);
+              if (mk) item.classList.add(mk);
+              item.textContent = evt.title + (evt.recurring === true ? ' ∞' : '');
+              titlesWrap.appendChild(item);
+            });
+
+            if (sorted.length > 2) {
+              const more = document.createElement('div');
+              more.className = 'month-event-more';
+              more.textContent = '+' + (sorted.length - 2) + ' more';
+              titlesWrap.appendChild(more);
+            }
+          }
         });
       };
 
       const buildMonthEventsIndex = function (weekEventsList) {
         monthEventsByDateKey = {};
+        const range = getMonthGridRange(currentMonthAnchor);
+        
         weekEventsList.forEach(function (evt) {
           if (!evt) return;
-          const weekStart = parseWeekKeyToDate(evt.week_key);
-          if (!weekStart) return;
-          const idx = dayKeys.indexOf(evt.day);
-          if (idx < 0) return;
-          const date = new Date(weekStart);
-          date.setDate(weekStart.getDate() + idx);
-          date.setHours(0, 0, 0, 0);
-          const key = formatDateKey(date);
-          if (!monthEventsByDateKey[key]) monthEventsByDateKey[key] = [];
+          const isRecurring = evt.recurring === true;
+          const dayIdx = dayKeys.indexOf(evt.day);
+          if (dayIdx < 0) return;
+          
           evt.__memberKey = memberKeyForName(evt.member);
-          monthEventsByDateKey[key].push(evt);
+          
+          if (!isRecurring) {
+            const weekStart = parseWeekKeyToDate(evt.week_key);
+            if (!weekStart) return;
+            const date = new Date(weekStart);
+            date.setDate(weekStart.getDate() + dayIdx);
+            date.setHours(0, 0, 0, 0);
+            const key = formatDateKey(date);
+            if (!monthEventsByDateKey[key]) monthEventsByDateKey[key] = [];
+            monthEventsByDateKey[key].push(evt);
+          } else {
+            const eventWeekStart = parseWeekKeyToDate(evt.week_key);
+            if (!eventWeekStart) return;
+            
+            const cursor = new Date(range.start);
+            cursor.setHours(0, 0, 0, 0);
+            
+            while (cursor.getTime() <= range.end.getTime()) {
+              if (cursor.getDay() === dayIdx) {
+                const cursorWeekStart = getSundayOfWeek(cursor);
+                if (eventAppliesToWeek(evt, cursorWeekStart, formatWeekKey(cursorWeekStart))) {
+                  const key = formatDateKey(cursor);
+                  if (!monthEventsByDateKey[key]) monthEventsByDateKey[key] = [];
+                  const exists = monthEventsByDateKey[key].some(function (e) {
+                    return e.id === evt.id;
+                  });
+                  if (!exists) {
+                    monthEventsByDateKey[key].push(evt);
+                  }
+                }
+              }
+              cursor.setDate(cursor.getDate() + 1);
+            }
+          }
         });
       };
 
@@ -2534,8 +2730,12 @@
           dots.className = 'month-dots';
           dots.setAttribute('aria-label', 'Event indicators');
 
+          const titles = document.createElement('div');
+          titles.className = 'month-event-titles';
+
           cell.appendChild(top);
           cell.appendChild(dots);
+          cell.appendChild(titles);
 
           cell.addEventListener('click', function (e) {
             const target = e.currentTarget;
@@ -2693,6 +2893,13 @@
           const titleEl = document.createElement('div');
           titleEl.className = 'event-title';
           titleEl.textContent = evt.title;
+          if (evt.recurring === true) {
+            const recurSymbol = document.createElement('span');
+            recurSymbol.className = 'recurring-symbol';
+            recurSymbol.textContent = '∞';
+            recurSymbol.setAttribute('aria-label', 'Recurring event');
+            titleEl.appendChild(recurSymbol);
+          }
           wrapper.appendChild(titleEl);
 
           if (evt.time) {
@@ -2852,6 +3059,7 @@
         '<button type="button" class="admin-save">Save</button>' +
         '<button type="button" class="admin-logout">Logout</button>' +
         '</div>' +
+        '<button type="button" id="send-billy-btn" class="admin-billy-btn">📱 Send to Billy (WhatsApp)</button>' +
         '<div class="admin-hint">Tip: click an event (in admin mode) to edit it.</div>';
       body.appendChild(adminPanel);
 
@@ -3047,7 +3255,10 @@
       }
       if (bottomAddBtn) {
         bottomAddBtn.addEventListener('click', function () {
-          openAddForSelectedDate();
+          if (quickAddInput) {
+            quickAddInput.focus();
+            quickAddInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
         });
       }
 
@@ -3073,6 +3284,11 @@
         bottomWeekBtn.addEventListener('click', async function () {
           setView('week');
           await loadEventsForCurrentWeek();
+        });
+      }
+      if (bottomAdminBtn) {
+        bottomAdminBtn.addEventListener('click', function () {
+          requireLogin();
         });
       }
 
@@ -3268,6 +3484,116 @@
           }
 
           handleQuickAddSubmit();
+        });
+      }
+
+      // Voice input
+      const voiceBtn = document.getElementById('voice-btn');
+      let recognition = null;
+
+      if (voiceBtn) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        
+        if (SpeechRecognition) {
+          recognition = new SpeechRecognition();
+          recognition.lang = 'en-US';
+          recognition.continuous = false;
+          recognition.interimResults = false;
+
+          recognition.onstart = function () {
+            voiceBtn.classList.add('is-listening');
+            voiceBtn.textContent = '🎙️';
+            if (quickAddHelper) {
+              quickAddHelper.textContent = 'Listening...';
+            }
+          };
+
+          recognition.onresult = function (event) {
+            const transcript = event.results[0][0].transcript;
+            if (quickAddInput) {
+              quickAddInput.value = transcript;
+              quickAddInput.focus();
+            }
+          };
+
+          recognition.onerror = function (event) {
+            console.error('Speech recognition error', event.error);
+            if (quickAddHelper) {
+              quickAddHelper.textContent = 'Voice input error: ' + event.error;
+            }
+          };
+
+          recognition.onend = function () {
+            voiceBtn.classList.remove('is-listening');
+            voiceBtn.textContent = '🎤';
+            if (quickAddHelper && quickAddHelper.textContent === 'Listening...') {
+              quickAddHelper.textContent = '';
+            }
+          };
+
+          voiceBtn.addEventListener('click', function () {
+            if (voiceBtn.classList.contains('is-listening')) {
+              recognition.stop();
+            } else {
+              recognition.start();
+            }
+          });
+        } else {
+          voiceBtn.style.display = 'none';
+        }
+      }
+
+      // Send to Billy WhatsApp summary
+      const sendBillyBtn = document.getElementById('send-billy-btn');
+      
+      if (sendBillyBtn) {
+        sendBillyBtn.addEventListener('click', async function () {
+          const weekStart = new Date(currentWeekStart);
+          const weekDates = dayKeys.map(function (_, index) {
+            const d = new Date(weekStart);
+            d.setDate(weekStart.getDate() + index);
+            d.setHours(0, 0, 0, 0);
+            return d;
+          });
+
+          const weekKey = formatWeekKey(weekStart);
+          const weekEvents = await fetchEventsFromSupabase(weekKey);
+
+          const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+          
+          let summary = 'Leng Family - Week of ' + weekStart.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' }) + '\n\n';
+
+          dayKeys.forEach(function (dayKey, index) {
+            const dayName = dayNames[index];
+            const date = weekDates[index];
+            const dateStr = date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+            
+            const dayEvts = weekEvents.filter(function (evt) {
+              return evt.day === dayKey;
+            }).sort(function (a, b) {
+              const ta = (a.time || '').toLowerCase();
+              const tb = (b.time || '').toLowerCase();
+              if (ta < tb) return -1;
+              if (ta > tb) return 1;
+              return String(a.title || '').localeCompare(String(b.title || ''));
+            });
+
+            summary += dayName + ' (' + dateStr + '):\n';
+            
+            if (dayEvts.length === 0) {
+              summary += '  (no events)\n';
+            } else {
+              dayEvts.forEach(function (evt) {
+                const time = evt.time ? evt.time + ' - ' : '';
+                const recur = evt.recurring === true ? ' (recurring)' : '';
+                summary += '  • ' + time + evt.member + ': ' + evt.title + recur + '\n';
+              });
+            }
+            summary += '\n';
+          });
+
+          const whatsappUrl = 'https://wa.me/6591234567?text=' + encodeURIComponent(summary);
+          window.open(whatsappUrl, '_blank');
         });
       }
 
