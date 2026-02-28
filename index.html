@@ -2199,35 +2199,45 @@
           </button>
         </div>
         <div class="settings-group">
-          <div class="settings-group-label">School Holidays -- Tanglin Trust (Jue)</div>
+          <div class="settings-group-label">School Holidays -- Tanglin Trust (Jue) 2025/26</div>
           <div class="settings-row settings-row-info" style="flex-direction:column;align-items:flex-start;gap:6px;cursor:default;">
-            <div style="font-size:0.84rem;line-height:1.5;color:#5a4f45;">
-              <strong>Term 2:</strong> 6 Jan -- 21 Mar 2026<br>
-              <strong>Spring Break:</strong> 22 Mar -- 5 Apr 2026<br>
-              <strong>Term 3:</strong> 6 Apr -- 19 Jun 2026<br>
-              <strong>Summer Break:</strong> 20 Jun -- 10 Aug 2026<br>
-              <strong>Term 4:</strong> 11 Aug -- 11 Dec 2026
+            <div style="font-size:0.84rem;line-height:1.7;color:#5a4f45;">
+              <strong>Term 2:</strong> 5 Jan -- 20 Mar 2026<br>
+              &nbsp;&nbsp;&nbsp;Half-term: 16 -- 20 Feb (+ CNY 17-18 Feb)<br>
+              <strong>Easter Break:</strong> 23 Mar -- 5 Apr<br>
+              <strong>Term 3:</strong> 6 Apr -- 26 Jun 2026<br>
+              &nbsp;&nbsp;&nbsp;Half-term: 25 -- 29 May<br>
+              <strong>Summer Break:</strong> 29 Jun -- Aug 2026
             </div>
-            <div style="font-size:0.72rem;color:#9a8b7a;">Verify dates at tanglin.edu.sg</div>
+            <div style="font-size:0.72rem;color:#9a8b7a;">Source: tts.edu.sg/school-life/term-dates</div>
           </div>
         </div>
         <div class="settings-group">
-          <div class="settings-group-label">Meal Planner Setup</div>
-          <div class="settings-row settings-row-info" style="flex-direction:column;align-items:flex-start;gap:6px;cursor:default;">
-            <div style="font-size:0.84rem;line-height:1.5;color:#5a4f45;">
-              To enable Meal Planner, create a <strong>meals</strong> table in Supabase. Go to SQL Editor and run:
+          <div class="settings-group-label">Calendar Sync</div>
+          <button type="button" class="settings-row" onclick="window.open('https://calendar.google.com/calendar/r?cid=webcal%3A%2F%2Fcalendar.tts.edu.sg%2FCalendarSync.ashx%3FCal%3DTanglin%20Trust%20School%20(TTS)%20Calendar%26ID%3D28029','_blank')">
+            <span>Add Tanglin Trust calendar to Google Calendar</span>
+            <span class="settings-row-arrow">&rsaquo;</span>
+          </button>
+          <button type="button" class="settings-row" style="margin-top:6px;" onclick="window.open('webcal://calendar.tts.edu.sg/CalendarSync.ashx?Cal=Tanglin%20Trust%20School%20(TTS)%20Calendar&ID=28029','_blank')">
+            <span>Add Tanglin Trust calendar to Apple Calendar</span>
+            <span class="settings-row-arrow">&rsaquo;</span>
+          </button>
+          <div class="settings-row settings-row-info" style="margin-top:6px;flex-direction:column;align-items:flex-start;gap:4px;cursor:default;">
+            <span style="font-weight:600;">Sync your own calendars to Family OS</span>
+            <div style="font-size:0.78rem;color:#766a5a;line-height:1.5;">
+              To display your Google Calendar or Apple Calendar events here, you need to share your calendar's public URL. Steps:<br>
+              <strong>Google:</strong> Calendar Settings > your calendar > "Integrate" > copy "Public address in iCal format"<br>
+              <strong>Apple:</strong> iCloud Calendar > Share calendar > enable "Public Calendar" > copy URL<br>
+              Then paste the URL below.
             </div>
-            <code style="font-size:0.72rem;background:rgba(0,0,0,0.04);padding:8px 10px;border-radius:8px;display:block;width:100%;white-space:pre-wrap;color:#5a4f45;line-height:1.5;">create table meals (
-  id bigint generated always as identity primary key,
-  week_key text not null,
-  day text not null,
-  meal_type text not null,
-  dish_name text not null,
-  notes text default '',
-  created_at timestamptz default now()
-);
-alter table meals enable row level security;
-create policy "Public access" on meals for all using (true) with check (true);</code>
+            <input type="text" id="ical-url-input" placeholder="Paste your iCal URL here..." style="width:100%;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,193,140,0.5);font-size:0.82rem;font-family:inherit;margin-top:4px;" />
+            <button type="button" id="ical-save-btn" class="btn" style="margin-top:6px;">Save Calendar URL</button>
+          </div>
+        </div>
+        <div class="settings-group">
+          <div class="settings-group-label">Meal Planner</div>
+          <div class="settings-row settings-row-info" id="meals-status-row">
+            <span>Status: checking...</span>
           </div>
         </div>
         <div class="settings-group">
@@ -2244,7 +2254,7 @@ create policy "Public access" on meals for all using (true) with check (true);</
         <div class="settings-group">
           <div class="settings-group-label">About</div>
           <div class="settings-row settings-row-info">
-            <span>Leng Family OS v1.1</span>
+            <span>Leng Family OS v1.2</span>
             <span class="settings-row-detail">Built with love by Papa</span>
           </div>
         </div>
@@ -4537,6 +4547,39 @@ create policy "Public access" on meals for all using (true) with check (true);</
           }
         });
       }
+
+      // ===== ICAL URL SAVE =====
+      var icalUrlInput = document.getElementById('ical-url-input');
+      var icalSaveBtn = document.getElementById('ical-save-btn');
+      var savedIcalUrl = '';
+      try { savedIcalUrl = window.localStorage.getItem('leng_ical_url') || ''; } catch(e) {}
+      if (icalUrlInput && savedIcalUrl) icalUrlInput.value = savedIcalUrl;
+
+      if (icalSaveBtn) {
+        icalSaveBtn.addEventListener('click', function () {
+          var url = icalUrlInput ? icalUrlInput.value.trim() : '';
+          if (!url) { window.alert('Please paste a calendar URL first.'); return; }
+          try { window.localStorage.setItem('leng_ical_url', url); } catch(e) {}
+          icalSaveBtn.textContent = 'Saved!';
+          setTimeout(function () { icalSaveBtn.textContent = 'Save Calendar URL'; }, 2000);
+        });
+      }
+
+      // ===== MEALS STATUS CHECK =====
+      (async function checkMealsTable() {
+        var statusEl = document.getElementById('meals-status-row');
+        if (!statusEl) return;
+        try {
+          var { data, error } = await supabaseClient.from('meals').select('id').limit(1);
+          if (error) {
+            statusEl.innerHTML = '<span style="color:#c0392b;">Meals table not found. Run the SQL setup in Supabase.</span>';
+          } else {
+            statusEl.innerHTML = '<span style="color:#27ae60;">Meals table active</span>';
+          }
+        } catch(e) {
+          statusEl.innerHTML = '<span style="color:#c0392b;">Could not check meals table.</span>';
+        }
+      })();
 
       // initial load
       syncWeekState();
