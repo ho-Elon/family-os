@@ -1348,7 +1348,7 @@
       right: 12px;
       bottom: 12px;
       z-index: 18;
-      display: none;
+      display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 8px;
       padding: 10px;
@@ -1381,6 +1381,20 @@
       box-shadow: 0 10px 18px rgba(245, 185, 143, 0.55);
     }
 
+    /* Desktop: center nav, limit width */
+    @media (min-width: 721px) {
+      .bottom-nav {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        width: 440px;
+        max-width: calc(100% - 24px);
+      }
+      .page {
+        padding-bottom: 84px;
+      }
+    }
+
     @media (max-width: 820px) {
       .brand-subtitle {
         display: none;
@@ -1401,9 +1415,6 @@
       }
       .month-day-label {
         display: inline;
-      }
-      .bottom-nav {
-        display: grid;
       }
       .page {
         padding-bottom: 84px;
@@ -1462,14 +1473,45 @@
     .quote-author { margin-top: 14px; font-size: 0.86rem; color: #766a5a; font-weight: 500; }
     .quote-actions { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 10px; }
     .quote-generate-btn { flex: 1; min-width: 180px; justify-content: center; }
+    .quote-personal {
+      margin-top: 14px; width: 100%;
+    }
+    .quote-personal-label {
+      font-size: 0.76rem; font-weight: 700; color: #8b7458;
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px;
+    }
+    .quote-personal-input {
+      width: 100%; padding: 10px 12px; border-radius: 14px;
+      border: 1px solid rgba(255, 193, 140, 0.5);
+      background: rgba(255, 255, 255, 0.96);
+      font-size: 0.9rem; font-family: inherit; color: #2b2432;
+      resize: vertical; min-height: 60px; line-height: 1.4;
+    }
+    .quote-personal-input::placeholder { color: #b09273; }
+    .quote-personal-input:focus {
+      outline: none; border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(245, 185, 143, 0.25);
+    }
+    .quote-share-row {
+      margin-top: 12px; display: flex; flex-wrap: wrap; gap: 10px;
+    }
     .quote-share-btn {
-      flex: 0 0 auto;
+      flex: 1; min-width: 140px;
       background: linear-gradient(135deg, rgba(76, 175, 80, 0.12), rgba(255, 255, 255, 0.95));
       border-color: rgba(76, 175, 80, 0.6); color: #2d5a2e;
     }
     .quote-share-btn:hover {
       background: linear-gradient(135deg, rgba(76, 175, 80, 0.18), rgba(255, 255, 255, 0.98));
       box-shadow: 0 4px 10px rgba(76, 175, 80, 0.2);
+    }
+    .quote-ig-btn {
+      flex: 1; min-width: 140px;
+      background: linear-gradient(135deg, rgba(193, 53, 132, 0.1), rgba(255, 255, 255, 0.95));
+      border-color: rgba(193, 53, 132, 0.5); color: #8a2c6b;
+    }
+    .quote-ig-btn:hover {
+      background: linear-gradient(135deg, rgba(193, 53, 132, 0.16), rgba(255, 255, 255, 0.98));
+      box-shadow: 0 4px 10px rgba(193, 53, 132, 0.15);
     }
     .quote-copy-btn { flex: 0 0 auto; }
     .quote-generate-btn.is-loading { opacity: 0.7; pointer-events: none; }
@@ -2001,8 +2043,17 @@
         </div>
         <div class="quote-actions">
           <button type="button" id="generate-quote-btn" class="btn btn-primary quote-generate-btn">✨ Generate Today's Quote</button>
-          <button type="button" id="share-quote-btn" class="btn quote-share-btn" style="display:none;">📱 Send to Family WhatsApp</button>
-          <button type="button" id="copy-quote-btn" class="btn quote-copy-btn" style="display:none;">📋 Copy</button>
+        </div>
+
+        <div class="quote-personal" id="quote-personal-section" style="display:none;">
+          <div class="quote-personal-label">Add your personal touch</div>
+          <textarea id="quote-personal-input" class="quote-personal-input" placeholder="e.g. Thinking of all of you today. Have a great week ahead! Love, Papa"></textarea>
+        </div>
+
+        <div class="quote-share-row" id="quote-share-row" style="display:none;">
+          <button type="button" id="share-quote-btn" class="btn quote-share-btn">📱 WhatsApp Family</button>
+          <button type="button" id="ig-quote-btn" class="btn quote-ig-btn">📸 Copy for IG Story</button>
+          <button type="button" id="copy-quote-btn" class="btn quote-copy-btn">📋 Copy</button>
         </div>
         <div class="quote-history-label" id="quote-history-label" style="display:none;">Recent Quotes</div>
         <div class="quote-history" id="quote-history"></div>
@@ -3874,6 +3925,7 @@
       var quoteHistory = [];
       var generateQuoteBtn = document.getElementById('generate-quote-btn');
       var shareQuoteBtn = document.getElementById('share-quote-btn');
+      var igQuoteBtn = document.getElementById('ig-quote-btn');
       var copyQuoteBtn = document.getElementById('copy-quote-btn');
       var quoteTextEl = document.getElementById('quote-text');
       var quoteMeaningEl = document.getElementById('quote-meaning');
@@ -3882,6 +3934,9 @@
       var quoteContentEl = document.getElementById('quote-content');
       var quoteHistoryEl = document.getElementById('quote-history');
       var quoteHistoryLabel = document.getElementById('quote-history-label');
+      var quotePersonalSection = document.getElementById('quote-personal-section');
+      var quotePersonalInput = document.getElementById('quote-personal-input');
+      var quoteShareRow = document.getElementById('quote-share-row');
 
       var showQuote = function (text, meaning, author) {
         if (quotePlaceholder) quotePlaceholder.style.display = 'none';
@@ -3889,8 +3944,8 @@
         if (quoteTextEl) quoteTextEl.textContent = '"' + text + '"';
         if (quoteMeaningEl) quoteMeaningEl.textContent = meaning || '';
         if (quoteAuthorEl) quoteAuthorEl.textContent = author ? '— ' + author : '';
-        if (shareQuoteBtn) shareQuoteBtn.style.display = '';
-        if (copyQuoteBtn) copyQuoteBtn.style.display = '';
+        if (quotePersonalSection) quotePersonalSection.style.display = '';
+        if (quoteShareRow) quoteShareRow.style.display = '';
         lastGeneratedQuote = { text: text, meaning: meaning || '', author: author || '' };
       };
 
@@ -3955,24 +4010,54 @@
         });
       }
 
+      var buildShareMessage = function () {
+        if (!lastGeneratedQuote) return '';
+        var personal = quotePersonalInput ? quotePersonalInput.value.trim() : '';
+        var msg = 'Good morning Leng family! 🌅\n\n"' + lastGeneratedQuote.text + '"' +
+          (lastGeneratedQuote.author ? '\n— ' + lastGeneratedQuote.author : '') +
+          (lastGeneratedQuote.meaning ? '\n\n💡 ' + lastGeneratedQuote.meaning : '');
+        if (personal) {
+          msg += '\n\n💌 ' + personal;
+        }
+        msg += '\n\n— Papa ❤️';
+        return msg;
+      };
+
       if (shareQuoteBtn) {
         shareQuoteBtn.addEventListener('click', function () {
           if (!lastGeneratedQuote) return;
-          var msg = 'Good morning Leng family! 🌅\n\n"' + lastGeneratedQuote.text + '"' +
-            (lastGeneratedQuote.author ? '\n— ' + lastGeneratedQuote.author : '') +
-            (lastGeneratedQuote.meaning ? '\n\n' + lastGeneratedQuote.meaning : '') +
-            '\n\n— Papa';
-          var whatsappUrl = 'https://wa.me/6597887908?text=' + encodeURIComponent(msg);
+          var msg = buildShareMessage();
+          // No number = WhatsApp opens picker, user chooses group or individual
+          var whatsappUrl = 'https://wa.me/?text=' + encodeURIComponent(msg);
           window.open(whatsappUrl, '_blank');
+        });
+      }
+
+      if (igQuoteBtn) {
+        igQuoteBtn.addEventListener('click', async function () {
+          if (!lastGeneratedQuote) return;
+          var personal = quotePersonalInput ? quotePersonalInput.value.trim() : '';
+          var msg = '✨ "' + lastGeneratedQuote.text + '"' +
+            (lastGeneratedQuote.author ? '\n— ' + lastGeneratedQuote.author : '') +
+            (lastGeneratedQuote.meaning ? '\n\n' + lastGeneratedQuote.meaning : '');
+          if (personal) {
+            msg += '\n\n' + personal;
+          }
+          msg += '\n\n#LengFamily #DailyQuote';
+          try {
+            await navigator.clipboard.writeText(msg);
+            igQuoteBtn.textContent = '✓ Copied for IG!';
+            setTimeout(function () { igQuoteBtn.textContent = '📸 Copy for IG Story'; }, 2000);
+          } catch (e) {
+            window.prompt('Copy this for IG:', msg);
+          }
         });
       }
 
       if (copyQuoteBtn) {
         copyQuoteBtn.addEventListener('click', async function () {
           if (!lastGeneratedQuote) return;
-          var msg = '"' + lastGeneratedQuote.text + '"' +
-            (lastGeneratedQuote.author ? '\n— ' + lastGeneratedQuote.author : '') +
-            (lastGeneratedQuote.meaning ? '\n\n' + lastGeneratedQuote.meaning : '');
+          var msg = buildShareMessage();
           try {
             await navigator.clipboard.writeText(msg);
             copyQuoteBtn.textContent = '✓ Copied!';
