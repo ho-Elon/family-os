@@ -1349,7 +1349,7 @@
       bottom: 12px;
       z-index: 18;
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 8px;
       padding: 10px;
       border-radius: 18px;
@@ -1387,7 +1387,7 @@
         left: 50%;
         right: auto;
         transform: translateX(-50%);
-        width: 440px;
+        width: 540px;
         max-width: calc(100% - 24px);
       }
       .page {
@@ -1526,6 +1526,87 @@
       font-size: 0.86rem; color: #5a4f45; line-height: 1.4;
     }
     .quote-history-item .quote-hist-date { font-size: 0.72rem; color: #9a8b7a; margin-top: 6px; }
+
+    /* ===== MEALS VIEW ===== */
+    .meals-container { padding: 8px 0; }
+    .meals-header { margin-bottom: 14px; }
+    .meals-title { font-size: 1.4rem; font-weight: 780; color: #2b2432; }
+    .meals-subtitle { font-size: 0.84rem; color: #766a5a; margin-top: 4px; }
+    .meals-week-nav {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+      padding: 8px 10px; border-radius: 14px;
+      background: linear-gradient(90deg, rgba(255, 240, 225, 0.9), rgba(255, 252, 244, 0.95));
+      border: 1px solid rgba(255, 193, 140, 0.5);
+    }
+    .meals-week-label {
+      flex: 1; text-align: center; font-weight: 780; font-size: 0.94rem; color: #5a3d1f;
+    }
+    .meals-grid {
+      display: grid; grid-template-columns: 1fr; gap: 8px;
+    }
+    .meal-day-card {
+      border-radius: 14px; background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--border-soft); overflow: hidden;
+    }
+    .meal-day-card.is-today {
+      border-color: var(--accent); box-shadow: 0 0 0 2px rgba(245, 185, 143, 0.4);
+    }
+    .meal-day-header {
+      padding: 8px 12px; font-weight: 750; font-size: 0.82rem;
+      letter-spacing: 0.06em; color: #5a3d1f;
+      background: linear-gradient(90deg, rgba(255, 240, 225, 0.7), rgba(255, 252, 244, 0.8));
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    }
+    .meal-day-header .meal-date { font-weight: 500; color: #9a8b7a; margin-left: 6px; font-size: 0.78rem; }
+    .meal-day-body { display: grid; grid-template-columns: 1fr 1fr; }
+    .meal-slot {
+      padding: 10px 12px; cursor: pointer; min-height: 60px;
+      border-right: 1px solid rgba(0, 0, 0, 0.04);
+      transition: background 0.12s ease;
+    }
+    .meal-slot:last-child { border-right: none; }
+    .meal-slot:hover { background: rgba(255, 248, 236, 0.7); }
+    .meal-slot-label {
+      font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: #b09273; margin-bottom: 4px;
+    }
+    .meal-slot-dish {
+      font-size: 0.88rem; font-weight: 600; color: #2b2432; line-height: 1.3;
+    }
+    .meal-slot-notes {
+      font-size: 0.74rem; color: #9a8b7a; margin-top: 2px;
+    }
+    .meal-slot-empty {
+      font-size: 0.82rem; color: #c4b8a8; font-style: italic;
+    }
+    .meals-actions {
+      margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px;
+    }
+    .meal-modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.4); z-index: 100;
+      justify-content: center; align-items: center; padding: 20px;
+    }
+    .meal-modal.is-open { display: flex; }
+    .meal-modal-content {
+      background: #fffaf5; border-radius: 18px; padding: 20px;
+      width: 100%; max-width: 380px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+    .meal-modal-title {
+      font-size: 1.1rem; font-weight: 780; color: #2b2432; margin-bottom: 14px;
+    }
+    .meals-modal-actions {
+      display: flex; gap: 8px; margin-top: 14px;
+    }
+    @media (min-width: 640px) {
+      .meals-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 960px) {
+      .meals-grid { grid-template-columns: repeat(7, 1fr); }
+      .meal-day-body { grid-template-columns: 1fr; }
+      .meal-slot { border-right: none; border-bottom: 1px solid rgba(0, 0, 0, 0.04); }
+      .meal-slot:last-child { border-bottom: none; }
+    }
 
     /* ===== SETTINGS VIEW ===== */
     .settings-container { padding: 8px 0; }
@@ -2052,11 +2133,57 @@
 
         <div class="quote-share-row" id="quote-share-row" style="display:none;">
           <button type="button" id="share-quote-btn" class="btn quote-share-btn">📱 WhatsApp Family</button>
-          <button type="button" id="ig-quote-btn" class="btn quote-ig-btn">📸 Copy for IG Story</button>
+          <button type="button" id="ig-quote-btn" class="btn quote-ig-btn">Copy for IG Story (then paste in IG)</button>
           <button type="button" id="copy-quote-btn" class="btn quote-copy-btn">📋 Copy</button>
         </div>
         <div class="quote-history-label" id="quote-history-label" style="display:none;">Recent Quotes</div>
         <div class="quote-history" id="quote-history"></div>
+      </div>
+    </section>
+
+    <!-- ===== MEALS VIEW ===== -->
+    <section id="meals-view" class="view-shell" aria-label="Meal Planner">
+      <div class="meals-container">
+        <div class="meals-header">
+          <div class="meals-title">Weekly Meal Planner</div>
+          <div class="meals-subtitle">Plan meals for the family — helpers can check this anytime</div>
+        </div>
+
+        <div class="meals-week-nav">
+          <button type="button" id="meals-prev" class="icon-btn" aria-label="Previous week">&#8249;</button>
+          <div id="meals-week-label" class="meals-week-label">This Week</div>
+          <button type="button" id="meals-next" class="icon-btn" aria-label="Next week">&#8250;</button>
+          <button type="button" id="meals-today-btn" class="btn" style="margin-left:8px;">Today</button>
+        </div>
+
+        <div class="meals-grid" id="meals-grid">
+          <!-- Filled by JS -->
+        </div>
+
+        <div class="meals-actions">
+          <button type="button" id="meals-ai-btn" class="btn btn-primary">Suggest Meals (AI)</button>
+          <button type="button" id="meals-share-btn" class="btn quote-share-btn">Send to Helpers (WhatsApp)</button>
+        </div>
+
+        <!-- Add/Edit meal modal -->
+        <div class="meal-modal" id="meal-modal">
+          <div class="meal-modal-content">
+            <div class="meal-modal-title" id="meal-modal-title">Add Meal</div>
+            <div class="admin-row">
+              <label for="meal-dish-input">Dish name</label>
+              <input id="meal-dish-input" type="text" placeholder="e.g. Chicken rice, Laksa, Pasta" />
+            </div>
+            <div class="admin-row">
+              <label for="meal-notes-input">Notes (optional)</label>
+              <input id="meal-notes-input" type="text" placeholder="e.g. No chilli for Jue, extra vegetables" />
+            </div>
+            <div class="meals-modal-actions">
+              <button type="button" id="meal-save-btn" class="btn btn-primary">Save</button>
+              <button type="button" id="meal-delete-btn" class="btn" style="color:#c0392b;">Delete</button>
+              <button type="button" id="meal-cancel-btn" class="btn">Cancel</button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -2067,39 +2194,69 @@
         <div class="settings-group">
           <div class="settings-group-label">Admin</div>
           <button type="button" id="settings-admin-btn" class="settings-row">
-            <span>🔐 Admin Mode</span>
-            <span class="settings-row-arrow">›</span>
+            <span>Admin Mode</span>
+            <span class="settings-row-arrow">&rsaquo;</span>
           </button>
         </div>
         <div class="settings-group">
-          <div class="settings-group-label">Calendar</div>
-          <div class="settings-row settings-row-info">
-            <span>📅 Google Calendar Sync (Jue)</span>
-            <span class="settings-badge">Coming Soon</span>
+          <div class="settings-group-label">School Holidays -- Tanglin Trust (Jue)</div>
+          <div class="settings-row settings-row-info" style="flex-direction:column;align-items:flex-start;gap:6px;cursor:default;">
+            <div style="font-size:0.84rem;line-height:1.5;color:#5a4f45;">
+              <strong>Term 2:</strong> 6 Jan -- 21 Mar 2026<br>
+              <strong>Spring Break:</strong> 22 Mar -- 5 Apr 2026<br>
+              <strong>Term 3:</strong> 6 Apr -- 19 Jun 2026<br>
+              <strong>Summer Break:</strong> 20 Jun -- 10 Aug 2026<br>
+              <strong>Term 4:</strong> 11 Aug -- 11 Dec 2026
+            </div>
+            <div style="font-size:0.72rem;color:#9a8b7a;">Verify dates at tanglin.edu.sg</div>
           </div>
         </div>
         <div class="settings-group">
-          <div class="settings-group-label">Trading</div>
+          <div class="settings-group-label">Meal Planner Setup</div>
+          <div class="settings-row settings-row-info" style="flex-direction:column;align-items:flex-start;gap:6px;cursor:default;">
+            <div style="font-size:0.84rem;line-height:1.5;color:#5a4f45;">
+              To enable Meal Planner, create a <strong>meals</strong> table in Supabase. Go to SQL Editor and run:
+            </div>
+            <code style="font-size:0.72rem;background:rgba(0,0,0,0.04);padding:8px 10px;border-radius:8px;display:block;width:100%;white-space:pre-wrap;color:#5a4f45;line-height:1.5;">create table meals (
+  id bigint generated always as identity primary key,
+  week_key text not null,
+  day text not null,
+  meal_type text not null,
+  dish_name text not null,
+  notes text default '',
+  created_at timestamptz default now()
+);
+alter table meals enable row level security;
+create policy "Public access" on meals for all using (true) with check (true);</code>
+          </div>
+        </div>
+        <div class="settings-group">
+          <div class="settings-group-label">Coming Soon</div>
           <div class="settings-row settings-row-info">
-            <span>📊 Morning General Briefing</span>
+            <span>Google Calendar Sync (Jue)</span>
+            <span class="settings-badge">Coming Soon</span>
+          </div>
+          <div class="settings-row settings-row-info" style="margin-top:6px;">
+            <span>Morning General (FX Briefing)</span>
             <span class="settings-badge">Coming Soon</span>
           </div>
         </div>
         <div class="settings-group">
           <div class="settings-group-label">About</div>
           <div class="settings-row settings-row-info">
-            <span>Leng Family OS v1.0</span>
-            <span class="settings-row-detail">Built with ❤️ by Papa</span>
+            <span>Leng Family OS v1.1</span>
+            <span class="settings-row-detail">Built with love by Papa</span>
           </div>
         </div>
       </div>
     </section>
   </main>
   <nav class="bottom-nav" aria-label="Bottom navigation">
-    <button type="button" id="bottom-home"><span>🏠 Home</span></button>
-    <button type="button" id="bottom-calendar" class="is-active"><span>📅 Calendar</span></button>
-    <button type="button" id="bottom-quotes"><span>💬 Quotes</span></button>
-    <button type="button" id="bottom-settings"><span>⚙️ Settings</span></button>
+    <button type="button" id="bottom-home"><span>Home</span></button>
+    <button type="button" id="bottom-calendar" class="is-active"><span>Calendar</span></button>
+    <button type="button" id="bottom-meals"><span>Meals</span></button>
+    <button type="button" id="bottom-quotes"><span>Quotes</span></button>
+    <button type="button" id="bottom-settings"><span>Settings</span></button>
   </nav>
   <!-- UMD build so `window.supabase` is available -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -2171,20 +2328,23 @@
 
       const bottomHomeBtn = document.getElementById('bottom-home');
       const bottomCalendarBtn = document.getElementById('bottom-calendar');
+      const bottomMealsBtn = document.getElementById('bottom-meals');
       const bottomQuotesBtn = document.getElementById('bottom-quotes');
       const bottomSettingsBtn = document.getElementById('bottom-settings');
       const homeViewEl = document.getElementById('home-view');
       const quotesViewEl = document.getElementById('quotes-view');
+      const mealsViewEl = document.getElementById('meals-view');
       const settingsViewEl = document.getElementById('settings-view');
 
       let currentView = 'month'; // 'month' | 'week'
-      let currentPage = 'calendar'; // 'home' | 'calendar' | 'quotes' | 'settings'
+      let currentPage = 'calendar'; // 'home' | 'calendar' | 'meals' | 'quotes' | 'settings'
 
       const setPage = function (page) {
         currentPage = page;
         if (homeViewEl) homeViewEl.classList.remove('is-active');
         if (monthViewEl) monthViewEl.classList.remove('is-active');
         if (weekViewEl) weekViewEl.classList.remove('is-active');
+        if (mealsViewEl) mealsViewEl.classList.remove('is-active');
         if (quotesViewEl) quotesViewEl.classList.remove('is-active');
         if (settingsViewEl) settingsViewEl.classList.remove('is-active');
 
@@ -2202,6 +2362,9 @@
           } else {
             if (monthViewEl) monthViewEl.classList.add('is-active');
           }
+        } else if (page === 'meals') {
+          if (mealsViewEl) mealsViewEl.classList.add('is-active');
+          renderMealsGrid();
         } else if (page === 'quotes') {
           if (quotesViewEl) quotesViewEl.classList.add('is-active');
         } else if (page === 'settings') {
@@ -2210,6 +2373,7 @@
 
         if (bottomHomeBtn) bottomHomeBtn.classList.toggle('is-active', page === 'home');
         if (bottomCalendarBtn) bottomCalendarBtn.classList.toggle('is-active', page === 'calendar');
+        if (bottomMealsBtn) bottomMealsBtn.classList.toggle('is-active', page === 'meals');
         if (bottomQuotesBtn) bottomQuotesBtn.classList.toggle('is-active', page === 'quotes');
         if (bottomSettingsBtn) bottomSettingsBtn.classList.toggle('is-active', page === 'settings');
       };
@@ -3567,6 +3731,11 @@
           setPage('quotes');
         });
       }
+      if (bottomMealsBtn) {
+        bottomMealsBtn.addEventListener('click', function () {
+          setPage('meals');
+        });
+      }
       if (bottomSettingsBtn) {
         bottomSettingsBtn.addEventListener('click', function () {
           setPage('settings');
@@ -4013,13 +4182,13 @@
       var buildShareMessage = function () {
         if (!lastGeneratedQuote) return '';
         var personal = quotePersonalInput ? quotePersonalInput.value.trim() : '';
-        var msg = 'Good morning Leng family! 🌅\n\n"' + lastGeneratedQuote.text + '"' +
-          (lastGeneratedQuote.author ? '\n— ' + lastGeneratedQuote.author : '') +
-          (lastGeneratedQuote.meaning ? '\n\n💡 ' + lastGeneratedQuote.meaning : '');
+        var msg = 'Good morning Leng family! ❤️\n\n"' + lastGeneratedQuote.text + '"' +
+          (lastGeneratedQuote.author ? '\n-- ' + lastGeneratedQuote.author : '') +
+          (lastGeneratedQuote.meaning ? '\n\n' + lastGeneratedQuote.meaning : '');
         if (personal) {
-          msg += '\n\n💌 ' + personal;
+          msg += '\n\n' + personal;
         }
-        msg += '\n\n— Papa ❤️';
+        msg += '\n\n-- Papa';
         return msg;
       };
 
@@ -4037,8 +4206,8 @@
         igQuoteBtn.addEventListener('click', async function () {
           if (!lastGeneratedQuote) return;
           var personal = quotePersonalInput ? quotePersonalInput.value.trim() : '';
-          var msg = '✨ "' + lastGeneratedQuote.text + '"' +
-            (lastGeneratedQuote.author ? '\n— ' + lastGeneratedQuote.author : '') +
+          var msg = '"' + lastGeneratedQuote.text + '"' +
+            (lastGeneratedQuote.author ? '\n-- ' + lastGeneratedQuote.author : '') +
             (lastGeneratedQuote.meaning ? '\n\n' + lastGeneratedQuote.meaning : '');
           if (personal) {
             msg += '\n\n' + personal;
@@ -4046,8 +4215,8 @@
           msg += '\n\n#LengFamily #DailyQuote';
           try {
             await navigator.clipboard.writeText(msg);
-            igQuoteBtn.textContent = '✓ Copied for IG!';
-            setTimeout(function () { igQuoteBtn.textContent = '📸 Copy for IG Story'; }, 2000);
+            igQuoteBtn.textContent = 'Copied! Open IG > Story > Text sticker > Paste';
+            setTimeout(function () { igQuoteBtn.textContent = 'Copy for IG Story (then paste in IG)'; }, 4000);
           } catch (e) {
             window.prompt('Copy this for IG:', msg);
           }
@@ -4064,6 +4233,307 @@
             setTimeout(function () { copyQuoteBtn.textContent = '📋 Copy'; }, 2000);
           } catch (e) {
             window.prompt('Copy this quote:', msg);
+          }
+        });
+      }
+
+      // ===== MEALS PLANNER =====
+      var mealsWeekOffset = 0;
+      var mealsData = {}; // keyed by 'weekKey-day-mealType'
+      var editingMeal = null; // { weekKey, day, mealType, existing }
+
+      var getMealsWeekStart = function () {
+        var d = new Date(baseWeekStart);
+        d.setDate(baseWeekStart.getDate() + mealsWeekOffset * 7);
+        d.setHours(0, 0, 0, 0);
+        return d;
+      };
+
+      var getMealsWeekKey = function () {
+        return formatWeekKey(getMealsWeekStart());
+      };
+
+      var mealsDayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+      var fetchMeals = async function (weekKey) {
+        try {
+          var { data, error } = await supabaseClient
+            .from('meals')
+            .select('id, week_key, day, meal_type, dish_name, notes')
+            .eq('week_key', weekKey);
+          if (error) {
+            console.error('[meals] fetch error', error);
+            return [];
+          }
+          return data || [];
+        } catch (e) {
+          console.error('[meals] unexpected fetch error', e);
+          return [];
+        }
+      };
+
+      var saveMeal = async function (meal) {
+        try {
+          if (meal.id) {
+            var { error } = await supabaseClient
+              .from('meals')
+              .update({ dish_name: meal.dish_name, notes: meal.notes })
+              .eq('id', meal.id);
+            if (error) { console.error('[meals] update error', error); return false; }
+          } else {
+            var { error } = await supabaseClient
+              .from('meals')
+              .insert({
+                week_key: meal.week_key,
+                day: meal.day,
+                meal_type: meal.meal_type,
+                dish_name: meal.dish_name,
+                notes: meal.notes || ''
+              });
+            if (error) { console.error('[meals] insert error', error); return false; }
+          }
+          return true;
+        } catch (e) {
+          console.error('[meals] save error', e);
+          return false;
+        }
+      };
+
+      var deleteMeal = async function (id) {
+        try {
+          var { error } = await supabaseClient.from('meals').delete().eq('id', id);
+          if (error) { console.error('[meals] delete error', error); return false; }
+          return true;
+        } catch (e) {
+          console.error('[meals] delete error', e);
+          return false;
+        }
+      };
+
+      var renderMealsGrid = async function () {
+        var gridEl = document.getElementById('meals-grid');
+        var labelEl = document.getElementById('meals-week-label');
+        if (!gridEl) return;
+
+        var weekStart = getMealsWeekStart();
+        var weekKey = getMealsWeekKey();
+
+        if (labelEl) {
+          if (mealsWeekOffset === 0) {
+            labelEl.textContent = 'This Week';
+          } else {
+            labelEl.textContent = 'Week of ' + weekStart.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+          }
+        }
+
+        var meals = await fetchMeals(weekKey);
+        mealsData = {};
+        meals.forEach(function (m) {
+          var key = m.week_key + '-' + m.day + '-' + m.meal_type;
+          mealsData[key] = m;
+        });
+
+        gridEl.innerHTML = '';
+        var todayStr = formatDateKey(today);
+
+        for (var i = 0; i < 7; i++) {
+          var dayDate = new Date(weekStart);
+          dayDate.setDate(weekStart.getDate() + i);
+          var dk = dayKeys[i];
+          var dateStr = formatDateKey(dayDate);
+          var isToday = dateStr === todayStr;
+
+          var card = document.createElement('div');
+          card.className = 'meal-day-card' + (isToday ? ' is-today' : '');
+
+          var header = document.createElement('div');
+          header.className = 'meal-day-header';
+          header.innerHTML = mealsDayNames[i] + '<span class="meal-date">' +
+            dayDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + '</span>';
+          card.appendChild(header);
+
+          var body = document.createElement('div');
+          body.className = 'meal-day-body';
+
+          ['lunch', 'dinner'].forEach(function (mealType) {
+            var slotKey = weekKey + '-' + dk + '-' + mealType;
+            var meal = mealsData[slotKey] || null;
+
+            var slot = document.createElement('div');
+            slot.className = 'meal-slot';
+            slot.setAttribute('data-day', dk);
+            slot.setAttribute('data-meal', mealType);
+
+            var label = document.createElement('div');
+            label.className = 'meal-slot-label';
+            label.textContent = mealType === 'lunch' ? 'Lunch' : 'Dinner';
+            slot.appendChild(label);
+
+            if (meal && meal.dish_name) {
+              var dish = document.createElement('div');
+              dish.className = 'meal-slot-dish';
+              dish.textContent = meal.dish_name;
+              slot.appendChild(dish);
+              if (meal.notes) {
+                var notes = document.createElement('div');
+                notes.className = 'meal-slot-notes';
+                notes.textContent = meal.notes;
+                slot.appendChild(notes);
+              }
+            } else {
+              var empty = document.createElement('div');
+              empty.className = 'meal-slot-empty';
+              empty.textContent = '+ Add';
+              slot.appendChild(empty);
+            }
+
+            slot.addEventListener('click', function () {
+              openMealModal(weekKey, dk, mealType, meal);
+            });
+
+            body.appendChild(slot);
+          });
+
+          card.appendChild(body);
+          gridEl.appendChild(card);
+        }
+      };
+
+      // Meal modal
+      var mealModal = document.getElementById('meal-modal');
+      var mealModalTitle = document.getElementById('meal-modal-title');
+      var mealDishInput = document.getElementById('meal-dish-input');
+      var mealNotesInput = document.getElementById('meal-notes-input');
+      var mealSaveBtn = document.getElementById('meal-save-btn');
+      var mealDeleteBtn = document.getElementById('meal-delete-btn');
+      var mealCancelBtn = document.getElementById('meal-cancel-btn');
+
+      var openMealModal = function (weekKey, day, mealType, existing) {
+        editingMeal = { weekKey: weekKey, day: day, mealType: mealType, existing: existing };
+        var dayLabel = mealsDayNames[dayKeys.indexOf(day)] || day;
+        if (mealModalTitle) mealModalTitle.textContent = (existing ? 'Edit' : 'Add') + ' ' + dayLabel + ' ' + (mealType === 'lunch' ? 'Lunch' : 'Dinner');
+        if (mealDishInput) mealDishInput.value = existing ? existing.dish_name : '';
+        if (mealNotesInput) mealNotesInput.value = existing ? (existing.notes || '') : '';
+        if (mealDeleteBtn) mealDeleteBtn.style.display = existing ? '' : 'none';
+        if (mealModal) mealModal.classList.add('is-open');
+        if (mealDishInput) mealDishInput.focus();
+      };
+
+      var closeMealModal = function () {
+        if (mealModal) mealModal.classList.remove('is-open');
+        editingMeal = null;
+      };
+
+      if (mealCancelBtn) mealCancelBtn.addEventListener('click', closeMealModal);
+      if (mealModal) {
+        mealModal.addEventListener('click', function (e) {
+          if (e.target === mealModal) closeMealModal();
+        });
+      }
+
+      if (mealSaveBtn) {
+        mealSaveBtn.addEventListener('click', async function () {
+          if (!editingMeal || !mealDishInput) return;
+          var dish = mealDishInput.value.trim();
+          if (!dish) { window.alert('Please enter a dish name.'); return; }
+
+          var meal = {
+            id: editingMeal.existing ? editingMeal.existing.id : null,
+            week_key: editingMeal.weekKey,
+            day: editingMeal.day,
+            meal_type: editingMeal.mealType,
+            dish_name: dish,
+            notes: mealNotesInput ? mealNotesInput.value.trim() : ''
+          };
+
+          var ok = await saveMeal(meal);
+          if (ok) {
+            closeMealModal();
+            renderMealsGrid();
+          }
+        });
+      }
+
+      if (mealDeleteBtn) {
+        mealDeleteBtn.addEventListener('click', async function () {
+          if (!editingMeal || !editingMeal.existing) return;
+          var ok = await deleteMeal(editingMeal.existing.id);
+          if (ok) {
+            closeMealModal();
+            renderMealsGrid();
+          }
+        });
+      }
+
+      // Meals week navigation
+      var mealsPrevBtn = document.getElementById('meals-prev');
+      var mealsNextBtn = document.getElementById('meals-next');
+      var mealsTodayBtn = document.getElementById('meals-today-btn');
+
+      if (mealsPrevBtn) mealsPrevBtn.addEventListener('click', function () { mealsWeekOffset--; renderMealsGrid(); });
+      if (mealsNextBtn) mealsNextBtn.addEventListener('click', function () { mealsWeekOffset++; renderMealsGrid(); });
+      if (mealsTodayBtn) mealsTodayBtn.addEventListener('click', function () { mealsWeekOffset = 0; renderMealsGrid(); });
+
+      // Share meals to WhatsApp (for helpers)
+      var mealsShareBtn = document.getElementById('meals-share-btn');
+      if (mealsShareBtn) {
+        mealsShareBtn.addEventListener('click', async function () {
+          var weekKey = getMealsWeekKey();
+          var weekStart = getMealsWeekStart();
+          var meals = await fetchMeals(weekKey);
+
+          var msg = 'Leng Family Meal Plan\nWeek of ' +
+            weekStart.toLocaleDateString(undefined, { month: 'long', day: 'numeric' }) + '\n\n';
+
+          for (var i = 0; i < 7; i++) {
+            var dk = dayKeys[i];
+            var dayDate = new Date(weekStart);
+            dayDate.setDate(weekStart.getDate() + i);
+            msg += mealsDayNames[i] + ' ' + dayDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ':\n';
+
+            var lunch = meals.find(function (m) { return m.day === dk && m.meal_type === 'lunch'; });
+            var dinner = meals.find(function (m) { return m.day === dk && m.meal_type === 'dinner'; });
+
+            msg += '  Lunch: ' + (lunch ? lunch.dish_name + (lunch.notes ? ' (' + lunch.notes + ')' : '') : '--') + '\n';
+            msg += '  Dinner: ' + (dinner ? dinner.dish_name + (dinner.notes ? ' (' + dinner.notes + ')' : '') : '--') + '\n';
+          }
+
+          msg += '\nPlease buy ingredients accordingly. Thank you!';
+          var url = 'https://wa.me/?text=' + encodeURIComponent(msg);
+          window.open(url, '_blank');
+        });
+      }
+
+      // AI meal suggestion
+      var mealsAiBtn = document.getElementById('meals-ai-btn');
+      if (mealsAiBtn) {
+        mealsAiBtn.addEventListener('click', async function () {
+          mealsAiBtn.classList.add('is-loading');
+          mealsAiBtn.textContent = 'Thinking...';
+          try {
+            var response = await fetch('/api/meals', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ family_size: 7, notes: 'Singapore family, mix of Asian and Western. Kids aged 16-21. Elderly grandmother. Two helpers cooking.' })
+            });
+            if (!response.ok) throw new Error('API error');
+            var data = await response.json();
+            if (data.suggestions) {
+              window.alert('AI Meal Suggestions:\n\n' + data.suggestions);
+            }
+          } catch (e) {
+            console.error('[meals] AI error', e);
+            window.alert('Meal suggestions:\n\n' +
+              'Mon: Hainanese Chicken Rice / Pasta Bolognese\n' +
+              'Tue: Fish Soup Noodles / Teriyaki Salmon\n' +
+              'Wed: Nasi Lemak / Stir-fry Vegetables w/ Tofu\n' +
+              'Thu: Laksa / Grilled Chicken w/ Rice\n' +
+              'Fri: Hokkien Mee / Steamed Fish w/ Ginger\n' +
+              'Sat: Dim Sum / BBQ Night\n' +
+              'Sun: Porridge / Family Hotpot');
+          } finally {
+            mealsAiBtn.classList.remove('is-loading');
+            mealsAiBtn.textContent = 'Suggest Meals (AI)';
           }
         });
       }
