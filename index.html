@@ -1488,6 +1488,12 @@
     .family-loc-map {
       font-size: 0.72rem; color: var(--papa); text-decoration: none; font-weight: 600; white-space: nowrap;
     }
+    .family-loc-selfie-btn {
+      flex-shrink: 0; padding: 3px 6px; border-radius: 8px;
+      border: none; background: transparent; font-size: 1rem;
+      cursor: pointer; opacity: 0.7;
+    }
+    .family-loc-selfie-btn:active { opacity: 1; transform: scale(1.1); }
     .home-family-member {
       display: flex; align-items: center; gap: 8px;
       font-size: 0.86rem; font-weight: 600; color: #5a4f45;
@@ -4680,7 +4686,6 @@
             var lat = pos.coords.latitude;
             var lng = pos.coords.longitude;
 
-            // Try reverse geocode but don't block on failure
             var address = lat.toFixed(4) + ', ' + lng.toFixed(4);
             try {
               var geoResp = await fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=16');
@@ -4690,25 +4695,24 @@
                   address = geoData.display_name.split(',').slice(0, 3).join(',').trim();
                 }
               }
-            } catch (e) { /* use coords as address */ }
+            } catch (e) { /* use coords */ }
 
-            // Save immediately without selfie
             await saveCheckin(memberKey, lat, lng, address, null);
             btns.forEach(function (b) { b.textContent = 'Check in'; b.disabled = false; });
-
-            // Then offer selfie
-            checkinPending = { memberKey: memberKey, lat: lat, lng: lng, address: address };
-            if (selfieInput) {
-              try { selfieInput.click(); } catch(e) { checkinPending = null; }
-            }
           },
           function (err) {
             console.error('[loc] geo error', err);
-            window.alert('Location access denied. Go to browser Settings > Site settings > Location and allow app.lengleng.com');
+            window.alert('Location access denied. Enable location for app.lengleng.com in your browser settings.');
             btns.forEach(function (b) { b.textContent = 'Check in'; b.disabled = false; });
           },
           { enableHighAccuracy: true, timeout: 15000 }
         );
+      };
+
+      // Selfie button handler — triggered by user tap directly so browser allows camera
+      var doSelfie = function (memberKey) {
+        checkinPending = { memberKey: memberKey };
+        if (selfieInput) selfieInput.click();
       };
 
       // Handle selfie capture — updates existing check-in with photo
@@ -4733,14 +4737,16 @@
         });
       }
 
-      // If camera dismissed without photo, just clear pending
+      // If camera dismissed without photo, clear pending
       window.addEventListener('focus', function () {
         setTimeout(function () {
           if (checkinPending && selfieInput && !selfieInput.value) {
             checkinPending = null;
           }
-        }, 500);
+        }, 600);
       });
+
+      var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
       var renderLocationGrid = async function () {
         var gridEl = document.getElementById('family-location-grid');
@@ -4776,24 +4782,26 @@
           }
           infoHtml += '</div>';
 
-          // Map link
-          var mapHtml = '';
+          // Map link + selfie button (mobile only, after check-in)
+          var actionsHtml = '';
           if (loc) {
-            mapHtml = '<a href="https://www.google.com/maps?q=' + loc.lat + ',' + loc.lng + '" target="_blank" class="family-loc-map">Map</a>';
+            actionsHtml += '<a href="https://www.google.com/maps?q=' + loc.lat + ',' + loc.lng + '" target="_blank" class="family-loc-map">Map</a>';
+            if (isMobile) {
+              actionsHtml += '<button type="button" class="family-loc-selfie-btn" data-selfie="' + m.key + '" title="Take selfie">📷</button>';
+            }
           }
 
           // Check in button
           var btnHtml = '<button type="button" class="family-loc-checkin-btn" data-checkin="' + m.key + '">Check in</button>';
 
-          row.innerHTML = photoHtml + infoHtml + mapHtml + btnHtml;
+          row.innerHTML = photoHtml + infoHtml + actionsHtml + btnHtml;
 
-          // Attach click handler
+          // Attach click handlers
           var btn = row.querySelector('[data-checkin="' + m.key + '"]');
-          if (btn) {
-            btn.addEventListener('click', function () {
-              doCheckin(m.key);
-            });
-          }
+          if (btn) btn.addEventListener('click', function () { doCheckin(m.key); });
+
+          var selfieBtn = row.querySelector('[data-selfie="' + m.key + '"]');
+          if (selfieBtn) selfieBtn.addEventListener('click', function () { doSelfie(m.key); });
 
           gridEl.appendChild(row);
         });
