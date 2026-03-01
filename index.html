@@ -1449,6 +1449,24 @@
       border-left: 4px solid var(--papa);
     }
     .home-family-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .family-location-grid { display: flex; flex-direction: column; gap: 8px; }
+    .family-loc-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px; border-radius: 12px;
+      background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(0, 0, 0, 0.03);
+    }
+    .family-loc-name {
+      font-weight: 700; font-size: 0.86rem; color: #2b2432; min-width: 60px;
+    }
+    .family-loc-detail {
+      flex: 1; font-size: 0.78rem; color: #766a5a; line-height: 1.35;
+    }
+    .family-loc-time {
+      font-size: 0.68rem; color: #b09273; white-space: nowrap;
+    }
+    .family-loc-map {
+      font-size: 0.72rem; color: var(--papa); text-decoration: none; font-weight: 600; white-space: nowrap;
+    }
     .home-family-member {
       display: flex; align-items: center; gap: 8px;
       font-size: 0.86rem; font-weight: 600; color: #5a4f45;
@@ -2090,14 +2108,21 @@
             <div class="home-card-content" id="home-today-events">Loading...</div>
           </div>
           <div class="home-card home-card-family">
-            <div class="home-card-label">Family</div>
-            <div class="home-family-grid">
-              <div class="home-family-member"><span class="member-pill member-papa"></span><span>Papa</span></div>
-              <div class="home-family-member"><span class="member-pill member-mimi"></span><span>Mimi</span></div>
-              <div class="home-family-member"><span class="member-pill member-mahmah"></span><span>Mahmah</span></div>
-              <div class="home-family-member"><span class="member-pill member-xiao"></span><span>Xiao</span></div>
-              <div class="home-family-member"><span class="member-pill member-han"></span><span>Han</span></div>
-              <div class="home-family-member"><span class="member-pill member-jue"></span><span>Jue</span></div>
+            <div class="home-card-label">Where is everyone?</div>
+            <div id="family-location-grid" class="family-location-grid">
+              <!-- Filled by JS -->
+            </div>
+            <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+              <select id="checkin-member-select" style="flex:1;min-width:120px;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,193,140,0.5);font-size:0.84rem;font-family:inherit;background:#fff;">
+                <option value="">I am...</option>
+                <option value="Hoelon">Papa (Hoelon)</option>
+                <option value="Hsin">Mimi (Hsin)</option>
+                <option value="Fly">Mahmah (Fly)</option>
+                <option value="Xiao">Xiao</option>
+                <option value="Han">Han</option>
+                <option value="Jue">Jue</option>
+              </select>
+              <button type="button" id="checkin-btn" class="btn btn-primary" style="flex:0 0 auto;">Check in</button>
             </div>
           </div>
         </div>
@@ -2254,7 +2279,7 @@
         <div class="settings-group">
           <div class="settings-group-label">About</div>
           <div class="settings-row settings-row-info">
-            <span>Leng Family OS v1.2</span>
+            <span>Leng Family OS v1.3</span>
             <span class="settings-row-detail">Built with love by Papa</span>
           </div>
         </div>
@@ -4098,6 +4123,7 @@
         if (previewEl && lastGeneratedQuote) {
           previewEl.textContent = '"' + lastGeneratedQuote.text.substring(0, 80) + (lastGeneratedQuote.text.length > 80 ? '...' : '') + '"';
         }
+        renderLocationGrid();
       };
 
       // ===== QUOTES LOGIC =====
@@ -4545,6 +4571,150 @@
             mealsAiBtn.classList.remove('is-loading');
             mealsAiBtn.textContent = 'Suggest Meals (AI)';
           }
+        });
+      }
+
+      // ===== FAMILY LOCATION TRACKER =====
+      var familyMembers = [
+        { key: 'Hoelon', name: 'Papa', css: 'papa' },
+        { key: 'Hsin', name: 'Mimi', css: 'mimi' },
+        { key: 'Fly', name: 'Mahmah', css: 'mahmah' },
+        { key: 'Xiao', name: 'Xiao', css: 'xiao' },
+        { key: 'Han', name: 'Han', css: 'han' },
+        { key: 'Jue', name: 'Jue', css: 'jue' }
+      ];
+
+      var fetchLocations = async function () {
+        try {
+          var { data, error } = await supabaseClient
+            .from('locations')
+            .select('member, lat, lng, address, updated_at')
+            .order('updated_at', { ascending: false });
+          if (error) { console.error('[loc] fetch error', error); return []; }
+          // deduplicate — keep latest per member
+          var seen = {};
+          var result = [];
+          (data || []).forEach(function (r) {
+            if (!seen[r.member]) { seen[r.member] = true; result.push(r); }
+          });
+          return result;
+        } catch (e) {
+          console.error('[loc] error', e);
+          return [];
+        }
+      };
+
+      var timeAgo = function (dateStr) {
+        var diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+        if (diff < 60) return 'just now';
+        if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+        if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+        return Math.floor(diff / 86400) + 'd ago';
+      };
+
+      var renderLocationGrid = async function () {
+        var gridEl = document.getElementById('family-location-grid');
+        if (!gridEl) return;
+
+        var locations = await fetchLocations();
+        var locMap = {};
+        locations.forEach(function (l) { locMap[l.member] = l; });
+
+        gridEl.innerHTML = '';
+        familyMembers.forEach(function (m) {
+          var loc = locMap[m.key];
+          var row = document.createElement('div');
+          row.className = 'family-loc-row';
+
+          var pill = '<span class="member-pill member-' + m.css + '"></span>';
+          var name = '<span class="family-loc-name">' + m.name + '</span>';
+
+          if (loc) {
+            var addr = loc.address || (loc.lat.toFixed(4) + ', ' + loc.lng.toFixed(4));
+            var mapUrl = 'https://www.google.com/maps?q=' + loc.lat + ',' + loc.lng;
+            row.innerHTML = pill + name +
+              '<span class="family-loc-detail">' + addr + '</span>' +
+              '<span class="family-loc-time">' + timeAgo(loc.updated_at) + '</span>' +
+              '<a href="' + mapUrl + '" target="_blank" class="family-loc-map">Map</a>';
+          } else {
+            row.innerHTML = pill + name +
+              '<span class="family-loc-detail" style="color:#c4b8a8;font-style:italic;">Not checked in yet</span>';
+          }
+          gridEl.appendChild(row);
+        });
+      };
+
+      // Check-in button
+      var checkinBtn = document.getElementById('checkin-btn');
+      var checkinSelect = document.getElementById('checkin-member-select');
+
+      if (checkinBtn) {
+        checkinBtn.addEventListener('click', async function () {
+          var member = checkinSelect ? checkinSelect.value : '';
+          if (!member) { window.alert('Select who you are first.'); return; }
+
+          checkinBtn.textContent = 'Locating...';
+          checkinBtn.disabled = true;
+
+          if (!navigator.geolocation) {
+            window.alert('Geolocation not supported on this device.');
+            checkinBtn.textContent = 'Check in';
+            checkinBtn.disabled = false;
+            return;
+          }
+
+          navigator.geolocation.getCurrentPosition(
+            async function (pos) {
+              var lat = pos.coords.latitude;
+              var lng = pos.coords.longitude;
+
+              // Reverse geocode via free API
+              var address = '';
+              try {
+                var geoResp = await fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=16');
+                var geoData = await geoResp.json();
+                if (geoData && geoData.display_name) {
+                  // Shorten to area name
+                  var parts = geoData.display_name.split(',');
+                  address = parts.slice(0, 3).join(',').trim();
+                }
+              } catch (e) {
+                console.log('[loc] geocode failed, using coords');
+              }
+
+              // Save to Supabase
+              try {
+                // Delete old entries for this member
+                await supabaseClient.from('locations').delete().eq('member', member);
+                // Insert new
+                var { error } = await supabaseClient.from('locations').insert({
+                  member: member,
+                  lat: lat,
+                  lng: lng,
+                  address: address,
+                  updated_at: new Date().toISOString()
+                });
+                if (error) {
+                  console.error('[loc] save error', error);
+                  window.alert('Error saving location. Check Supabase locations table.');
+                } else {
+                  await renderLocationGrid();
+                }
+              } catch (e) {
+                console.error('[loc] save error', e);
+              }
+
+              checkinBtn.textContent = 'Check in';
+              checkinBtn.disabled = false;
+            },
+            function (err) {
+              console.error('[loc] geo error', err);
+              window.alert('Could not get location. Please enable location access for this site.');
+              checkinBtn.textContent = 'Check in';
+              checkinBtn.disabled = false;
+            },
+            { enableHighAccuracy: true, timeout: 10000 }
+          );
         });
       }
 
