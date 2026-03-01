@@ -4672,7 +4672,6 @@
           window.alert('Geolocation not supported.');
           return;
         }
-        // Update button text
         var btns = document.querySelectorAll('[data-checkin="' + memberKey + '"]');
         btns.forEach(function (b) { b.textContent = 'Locating...'; b.disabled = true; });
 
@@ -4680,61 +4679,64 @@
           async function (pos) {
             var lat = pos.coords.latitude;
             var lng = pos.coords.longitude;
-            var address = '';
+
+            // Try reverse geocode but don't block on failure
+            var address = lat.toFixed(4) + ', ' + lng.toFixed(4);
             try {
               var geoResp = await fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=16');
-              var geoData = await geoResp.json();
-              if (geoData && geoData.display_name) {
-                address = geoData.display_name.split(',').slice(0, 3).join(',').trim();
+              if (geoResp.ok) {
+                var geoData = await geoResp.json();
+                if (geoData && geoData.display_name) {
+                  address = geoData.display_name.split(',').slice(0, 3).join(',').trim();
+                }
               }
-            } catch (e) { /* skip geocode */ }
+            } catch (e) { /* use coords as address */ }
 
-            // Store pending and open camera
+            // Save immediately without selfie
+            await saveCheckin(memberKey, lat, lng, address, null);
+            btns.forEach(function (b) { b.textContent = 'Check in'; b.disabled = false; });
+
+            // Then offer selfie
             checkinPending = { memberKey: memberKey, lat: lat, lng: lng, address: address };
             if (selfieInput) {
-              selfieInput.click();
-            } else {
-              // No camera, save without selfie
-              await saveCheckin(memberKey, lat, lng, address, null);
-              btns.forEach(function (b) { b.textContent = 'Check in'; b.disabled = false; });
+              try { selfieInput.click(); } catch(e) { checkinPending = null; }
             }
           },
           function (err) {
-            window.alert('Location access denied. Enable location for this site.');
+            console.error('[loc] geo error', err);
+            window.alert('Location access denied. Go to browser Settings > Site settings > Location and allow app.lengleng.com');
             btns.forEach(function (b) { b.textContent = 'Check in'; b.disabled = false; });
           },
-          { enableHighAccuracy: true, timeout: 10000 }
+          { enableHighAccuracy: true, timeout: 15000 }
         );
       };
 
-      // Handle selfie capture
+      // Handle selfie capture — updates existing check-in with photo
       if (selfieInput) {
         selfieInput.addEventListener('change', async function (e) {
           if (!checkinPending || !e.target.files || !e.target.files[0]) {
-            // No photo taken — save without selfie
-            if (checkinPending) {
-              await saveCheckin(checkinPending.memberKey, checkinPending.lat, checkinPending.lng, checkinPending.address, null);
-            }
             checkinPending = null;
             return;
           }
-          var selfieData = await compressImage(e.target.files[0], 200);
-          await saveCheckin(checkinPending.memberKey, checkinPending.lat, checkinPending.lng, checkinPending.address, selfieData);
-          var btns = document.querySelectorAll('[data-checkin="' + checkinPending.memberKey + '"]');
-          btns.forEach(function (b) { b.textContent = 'Check in'; b.disabled = false; });
+          try {
+            var selfieData = await compressImage(e.target.files[0], 200);
+            // Update the record we just saved
+            await supabaseClient.from('locations')
+              .update({ selfie: selfieData })
+              .eq('member', checkinPending.memberKey);
+            await renderLocationGrid();
+          } catch (e2) {
+            console.error('[loc] selfie save error', e2);
+          }
           checkinPending = null;
           selfieInput.value = '';
         });
       }
 
-      // Also handle cancel (user closes camera without taking photo)
+      // If camera dismissed without photo, just clear pending
       window.addEventListener('focus', function () {
-        setTimeout(async function () {
+        setTimeout(function () {
           if (checkinPending && selfieInput && !selfieInput.value) {
-            // Camera was dismissed without photo — save without selfie
-            await saveCheckin(checkinPending.memberKey, checkinPending.lat, checkinPending.lng, checkinPending.address, null);
-            var btns = document.querySelectorAll('[data-checkin="' + checkinPending.memberKey + '"]');
-            btns.forEach(function (b) { b.textContent = 'Check in'; b.disabled = false; });
             checkinPending = null;
           }
         }, 500);
