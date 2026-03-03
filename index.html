@@ -1494,6 +1494,24 @@
       cursor: pointer; opacity: 0.7;
     }
     .family-loc-selfie-btn:active { opacity: 1; transform: scale(1.1); }
+    /* Morning General */
+    .home-card-mg { border-left: 3px solid #2c3e50; }
+    .mg-content {
+      margin-top: 8px; font-size: 0.82rem; line-height: 1.55; color: #3d3328;
+      max-height: 400px; overflow-y: auto;
+    }
+    .mg-content h2, .mg-content strong { color: #2c3e50; }
+    .mg-content p { margin: 6px 0; }
+    /* iCal feed items */
+    .ical-feed-item {
+      display: flex; align-items: center; gap: 6px; padding: 6px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.04); font-size: 0.8rem;
+    }
+    .ical-feed-name { font-weight: 600; color: #2b2432; min-width: 50px; }
+    .ical-feed-url { flex: 1; color: #766a5a; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.72rem; }
+    .ical-feed-del { border: none; background: none; color: #c0392b; font-size: 0.9rem; cursor: pointer; padding: 2px 6px; }
+    /* External cal events on calendar */
+    .external-event-dot { width: 6px; height: 6px; border-radius: 50%; background: #3498db; display: inline-block; margin-right: 3px; }
     .home-family-member {
       display: flex; align-items: center; gap: 8px;
       font-size: 0.86rem; font-weight: 600; color: #5a4f45;
@@ -2134,6 +2152,18 @@
             <div class="home-card-label">Today's Events</div>
             <div class="home-card-content" id="home-today-events">Loading...</div>
           </div>
+          <div class="home-card home-card-mg" id="morning-general-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div class="home-card-label" style="margin-bottom:0;">Morning General</div>
+              <button type="button" id="mg-generate-btn" class="btn btn-primary" style="padding:5px 12px;font-size:0.76rem;">Generate Briefing</button>
+            </div>
+            <div id="mg-content" class="mg-content">
+              <div style="color:#9a8b7a;font-style:italic;font-size:0.82rem;">Tap "Generate Briefing" for today's FX/macro outlook</div>
+            </div>
+            <div id="mg-share-row" style="display:none;margin-top:8px;">
+              <button type="button" id="mg-whatsapp-btn" class="btn" style="font-size:0.76rem;">Share via WhatsApp</button>
+            </div>
+          </div>
           <div class="home-card home-card-family">
             <div class="home-card-label">Where is everyone?</div>
             <div id="family-location-grid" class="family-location-grid">
@@ -2257,23 +2287,25 @@
         <div class="settings-group">
           <div class="settings-group-label">Calendar Sync</div>
           <button type="button" class="settings-row" onclick="window.open('https://calendar.google.com/calendar/r?cid=webcal%3A%2F%2Fcalendar.tts.edu.sg%2FCalendarSync.ashx%3FCal%3DTanglin%20Trust%20School%20(TTS)%20Calendar%26ID%3D28029','_blank')">
-            <span>Add Tanglin Trust calendar to Google Calendar</span>
+            <span>Add Tanglin Trust to Google Calendar</span>
             <span class="settings-row-arrow">&rsaquo;</span>
           </button>
           <button type="button" class="settings-row" style="margin-top:6px;" onclick="window.open('webcal://calendar.tts.edu.sg/CalendarSync.ashx?Cal=Tanglin%20Trust%20School%20(TTS)%20Calendar&ID=28029','_blank')">
-            <span>Add Tanglin Trust calendar to Apple Calendar</span>
+            <span>Add Tanglin Trust to Apple Calendar</span>
             <span class="settings-row-arrow">&rsaquo;</span>
           </button>
-          <div class="settings-row settings-row-info" style="margin-top:6px;flex-direction:column;align-items:flex-start;gap:4px;cursor:default;">
-            <span style="font-weight:600;">Sync your own calendars to Family OS</span>
-            <div style="font-size:0.78rem;color:#766a5a;line-height:1.5;">
-              To display your Google Calendar or Apple Calendar events here, you need to share your calendar's public URL. Steps:<br>
-              <strong>Google:</strong> Calendar Settings > your calendar > "Integrate" > copy "Public address in iCal format"<br>
-              <strong>Apple:</strong> iCloud Calendar > Share calendar > enable "Public Calendar" > copy URL<br>
-              Then paste the URL below.
+          <div class="settings-row settings-row-info" style="margin-top:8px;flex-direction:column;align-items:flex-start;gap:6px;cursor:default;">
+            <span style="font-weight:600;">Import calendars into Family OS</span>
+            <div style="font-size:0.76rem;color:#766a5a;line-height:1.4;">
+              Apple: Calendar app > tap (i) on calendar > Public Calendar ON > Share Link<br>
+              Google: Settings > Integrate > "Public address in iCal format"
             </div>
-            <input type="text" id="ical-url-input" placeholder="Paste your iCal URL here..." style="width:100%;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,193,140,0.5);font-size:0.82rem;font-family:inherit;margin-top:4px;" />
-            <button type="button" id="ical-save-btn" class="btn" style="margin-top:6px;">Save Calendar URL</button>
+            <div id="ical-feeds-list" style="width:100%;"></div>
+            <div style="display:flex;gap:6px;width:100%;margin-top:4px;">
+              <input type="text" id="ical-feed-name" placeholder="Name (e.g. Papa)" style="width:80px;padding:7px 8px;border-radius:10px;border:1px solid rgba(255,193,140,0.5);font-size:0.8rem;font-family:inherit;" />
+              <input type="text" id="ical-feed-url" placeholder="Paste webcal:// or https:// URL" style="flex:1;padding:7px 8px;border-radius:10px;border:1px solid rgba(255,193,140,0.5);font-size:0.8rem;font-family:inherit;" />
+            </div>
+            <button type="button" id="ical-feed-add-btn" class="btn" style="margin-top:4px;">Add Calendar Feed</button>
           </div>
         </div>
         <div class="settings-group">
@@ -2285,18 +2317,18 @@
         <div class="settings-group">
           <div class="settings-group-label">Coming Soon</div>
           <div class="settings-row settings-row-info">
-            <span>Google Calendar Sync (Jue)</span>
+            <span>Family Polls & Voting</span>
             <span class="settings-badge">Coming Soon</span>
           </div>
           <div class="settings-row settings-row-info" style="margin-top:6px;">
-            <span>Morning General (FX Briefing)</span>
+            <span>Shared Shopping List</span>
             <span class="settings-badge">Coming Soon</span>
           </div>
         </div>
         <div class="settings-group">
           <div class="settings-group-label">About</div>
           <div class="settings-row settings-row-info">
-            <span>Leng Family OS v1.4</span>
+            <span>Leng Family OS v1.5</span>
             <span class="settings-row-detail">Built with love by Papa</span>
           </div>
         </div>
@@ -2948,18 +2980,20 @@
 
         const key = formatDateKey(date);
         const dayEvents = Array.isArray(monthEventsByDateKey[key]) ? monthEventsByDateKey[key] : [];
+        const extEvents = getExternalEventsForDate(key);
 
+        var totalCount = dayEvents.length + extEvents.length;
         if (dayDetailTitleEl) dayDetailTitleEl.textContent = formatDayTitle(date);
         if (dayDetailSubtitleEl) {
-          dayDetailSubtitleEl.textContent = dayEvents.length
-            ? (dayEvents.length + ' event' + (dayEvents.length === 1 ? '' : 's'))
+          dayDetailSubtitleEl.textContent = totalCount
+            ? (totalCount + ' event' + (totalCount === 1 ? '' : 's'))
             : 'No events yet';
         }
 
         if (!dayDetailBodyEl) return;
         dayDetailBodyEl.innerHTML = '';
 
-        if (!dayEvents.length) {
+        if (totalCount === 0) {
           const empty = document.createElement('div');
           empty.className = 'empty-state';
           empty.textContent = 'No events for this day.';
@@ -2967,6 +3001,7 @@
           return;
         }
 
+        // Supabase events
         dayEvents
           .slice()
           .sort(function (a, b) {
@@ -3019,6 +3054,35 @@
 
             dayDetailBodyEl.appendChild(pill);
           });
+
+        // External iCal events
+        extEvents.forEach(function (evt) {
+          const pill = document.createElement('div');
+          pill.className = 'event-pill';
+          pill.style.borderLeft = '3px solid #3498db';
+
+          const main = document.createElement('div');
+          main.className = 'event-pill-main';
+
+          const title = document.createElement('div');
+          title.className = 'event-pill-title';
+          title.style.color = '#2980b9';
+          title.textContent = evt.title;
+          main.appendChild(title);
+
+          const meta = document.createElement('div');
+          meta.className = 'event-pill-meta';
+          var timeStr = '';
+          if (!evt.allDay && evt.start.length > 10) {
+            try { timeStr = new Date(evt.start).toLocaleTimeString('en-SG', { hour: '2-digit', minute: '2-digit', hour12: true }); } catch(e) {}
+          }
+          meta.textContent = (timeStr ? timeStr + ' -- ' : 'All day -- ') + (evt.source || 'External');
+          if (evt.location) meta.textContent += ' -- ' + evt.location;
+          main.appendChild(meta);
+
+          pill.appendChild(main);
+          dayDetailBodyEl.appendChild(pill);
+        });
       };
 
       const updateMonthSelectionUI = function () {
@@ -3045,6 +3109,9 @@
 
           const dayEvents = Array.isArray(monthEventsByDateKey[key]) ? monthEventsByDateKey[key] : [];
           
+          // Also get external events for this date
+          const extEvents = getExternalEventsForDate(key);
+          
           const memberKeys = {};
           dayEvents.forEach(function (evt) {
             const mk = evt.__memberKey || memberKeyForName(evt.member);
@@ -3057,30 +3124,41 @@
             dotsWrap.appendChild(dot);
           });
 
-          if (titlesWrap && dayEvents.length > 0) {
-            const sorted = dayEvents.slice().sort(function (a, b) {
-              const ta = (a.time || '').toLowerCase();
-              const tb = (b.time || '').toLowerCase();
-              if (ta < tb) return -1;
-              if (ta > tb) return 1;
-              return String(a.title || '').localeCompare(String(b.title || ''));
+          // Add blue dot for external events
+          if (extEvents.length > 0) {
+            const dot = document.createElement('span');
+            dot.className = 'external-event-dot';
+            dot.setAttribute('aria-label', 'external');
+            dotsWrap.appendChild(dot);
+          }
+
+          if (titlesWrap) {
+            // Combine all events for title display
+            var allTitles = [];
+            dayEvents.forEach(function (evt) {
+              allTitles.push({ title: evt.title, mk: evt.__memberKey || memberKeyForName(evt.member), recurring: evt.recurring, external: false });
+            });
+            extEvents.forEach(function (evt) {
+              allTitles.push({ title: evt.title, mk: null, recurring: false, external: true, source: evt.source });
             });
 
-            const toShow = sorted.slice(0, 2);
-            toShow.forEach(function (evt) {
-              const item = document.createElement('div');
-              item.className = 'month-event-item';
-              const mk = evt.__memberKey || memberKeyForName(evt.member);
-              if (mk) item.classList.add(mk);
-              item.textContent = evt.title + (evt.recurring === true ? ' ∞' : '');
-              titlesWrap.appendChild(item);
-            });
+            if (allTitles.length > 0) {
+              const toShow = allTitles.slice(0, 2);
+              toShow.forEach(function (evt) {
+                const item = document.createElement('div');
+                item.className = 'month-event-item';
+                if (evt.mk) item.classList.add(evt.mk);
+                if (evt.external) item.style.color = '#2980b9';
+                item.textContent = evt.title + (evt.recurring === true ? ' ∞' : '');
+                titlesWrap.appendChild(item);
+              });
 
-            if (sorted.length > 2) {
-              const more = document.createElement('div');
-              more.className = 'month-event-more';
-              more.textContent = '+' + (sorted.length - 2) + ' more';
-              titlesWrap.appendChild(more);
+              if (allTitles.length > 2) {
+                const more = document.createElement('div');
+                more.className = 'month-event-more';
+                more.textContent = '+' + (allTitles.length - 2) + ' more';
+                titlesWrap.appendChild(more);
+              }
             }
           }
         });
@@ -4122,16 +4200,32 @@
         if (eventsEl) {
           var todayKey = formatDateKey(today);
           var todayEvts = monthEventsByDateKey[todayKey] || [];
-          if (todayEvts.length === 0) {
-            eventsEl.textContent = 'No events today — enjoy the day!';
+          // Merge external calendar events
+          var todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+          var externalToday = getExternalEventsForDate(todayStr);
+
+          var allEvents = [];
+          todayEvts.forEach(function (evt) {
+            allEvents.push({ time: evt.time || '', label: evt.member + ': ' + evt.title, external: false });
+          });
+          externalToday.forEach(function (evt) {
+            var time = '';
+            if (!evt.allDay && evt.start.length > 10) {
+              try { time = new Date(evt.start).toLocaleTimeString('en-SG', { hour: '2-digit', minute: '2-digit', hour12: true }); } catch(e) {}
+            }
+            allEvents.push({ time: time, label: (evt.source ? evt.source + ': ' : '') + evt.title, external: true });
+          });
+
+          if (allEvents.length === 0) {
+            eventsEl.textContent = 'No events today -- enjoy the day!';
           } else {
             eventsEl.innerHTML = '';
-            todayEvts.slice().sort(function (a, b) {
-              return (a.time || '').localeCompare(b.time || '');
-            }).forEach(function (evt) {
+            allEvents.sort(function (a, b) { return (a.time || '').localeCompare(b.time || ''); });
+            allEvents.forEach(function (evt) {
               var div = document.createElement('div');
               div.style.cssText = 'padding:4px 0;font-size:0.88rem;';
-              div.textContent = (evt.time ? evt.time + ' — ' : '') + evt.member + ': ' + evt.title;
+              if (evt.external) div.style.color = '#2980b9';
+              div.textContent = (evt.time ? evt.time + ' -- ' : '') + evt.label;
               eventsEl.appendChild(div);
             });
           }
@@ -4807,20 +4901,162 @@
         });
       };
 
-      // ===== ICAL URL SAVE =====
-      var icalUrlInput = document.getElementById('ical-url-input');
-      var icalSaveBtn = document.getElementById('ical-save-btn');
-      var savedIcalUrl = '';
-      try { savedIcalUrl = window.localStorage.getItem('leng_ical_url') || ''; } catch(e) {}
-      if (icalUrlInput && savedIcalUrl) icalUrlInput.value = savedIcalUrl;
+      // ===== ICAL FEED MANAGER =====
+      var icalFeeds = [];
+      var icalEvents = []; // merged events from all feeds
 
-      if (icalSaveBtn) {
-        icalSaveBtn.addEventListener('click', function () {
-          var url = icalUrlInput ? icalUrlInput.value.trim() : '';
-          if (!url) { window.alert('Please paste a calendar URL first.'); return; }
-          try { window.localStorage.setItem('leng_ical_url', url); } catch(e) {}
-          icalSaveBtn.textContent = 'Saved!';
-          setTimeout(function () { icalSaveBtn.textContent = 'Save Calendar URL'; }, 2000);
+      // Load feeds from Supabase
+      var loadIcalFeeds = async function () {
+        try {
+          var { data, error } = await supabaseClient.from('calendar_feeds').select('*').order('created_at');
+          if (error) { console.log('[ical] feeds table not ready'); return; }
+          icalFeeds = data || [];
+          renderIcalFeedsList();
+        } catch (e) { console.log('[ical] load error', e); }
+      };
+
+      var renderIcalFeedsList = function () {
+        var listEl = document.getElementById('ical-feeds-list');
+        if (!listEl) return;
+        if (icalFeeds.length === 0) {
+          listEl.innerHTML = '<div style="font-size:0.74rem;color:#b09273;font-style:italic;padding:4px 0;">No calendar feeds added yet.</div>';
+          return;
+        }
+        listEl.innerHTML = '';
+        icalFeeds.forEach(function (feed) {
+          var item = document.createElement('div');
+          item.className = 'ical-feed-item';
+          item.innerHTML = '<span class="ical-feed-name">' + feed.name + '</span>' +
+            '<span class="ical-feed-url">' + feed.url.substring(0, 50) + '...</span>' +
+            '<button type="button" class="ical-feed-del" data-feed-id="' + feed.id + '" title="Remove">x</button>';
+          var delBtn = item.querySelector('[data-feed-id="' + feed.id + '"]');
+          if (delBtn) {
+            delBtn.addEventListener('click', async function () {
+              await supabaseClient.from('calendar_feeds').delete().eq('id', feed.id);
+              await loadIcalFeeds();
+            });
+          }
+          listEl.appendChild(item);
+        });
+      };
+
+      // Add feed button
+      var addFeedBtn = document.getElementById('ical-feed-add-btn');
+      if (addFeedBtn) {
+        addFeedBtn.addEventListener('click', async function () {
+          var nameInput = document.getElementById('ical-feed-name');
+          var urlInput = document.getElementById('ical-feed-url');
+          var name = nameInput ? nameInput.value.trim() : '';
+          var url = urlInput ? urlInput.value.trim() : '';
+          if (!name || !url) { window.alert('Enter both a name and URL.'); return; }
+          // Basic validation
+          if (!url.startsWith('webcal://') && !url.startsWith('https://') && !url.startsWith('http://')) {
+            window.alert('URL must start with webcal://, https://, or http://');
+            return;
+          }
+          addFeedBtn.textContent = 'Adding...';
+          try {
+            var { error } = await supabaseClient.from('calendar_feeds').insert({ name: name, url: url });
+            if (error) {
+              console.error('[ical] add error', error);
+              window.alert('Error saving. Make sure calendar_feeds table exists in Supabase.');
+            } else {
+              nameInput.value = '';
+              urlInput.value = '';
+              await loadIcalFeeds();
+              // Refresh external events
+              await fetchAllExternalEvents();
+            }
+          } catch (e) {
+            console.error('[ical] add error', e);
+          }
+          addFeedBtn.textContent = 'Add Calendar Feed';
+        });
+      }
+
+      // Fetch events from all feeds via proxy
+      var fetchAllExternalEvents = async function () {
+        icalEvents = [];
+        if (icalFeeds.length === 0) return;
+
+        var promises = icalFeeds.map(async function (feed) {
+          try {
+            var resp = await fetch('/api/ical?url=' + encodeURIComponent(feed.url));
+            if (!resp.ok) { console.error('[ical] fetch failed for', feed.name); return []; }
+            var data = await resp.json();
+            return (data.events || []).map(function (ev) {
+              ev.source = feed.name;
+              ev.external = true;
+              return ev;
+            });
+          } catch (e) {
+            console.error('[ical] error fetching', feed.name, e);
+            return [];
+          }
+        });
+
+        var results = await Promise.all(promises);
+        results.forEach(function (evts) {
+          icalEvents = icalEvents.concat(evts);
+        });
+        console.log('[ical] loaded', icalEvents.length, 'external events');
+      };
+
+      // Get external events for a specific date (YYYY-MM-DD)
+      var getExternalEventsForDate = function (dateStr) {
+        return icalEvents.filter(function (ev) {
+          var start = ev.start.substring(0, 10);
+          return start === dateStr;
+        });
+      };
+
+      // ===== MORNING GENERAL =====
+      var mgBtn = document.getElementById('mg-generate-btn');
+      var mgContent = document.getElementById('mg-content');
+      var mgShareRow = document.getElementById('mg-share-row');
+      var mgWhatsappBtn = document.getElementById('mg-whatsapp-btn');
+      var lastBriefing = '';
+
+      if (mgBtn) {
+        mgBtn.addEventListener('click', async function () {
+          mgBtn.textContent = 'Generating...';
+          mgBtn.disabled = true;
+          mgContent.innerHTML = '<div style="color:#9a8b7a;font-style:italic;">Generating your morning briefing...</div>';
+
+          try {
+            var resp = await fetch('/api/morning-general', { method: 'POST' });
+            if (!resp.ok) throw new Error('API error: ' + resp.status);
+            var data = await resp.json();
+
+            if (data.briefing) {
+              lastBriefing = data.briefing;
+              // Convert markdown-ish to HTML
+              var html = data.briefing
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n- /g, '<br>-- ')
+                .replace(/\n/g, '<br>');
+              mgContent.innerHTML = '<p>' + html + '</p>';
+              if (mgShareRow) mgShareRow.style.display = 'block';
+            } else {
+              mgContent.innerHTML = '<div style="color:#c0392b;">No briefing generated. Check API key.</div>';
+            }
+          } catch (e) {
+            console.error('[mg] error', e);
+            mgContent.innerHTML = '<div style="color:#c0392b;">Error: ' + e.message + '</div>';
+          }
+
+          mgBtn.textContent = 'Refresh Briefing';
+          mgBtn.disabled = false;
+        });
+      }
+
+      if (mgWhatsappBtn) {
+        mgWhatsappBtn.addEventListener('click', function () {
+          if (!lastBriefing) return;
+          var msg = 'MORNING GENERAL -- ' + new Date().toLocaleDateString('en-SG', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) +
+            '\n\n' + lastBriefing;
+          window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
         });
       }
 
@@ -4845,6 +5081,9 @@
       updateWeekLabelAndButtons();
       await loadEventsForCurrentWeek();
       clearDayDetail();
+      // Load iCal feeds
+      await loadIcalFeeds();
+      await fetchAllExternalEvents();
       setView('month');
       setPage('calendar');
       await renderMonth();
