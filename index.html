@@ -470,166 +470,53 @@
       }
     }
 
-    /* Admin controls */
+    /* Admin controls - see Event Modal section below */
+
+    /* Event Modal */
+    .event-modal-backdrop {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,0.35); display: none;
+      align-items: center; justify-content: center;
+      padding: 16px;
+    }
+    .event-modal-backdrop.is-open { display: flex; }
+    .event-modal {
+      background: #fffcf6; border-radius: 20px; padding: 20px 20px 16px;
+      width: 100%; max-width: 380px; max-height: 80vh; overflow-y: auto;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15); border: 1px solid var(--border-soft);
+    }
+    .event-modal h2 {
+      font-size: 1rem; font-weight: 800; color: #2b2432; margin: 0 0 14px;
+    }
+    .em-row { margin-bottom: 12px; }
+    .em-row label { display: block; font-size: 0.76rem; color: #8c8170; margin-bottom: 4px; font-weight: 600; }
+    .em-row select, .em-row input {
+      width: 100%; padding: 9px 10px; border-radius: 10px;
+      border: 1px solid rgba(255,193,140,0.5); font-size: 0.88rem;
+      font-family: inherit; background: #fff; color: #2b2432;
+    }
+    .em-row select:focus, .em-row input:focus { outline: none; border-color: var(--accent); }
+    .em-recurring-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
+    .em-actions { display: flex; gap: 8px; margin-top: 16px; }
+    .em-actions .btn { flex: 1; padding: 10px; font-size: 0.88rem; }
+    .em-delete-btn { 
+      margin-top: 10px; width: 100%; padding: 8px; border: none; 
+      background: rgba(192,57,43,0.08); color: #c0392b; border-radius: 10px;
+      font-size: 0.82rem; font-family: inherit; cursor: pointer; font-weight: 600;
+    }
+    .em-delete-btn:hover { background: rgba(192,57,43,0.15); }
+
+    /* Admin indicator */
     .admin-toggle {
-      position: fixed;
-      bottom: 16px;
-      right: 16px;
-      z-index: 20;
-      padding: 6px 10px;
-      font-size: 0.72rem;
-      border-radius: 999px;
-      border: 1px solid var(--border-soft);
-      background: rgba(255, 255, 255, 0.9);
-      color: #7c5a3a;
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
-      cursor: pointer;
-      opacity: 0.85;
-      backdrop-filter: blur(10px);
-    }
-    @media (max-width: 720px) {
-      .admin-toggle { bottom: 80px; }
-    }
-
-    .admin-toggle:hover {
-      opacity: 1;
-    }
-
-    .admin-panel {
-      position: fixed;
-      bottom: 56px;
-      right: 16px;
-      z-index: 19;
-      width: 260px;
-      max-width: calc(100% - 32px);
-      padding: 10px 12px 12px;
-      border-radius: 14px;
-      background: rgba(255, 252, 246, 0.98);
-      border: 1px solid var(--border-soft);
+      position: fixed; bottom: 16px; right: 16px; z-index: 20;
+      padding: 6px 14px; border-radius: 12px; border: 1px solid var(--border-soft);
+      background: rgba(255,252,246,0.95); font-size: 0.72rem; font-weight: 700;
+      font-family: inherit; color: #8b7458; cursor: pointer;
       box-shadow: var(--shadow-soft);
-      font-size: 0.78rem;
-      color: var(--text-main);
-      display: none;
     }
-    @media (max-width: 720px) {
-      .admin-panel { bottom: 120px; }
-    }
-
-    .admin-panel.is-open {
-      display: block;
-    }
-
-    .admin-panel h2 {
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #8b7458;
-      margin-bottom: 6px;
-    }
-
-    .admin-row {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      margin-bottom: 6px;
-    }
-
-    .admin-row label {
-      font-size: 0.7rem;
-      color: #8c8170;
-    }
-
-    .admin-row select,
-    .admin-row input {
-      width: 100%;
-      padding: 4px 6px;
-      border-radius: 8px;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      font-size: 0.76rem;
-      font-family: inherit;
-      background: rgba(255, 255, 255, 0.95);
-      color: inherit;
-    }
-
-    .admin-recurring-controls {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .admin-recurring-checkbox {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.7rem;
-      color: #8c8170;
-      white-space: nowrap;
-    }
-
-    .admin-recurring-checkbox input {
-      margin: 0;
-    }
-
-    .admin-frequency {
-      flex: 1;
-    }
-
-    .admin-actions {
-      display: flex;
-      justify-content: space-between;
-      gap: 6px;
-      margin-top: 4px;
-    }
-
-    .admin-actions button {
-      flex: 1;
-      padding: 5px 6px;
-      border-radius: 999px;
-      border: none;
-      font-size: 0.7rem;
-      cursor: pointer;
-      font-weight: 500;
-      font-family: inherit;
-    }
-
-    .admin-save {
-      background: var(--accent-soft);
-      color: #5a422a;
-      border: 1px solid rgba(255, 193, 140, 0.7);
-    }
-
-    .admin-logout {
-      background: #f3f0ea;
-      color: #7a6b5d;
-      border: 1px solid rgba(0, 0, 0, 0.04);
-    }
-
-    .admin-hint {
-      font-size: 0.65rem;
-      color: #a09180;
-      margin-top: 2px;
-    }
-
-    .admin-billy-btn {
-      width: 100%;
-      padding: 7px 10px;
-      margin-top: 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(76, 175, 80, 0.6);
-      background: linear-gradient(135deg, rgba(76, 175, 80, 0.12), rgba(255, 255, 255, 0.95));
-      color: #2d5a2e;
-      cursor: pointer;
-      font-weight: 600;
-      font-family: inherit;
-      font-size: 0.76rem;
-      transition: all 0.15s ease;
-    }
-
-    .admin-billy-btn:hover {
-      background: linear-gradient(135deg, rgba(76, 175, 80, 0.18), rgba(255, 255, 255, 0.98));
-      box-shadow: 0 4px 10px rgba(76, 175, 80, 0.2);
-      transform: translateY(-1px);
-    }
+    @media (max-width: 720px) { .admin-toggle { bottom: 72px; } }
+    body.is-admin .admin-toggle { background: var(--accent); color: #fff; }
+    body.is-admin .event-delete { display: flex; }
 
     .event-card-dynamic {
       margin-top: 4px;
@@ -1769,6 +1656,7 @@
               <span id="day-detail-subtitle">Tap a date to see events</span>
             </div>
             <button type="button" id="month-add" class="btn">Add</button>
+            <button type="button" id="send-billy-btn" class="btn" style="font-size:0.72rem;padding:5px 10px;" title="Share week on WhatsApp">📱 Share</button>
           </div>
           <div id="day-detail-body" class="month-detail-body"></div>
         </aside>
@@ -2335,6 +2223,51 @@
       </div>
     </section>
   </main>
+  <!-- Event Add/Edit Modal -->
+  <div class="event-modal-backdrop" id="event-modal-backdrop">
+    <div class="event-modal" id="event-modal">
+      <h2 id="em-title">Add Event</h2>
+      <div class="em-row">
+        <label for="em-member">Family member</label>
+        <select id="em-member">
+          <option value="Hoelon">Papa (Hoelon)</option>
+          <option value="Hsin">Mimi (Hsin)</option>
+          <option value="Fly">Mahmah (Fly)</option>
+          <option value="Xiao">Xiao</option>
+          <option value="Han">Han</option>
+          <option value="Jue">Jue</option>
+        </select>
+      </div>
+      <div class="em-row">
+        <label for="em-date">Date</label>
+        <input type="date" id="em-date" />
+      </div>
+      <div class="em-row">
+        <label for="em-event-title">Event title</label>
+        <input type="text" id="em-event-title" placeholder="e.g. Doctor appointment" />
+      </div>
+      <div class="em-row">
+        <label for="em-time">Time (optional)</label>
+        <input type="text" id="em-time" placeholder="e.g. 3pm, 10.30am" />
+      </div>
+      <div class="em-row">
+        <label>Repeat</label>
+        <select id="em-recurring">
+          <option value="none">Does not repeat</option>
+          <option value="weekly">Every week</option>
+          <option value="biweekly">Every 2 weeks</option>
+          <option value="monthly">Every month</option>
+          <option value="yearly">Every year (birthday)</option>
+        </select>
+      </div>
+      <div class="em-actions">
+        <button type="button" class="btn" id="em-cancel-btn">Cancel</button>
+        <button type="button" class="btn btn-primary" id="em-save-btn">Save</button>
+      </div>
+      <button type="button" class="em-delete-btn" id="em-delete-btn" style="display:none;">Delete Event</button>
+    </div>
+  </div>
+
   <nav class="bottom-nav" aria-label="Bottom navigation">
     <button type="button" id="bottom-home"><span>Home</span></button>
     <button type="button" id="bottom-calendar" class="is-active"><span>Calendar</span></button>
@@ -2684,7 +2617,7 @@
       };
 
       var events = [];
-      var editingId = null;
+      var editingId = null; // legacy, used by quick-add undo
       var monthEventsByDateKey = {};
 
       const parseQuickAddText = function (raw) {
@@ -3051,6 +2984,12 @@
               deleteEvent(evt.id);
             });
             pill.appendChild(deleteBtn);
+
+            pill.style.cursor = 'pointer';
+            pill.addEventListener('click', function () {
+              if (!body.classList.contains('is-admin')) return;
+              startEditModal(evt.id);
+            });
 
             dayDetailBodyEl.appendChild(pill);
           });
@@ -3490,7 +3429,7 @@
 
           wrapper.addEventListener('click', function () {
             if (!body.classList.contains('is-admin')) return;
-            startEdit(evt.id);
+            startEditModal(evt.id);
           });
 
           inner.appendChild(wrapper);
@@ -3504,9 +3443,6 @@
         events = events.filter(function (e) {
           return e.id !== id;
         });
-        if (editingId === id) {
-          clearForm();
-        }
         renderEvents();
         if (currentView === 'month') {
           await loadMonthEvents();
@@ -3567,265 +3503,254 @@
         });
       }
 
-      // Admin UI
+      // ===== ADMIN + EVENT MODAL SYSTEM =====
+      var isAdmin = false;
+
+      // Persistent login
+      try {
+        if (window.localStorage.getItem('leng_admin') === 'yes') {
+          isAdmin = true;
+          body.classList.add('is-admin');
+        }
+      } catch(e) {}
+
+      // Admin toggle button
       const adminToggle = document.createElement('button');
       adminToggle.type = 'button';
       adminToggle.className = 'admin-toggle';
-      adminToggle.textContent = 'Admin';
+      adminToggle.textContent = isAdmin ? 'Admin ON' : 'Admin';
       body.appendChild(adminToggle);
 
-      const adminPanel = document.createElement('section');
-      adminPanel.className = 'admin-panel';
-      adminPanel.innerHTML =
-        '<h2>Admin events</h2>' +
-        '<div class="admin-row">' +
-        '<label for="admin-member">Family member</label>' +
-        '<select id="admin-member">' +
-        '<option value="Hoelon">Hoelon</option>' +
-        '<option value="Hsin">Hsin</option>' +
-        '<option value="Fly">Fly</option>' +
-        '<option value="Xiao">Xiao</option>' +
-        '<option value="Han">Han</option>' +
-        '<option value="Jue">Jue</option>' +
-        '</select>' +
-        '</div>' +
-        '<div class="admin-row">' +
-        '<label for="admin-day">Day of week</label>' +
-        '<select id="admin-day">' +
-        '<option value="mon">Mon</option>' +
-        '<option value="tue">Tue</option>' +
-        '<option value="wed">Wed</option>' +
-        '<option value="thu">Thu</option>' +
-        '<option value="fri">Fri</option>' +
-        '<option value="sat">Sat</option>' +
-        '<option value="sun">Sun</option>' +
-        '</select>' +
-        '</div>' +
-        '<div class="admin-row">' +
-        '<label for="admin-title">Event title</label>' +
-        '<input id="admin-title" type="text" />' +
-        '</div>' +
-        '<div class="admin-row">' +
-        '<label for="admin-time">Time (optional)</label>' +
-        '<input id="admin-time" type="text" />' +
-        '</div>' +
-        '<div class="admin-row">' +
-        '<label for="admin-recurring">Recurring</label>' +
-        '<div class="admin-recurring-controls">' +
-        '<label class="admin-recurring-checkbox">' +
-        '<input id="admin-recurring" type="checkbox" />' +
-        '<span>Recurring</span>' +
-        '</label>' +
-        '<select id="admin-frequency" class="admin-frequency" disabled>' +
-        '<option value="weekly">Weekly</option>' +
-        '<option value="biweekly">Biweekly</option>' +
-        '<option value="monthly">Monthly</option>' +
-        '</select>' +
-        '</div>' +
-        '</div>' +
-        '<div class="admin-actions">' +
-        '<button type="button" class="admin-save">Save</button>' +
-        '<button type="button" class="admin-logout">Logout</button>' +
-        '</div>' +
-        '<button type="button" id="send-billy-btn" class="admin-billy-btn">📱 Send to Billy (WhatsApp)</button>' +
-        '<div class="admin-hint">Tip: click an event (in admin mode) to edit it.</div>';
-      body.appendChild(adminPanel);
-
-      const memberSelect = adminPanel.querySelector('#admin-member');
-      const daySelect = adminPanel.querySelector('#admin-day');
-      const titleInput = adminPanel.querySelector('#admin-title');
-      const timeInput = adminPanel.querySelector('#admin-time');
-      const recurringCheckbox = adminPanel.querySelector('#admin-recurring');
-      const frequencySelect = adminPanel.querySelector('#admin-frequency');
-      const saveBtn = adminPanel.querySelector('.admin-save');
-      const logoutBtn = adminPanel.querySelector('.admin-logout');
-
-      if (recurringCheckbox && frequencySelect) {
-        recurringCheckbox.addEventListener('change', function () {
-          if (recurringCheckbox.checked) {
-            frequencySelect.disabled = false;
-            if (!frequencySelect.value) {
-              frequencySelect.value = 'weekly';
-            }
-          } else {
-            frequencySelect.disabled = true;
-          }
-        });
-      }
-
-      const openAdmin = function () {
-        body.classList.add('is-admin');
-        adminPanel.classList.add('is-open');
-      };
-
-      const closeAdmin = function () {
-        body.classList.remove('is-admin');
-        adminPanel.classList.remove('is-open');
-        clearForm();
-      };
-
-      const requireLogin = function () {
-        if (body.classList.contains('is-admin')) {
-          if (adminPanel.classList.contains('is-open')) {
-            adminPanel.classList.remove('is-open');
-          } else {
-            adminPanel.classList.add('is-open');
-          }
-          return;
-        }
-        const input = window.prompt('Enter admin password');
-        if (input === null) return;
-        if (input === PASSWORD) {
-          openAdmin();
+      adminToggle.addEventListener('click', function () {
+        if (isAdmin) {
+          isAdmin = false;
+          body.classList.remove('is-admin');
+          adminToggle.textContent = 'Admin';
+          try { window.localStorage.removeItem('leng_admin'); } catch(e) {}
         } else {
-          window.alert('Incorrect password.');
-        }
-      };
-
-      adminToggle.addEventListener('click', requireLogin);
-
-      const clearForm = function () {
-        editingId = null;
-        if (titleInput) titleInput.value = '';
-        if (timeInput) timeInput.value = '';
-        if (recurringCheckbox) recurringCheckbox.checked = false;
-        if (frequencySelect) {
-          frequencySelect.value = 'weekly';
-          frequencySelect.disabled = true;
-        }
-      };
-
-      const startEdit = function (id) {
-        const evt = events.find(function (e) {
-          return e.id === id;
-        });
-        if (!evt) return;
-        editingId = id;
-        if (memberSelect) memberSelect.value = evt.member;
-        if (daySelect) daySelect.value = evt.day;
-        if (titleInput) titleInput.value = evt.title;
-        if (timeInput) timeInput.value = evt.time || '';
-        if (recurringCheckbox) {
-          const isRecurring = evt.recurring === true;
-          recurringCheckbox.checked = isRecurring;
-        }
-        if (frequencySelect) {
-          let freqValue = (evt.frequency || '').toLowerCase();
-          if (
-            freqValue !== 'weekly' &&
-            freqValue !== 'biweekly' &&
-            freqValue !== 'monthly'
-          ) {
-            freqValue = 'weekly';
-          }
-          frequencySelect.value = freqValue;
-          frequencySelect.disabled =
-            !recurringCheckbox || !recurringCheckbox.checked;
-        }
-        if (!adminPanel.classList.contains('is-open')) {
-          adminPanel.classList.add('is-open');
-        }
-      };
-
-      if (saveBtn) {
-        saveBtn.addEventListener('click', async function () {
-          const member =
-            memberSelect && memberSelect.value ? memberSelect.value : 'Hoelon';
-          const day = daySelect && daySelect.value ? daySelect.value : 'mon';
-          const title = titleInput ? titleInput.value.trim() : '';
-          const time = timeInput ? timeInput.value.trim() : '';
-           const isRecurring =
-             recurringCheckbox && recurringCheckbox.checked ? true : false;
-           let frequency = null;
-           if (isRecurring && frequencySelect) {
-             frequency = frequencySelect.value || 'weekly';
-           }
-
-          if (!title) {
-            window.alert('Please enter an event title.');
-            return;
-          }
-
-          let savedEvent = null;
-
-          if (editingId != null) {
-            const existing = events.find(function (e) {
-              return e.id === editingId;
-            });
-            if (!existing) {
-              return;
-            }
-
-            const updated = {
-              id: existing.id,
-              member: member,
-              day: day,
-              title: title,
-              time: time,
-              week_key: existing.week_key || currentWeekKey,
-              recurring: isRecurring,
-              frequency: frequency
-            };
-
-            savedEvent = await updateEventInSupabase(updated);
-            if (!savedEvent) {
-              return;
-            }
-
-            events = await fetchEventsFromSupabase(currentWeekKey);
+          var input = window.prompt('Enter admin password');
+          if (input === null) return;
+          if (input === PASSWORD) {
+            isAdmin = true;
+            body.classList.add('is-admin');
+            adminToggle.textContent = 'Admin ON';
+            try { window.localStorage.setItem('leng_admin', 'yes'); } catch(e) {}
           } else {
-            const toInsert = {
-              member: member,
-              day: day,
-              title: title,
-              time: time,
-              week_key: currentWeekKey,
-              recurring: isRecurring,
-              frequency: frequency
-            };
-
-            savedEvent = await insertEventInSupabase(toInsert);
-            if (!savedEvent) {
-              return;
-            }
-
-            events = await fetchEventsFromSupabase(currentWeekKey);
+            window.alert('Incorrect password.');
           }
-
-          renderEvents();
-          clearForm();
-          if (currentView === 'month') {
-            await renderMonth();
-          }
-        });
-      }
-
-      if (logoutBtn) {
-        logoutBtn.addEventListener('click', function () {
-          closeAdmin();
-        });
-      }
-
-      const openAddForSelectedDate = function () {
-        const d = selectedDate || new Date(today);
-        setWeekToDate(d);
-        if (daySelect) {
-          const dk = dayKeys[d.getDay()];
-          daySelect.value = dk;
         }
-        requireLogin();
+      });
+
+      // Event modal elements
+      var emBackdrop = document.getElementById('event-modal-backdrop');
+      var emTitleEl = document.getElementById('em-title');
+      var emMember = document.getElementById('em-member');
+      var emDate = document.getElementById('em-date');
+      var emEventTitle = document.getElementById('em-event-title');
+      var emTime = document.getElementById('em-time');
+      var emRecurring = document.getElementById('em-recurring');
+      var emSaveBtn = document.getElementById('em-save-btn');
+      var emCancelBtn = document.getElementById('em-cancel-btn');
+      var emDeleteBtn = document.getElementById('em-delete-btn');
+      var emEditingId = null;
+
+      var openEventModal = function (opts) {
+        opts = opts || {};
+        emEditingId = opts.id || null;
+
+        if (emTitleEl) emTitleEl.textContent = emEditingId ? 'Edit Event' : 'Add Event';
+        if (emMember) emMember.value = opts.member || 'Hoelon';
+        if (emEventTitle) emEventTitle.value = opts.title || '';
+        if (emTime) emTime.value = opts.time || '';
+
+        // Set date
+        if (emDate) {
+          if (opts.date) {
+            emDate.value = opts.date; // YYYY-MM-DD
+          } else if (opts.day && currentWeekKey) {
+            // Convert day key to actual date
+            var dayIdx = dayKeys.indexOf(opts.day);
+            if (dayIdx > -1) {
+              var d = new Date(currentWeekStart);
+              d.setDate(d.getDate() + dayIdx);
+              emDate.value = formatDateKey(d);
+            }
+          } else {
+            var sel = selectedDate || new Date(today);
+            emDate.value = formatDateKey(sel);
+          }
+        }
+
+        // Recurring
+        if (emRecurring) {
+          if (opts.recurring && opts.frequency) {
+            emRecurring.value = opts.frequency;
+          } else if (opts.recurring) {
+            emRecurring.value = 'weekly';
+          } else {
+            emRecurring.value = 'none';
+          }
+        }
+
+        // Show/hide delete button
+        if (emDeleteBtn) emDeleteBtn.style.display = emEditingId ? 'block' : 'none';
+
+        if (emBackdrop) emBackdrop.classList.add('is-open');
       };
 
+      var closeEventModal = function () {
+        if (emBackdrop) emBackdrop.classList.remove('is-open');
+        emEditingId = null;
+        if (emEventTitle) emEventTitle.value = '';
+        if (emTime) emTime.value = '';
+        if (emRecurring) emRecurring.value = 'none';
+      };
+
+      // Cancel button
+      if (emCancelBtn) {
+        emCancelBtn.addEventListener('click', closeEventModal);
+      }
+
+      // Click backdrop to close
+      if (emBackdrop) {
+        emBackdrop.addEventListener('click', function (e) {
+          if (e.target === emBackdrop) closeEventModal();
+        });
+      }
+
+      // Save button
+      if (emSaveBtn) {
+        emSaveBtn.addEventListener('click', async function () {
+          var member = emMember ? emMember.value : 'Hoelon';
+          var title = emEventTitle ? emEventTitle.value.trim() : '';
+          var time = emTime ? emTime.value.trim() : '';
+          var dateVal = emDate ? emDate.value : '';
+          var recurVal = emRecurring ? emRecurring.value : 'none';
+
+          if (!title) { window.alert('Enter an event title.'); return; }
+          if (!dateVal) { window.alert('Select a date.'); return; }
+
+          // Convert date to day key and week_key
+          var dateObj = new Date(dateVal + 'T12:00:00');
+          var dayKey = dayKeys[dateObj.getDay()];
+          var weekStart = getSundayOfWeek(dateObj);
+          var weekKey = formatWeekKey(weekStart);
+
+          var isRecurring = recurVal !== 'none';
+          var frequency = isRecurring ? recurVal : null;
+
+          emSaveBtn.textContent = 'Saving...';
+          emSaveBtn.disabled = true;
+
+          if (emEditingId) {
+            var existing = events.find(function (e) { return e.id === emEditingId; });
+            if (existing) {
+              await updateEventInSupabase({
+                id: emEditingId,
+                member: member,
+                day: dayKey,
+                title: title,
+                time: time,
+                week_key: weekKey,
+                recurring: isRecurring,
+                frequency: frequency
+              });
+            }
+          } else {
+            await insertEventInSupabase({
+              member: member,
+              day: dayKey,
+              title: title,
+              time: time,
+              week_key: weekKey,
+              recurring: isRecurring,
+              frequency: frequency
+            });
+          }
+
+          // Refresh events
+          events = await fetchEventsFromSupabase(currentWeekKey);
+          renderEvents();
+          if (currentView === 'month') await renderMonth();
+
+          emSaveBtn.textContent = 'Save';
+          emSaveBtn.disabled = false;
+          closeEventModal();
+        });
+      }
+
+      // Delete button
+      if (emDeleteBtn) {
+        emDeleteBtn.addEventListener('click', async function () {
+          if (!emEditingId) return;
+          if (!window.confirm('Delete this event?')) return;
+          await deleteEvent(emEditingId);
+          closeEventModal();
+        });
+      }
+
+      // "Add" button on month day detail
       if (monthAddBtn) {
         monthAddBtn.addEventListener('click', function () {
-          openAddForSelectedDate();
+          if (!isAdmin) {
+            var input = window.prompt('Enter admin password');
+            if (input !== PASSWORD) { if (input !== null) window.alert('Incorrect password.'); return; }
+            isAdmin = true;
+            body.classList.add('is-admin');
+            adminToggle.textContent = 'Admin ON';
+            try { window.localStorage.setItem('leng_admin', 'yes'); } catch(e) {}
+          }
+          var d = selectedDate || new Date(today);
+          openEventModal({ date: formatDateKey(d) });
         });
       }
+
+      // Click event pill to edit (handled in renderMonthDots day detail)
+      var startEditModal = function (id) {
+        var evt = events.find(function (e) { return e.id === id; });
+        if (!evt) return;
+        // Convert day + week_key to actual date
+        var dateStr = '';
+        if (evt.week_key && evt.day) {
+          var ws = new Date(evt.week_key + 'T12:00:00');
+          var dayIdx = dayKeys.indexOf(evt.day);
+          if (dayIdx > -1) {
+            ws.setDate(ws.getDate() + dayIdx);
+            dateStr = formatDateKey(ws);
+          }
+        }
+        openEventModal({
+          id: evt.id,
+          member: evt.member,
+          title: evt.title,
+          time: evt.time || '',
+          date: dateStr,
+          recurring: evt.recurring === true,
+          frequency: evt.frequency || 'weekly'
+        });
+      };
+
       // Settings admin button
       var settingsAdminBtn = document.getElementById('settings-admin-btn');
       if (settingsAdminBtn) {
         settingsAdminBtn.addEventListener('click', function () {
-          requireLogin();
+          if (isAdmin) {
+            isAdmin = false;
+            body.classList.remove('is-admin');
+            adminToggle.textContent = 'Admin';
+            try { window.localStorage.removeItem('leng_admin'); } catch(e) {}
+          } else {
+            var input = window.prompt('Enter admin password');
+            if (input === null) return;
+            if (input === PASSWORD) {
+              isAdmin = true;
+              body.classList.add('is-admin');
+              adminToggle.textContent = 'Admin ON';
+              try { window.localStorage.setItem('leng_admin', 'yes'); } catch(e) {}
+            } else {
+              window.alert('Incorrect password.');
+            }
+          }
         });
       }
 

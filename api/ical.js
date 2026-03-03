@@ -1,6 +1,26 @@
 // Vercel serverless function: Fetch and parse iCal feeds
 // GET /api/ical?url=ENCODED_WEBCAL_URL
 
+const https = require('https');
+const http = require('http');
+
+function fetchURL(url) {
+  return new Promise(function (resolve, reject) {
+    var mod = url.startsWith('https') ? https : http;
+    mod.get(url, { headers: { 'User-Agent': 'LengFamilyOS/1.0' } }, function (res) {
+      // Follow redirects
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        return fetchURL(res.headers.location).then(resolve).catch(reject);
+      }
+      var chunks = [];
+      res.on('data', function (c) { chunks.push(c); });
+      res.on('end', function () {
+        resolve({ status: res.statusCode, text: Buffer.concat(chunks).toString() });
+      });
+    }).on('error', reject);
+  });
+}
+
 module.exports = async function (req, res) {
   // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -16,18 +36,13 @@ module.exports = async function (req, res) {
   url = url.replace(/^webcal:\/\//, 'https://');
 
   try {
-    var response = await fetch(url, {
-      headers: {
-        'User-Agent': 'LengFamilyOS/1.0',
-        'Accept': 'text/calendar, text/plain, */*'
-      }
-    });
+    var result = await fetchURL(url);
 
-    if (!response.ok) {
-      return res.status(502).json({ error: 'Failed to fetch calendar: ' + response.status });
+    if (result.status !== 200) {
+      return res.status(502).json({ error: 'Failed to fetch calendar: ' + result.status });
     }
 
-    var icsText = await response.text();
+    var icsText = result.text;
     var events = parseICS(icsText);
 
     // Filter to events within -30 days to +90 days
