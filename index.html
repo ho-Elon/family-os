@@ -4672,7 +4672,13 @@
 
       var saveCheckin = async function (memberKey, lat, lng, address, selfieData) {
         try {
-          await supabaseClient.from('locations').delete().eq('member', memberKey);
+          // Check if member already has a row
+          var { data: existing } = await supabaseClient
+            .from('locations')
+            .select('id')
+            .eq('member', memberKey)
+            .limit(1);
+
           var row = {
             member: memberKey,
             lat: lat,
@@ -4681,20 +4687,32 @@
             updated_at: new Date().toISOString()
           };
           if (selfieData) row.selfie = selfieData;
-          var { error } = await supabaseClient.from('locations').insert(row);
-          if (error) {
-            console.error('[loc] save error', error);
-            window.alert('Error saving. Check Supabase locations table has a "selfie" text column.');
+
+          var result;
+          if (existing && existing.length > 0) {
+            // Update existing row (safe — never lose data)
+            result = await supabaseClient.from('locations')
+              .update(row)
+              .eq('member', memberKey);
+          } else {
+            // First check-in for this member
+            result = await supabaseClient.from('locations').insert(row);
+          }
+
+          if (result.error) {
+            console.error('[loc] save error', result.error);
+            window.alert('Error saving check-in: ' + (result.error.message || 'unknown'));
           }
           await renderLocationGrid();
         } catch (e) {
           console.error('[loc] save error', e);
+          window.alert('Check-in failed: ' + e.message);
         }
       };
 
       var doCheckin = function (memberKey) {
         if (!navigator.geolocation) {
-          window.alert('Geolocation not supported.');
+          window.alert('Geolocation not supported on this browser.');
           return;
         }
         var btns = document.querySelectorAll('[data-checkin="' + memberKey + '"]');
@@ -4705,23 +4723,34 @@
             var lat = pos.coords.latitude;
             var lng = pos.coords.longitude;
 
+            // Save immediately with coords (don't wait for geocoding)
             var address = lat.toFixed(4) + ', ' + lng.toFixed(4);
+            await saveCheckin(memberKey, lat, lng, address, null);
+            btns.forEach(function (b) { b.textContent = 'Check in'; b.disabled = false; });
+
+            // Then try geocoding in background to get a nice address
             try {
               var geoResp = await fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=16');
               if (geoResp.ok) {
                 var geoData = await geoResp.json();
                 if (geoData && geoData.display_name) {
-                  address = geoData.display_name.split(',').slice(0, 3).join(',').trim();
+                  var niceName = geoData.display_name.split(',').slice(0, 3).join(',').trim();
+                  // Update address in background
+                  await supabaseClient.from('locations')
+                    .update({ address: niceName })
+                    .eq('member', memberKey);
+                  await renderLocationGrid();
                 }
               }
-            } catch (e) { /* use coords */ }
-
-            await saveCheckin(memberKey, lat, lng, address, null);
-            btns.forEach(function (b) { b.textContent = 'Check in'; b.disabled = false; });
+            } catch (e) { /* keep coords - no big deal */ }
           },
           function (err) {
             console.error('[loc] geo error', err);
-            window.alert('Location access denied. Enable location for app.lengleng.com in your browser settings.');
+            var msg = 'Location access denied.';
+            if (err.code === 1) msg = 'Location permission denied. Go to browser Settings > Site Settings > Location to enable for app.lengleng.com';
+            if (err.code === 2) msg = 'Location unavailable. Make sure GPS is on.';
+            if (err.code === 3) msg = 'Location timed out. Try again in a moment.';
+            window.alert(msg);
             btns.forEach(function (b) { b.textContent = 'Check in'; b.disabled = false; });
           },
           { enableHighAccuracy: true, timeout: 15000 }
@@ -4771,7 +4800,17 @@
         var gridEl = document.getElementById('family-location-grid');
         if (!gridEl) return;
 
-        var locations = await fetchLocations();
+        // Show loading on first render
+        if (gridEl.innerHTML === '' || gridEl.innerHTML === '<!-- Filled by JS -->') {
+          gridEl.innerHTML = '<div style="color:#b09273;font-style:italic;padding:8px 0;font-size:0.82rem;">Loading locations...</div>';
+        }
+
+        var locations = [];
+        try {
+          locations = await fetchLocations();
+        } catch (e) {
+          console.error('[loc] render error', e);
+        }
         var locMap = {};
         locations.forEach(function (l) { locMap[l.member] = l; });
 
