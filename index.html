@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Leng Family OS</title>
+  <title>Leng Family OS v1.6</title>
   <style>
     :root {
       --bg: #fff9f3;
@@ -1401,6 +1404,17 @@
     .external-event-dot { width: 6px; height: 6px; border-radius: 50%; background: #3498db; display: inline-block; margin-right: 3px; }
     /* Weather card */
     .home-card-weather { border-left: 3px solid #3498db; }
+    .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
+    .weather-city {
+      background: rgba(255,255,255,0.6); border-radius: 10px; padding: 8px 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .weather-city-icon { font-size: 1.3rem; }
+    .weather-city-info { flex: 1; }
+    .weather-city-name { font-size: 0.72rem; font-weight: 700; color: #8c8170; text-transform: uppercase; letter-spacing: 0.03em; }
+    .weather-city-temp { font-size: 1rem; font-weight: 800; color: #2b2432; }
+    .weather-city-desc { font-size: 0.7rem; color: #9a8b7a; }
+    @media (max-width: 400px) { .weather-grid { grid-template-columns: 1fr; } }
     /* Year timeline */
     .year-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; font-size: 0.74rem; }
     .year-legend-item { display: flex; align-items: center; gap: 4px; }
@@ -2092,11 +2106,8 @@
             <div class="home-card-content" id="home-today-events">Loading...</div>
           </div>
           <div class="home-card home-card-weather" id="weather-card">
-            <div style="display:flex;align-items:center;justify-content:space-between;">
-              <div class="home-card-label" style="margin-bottom:0;">Singapore Weather</div>
-              <div id="weather-icon" style="font-size:1.4rem;"></div>
-            </div>
-            <div id="weather-content" style="margin-top:6px;font-size:0.86rem;color:#3d3328;line-height:1.5;">Loading weather...</div>
+            <div class="home-card-label">World Weather</div>
+            <div id="weather-content" class="weather-grid">Loading weather...</div>
           </div>
           <div class="home-card home-card-mg" id="morning-general-card">
             <div style="display:flex;align-items:center;justify-content:space-between;">
@@ -5177,30 +5188,54 @@
         }
       })();
 
-      // ===== WEATHER WIDGET =====
+      // ===== WEATHER WIDGET (4 CITIES) =====
+      var weatherCities = [
+        { name: 'Singapore', lat: 1.3521, lng: 103.8198 },
+        { name: 'Hong Kong', lat: 22.3193, lng: 114.1694 },
+        { name: 'London', lat: 51.5074, lng: -0.1278 },
+        { name: 'New York', lat: 40.7128, lng: -74.0060 }
+      ];
+
+      var weatherIcons = { 0:'☀️', 1:'🌤️', 2:'⛅', 3:'☁️', 45:'🌫️', 48:'🌫️', 51:'🌦️', 53:'🌦️', 55:'🌧️', 61:'🌧️', 63:'🌧️', 65:'🌧️', 80:'🌦️', 81:'🌧️', 82:'⛈️', 95:'⛈️', 96:'⛈️', 99:'⛈️' };
+      var weatherNames = { 0:'Clear', 1:'Mostly clear', 2:'Partly cloudy', 3:'Overcast', 45:'Foggy', 48:'Foggy', 51:'Light drizzle', 53:'Drizzle', 55:'Heavy drizzle', 61:'Light rain', 63:'Rain', 65:'Heavy rain', 80:'Showers', 81:'Showers', 82:'Heavy showers', 95:'Thunderstorm', 96:'Thunderstorm', 99:'Thunderstorm' };
+
       var loadWeather = async function () {
         var contentEl = document.getElementById('weather-content');
-        var iconEl = document.getElementById('weather-icon');
         if (!contentEl) return;
+
+        // Build multi-location request
+        var lats = weatherCities.map(function (c) { return c.lat; }).join(',');
+        var lngs = weatherCities.map(function (c) { return c.lng; }).join(',');
+
         try {
-          // Singapore coords: 1.3521, 103.8198
-          var resp = await fetch('https://api.open-meteo.com/v1/forecast?latitude=1.3521&longitude=103.8198&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia/Singapore&forecast_days=1');
-          if (!resp.ok) { contentEl.textContent = 'Weather unavailable'; return; }
-          var data = await resp.json();
-          var c = data.current || {};
-          var d = data.daily || {};
+          // Fetch all cities in parallel
+          var results = await Promise.all(weatherCities.map(async function (city) {
+            var resp = await fetch('https://api.open-meteo.com/v1/forecast?latitude=' + city.lat + '&longitude=' + city.lng + '&current=temperature_2m,weather_code&daily=precipitation_probability_max&timezone=auto&forecast_days=1');
+            if (!resp.ok) return null;
+            var data = await resp.json();
+            return { city: city.name, data: data };
+          }));
 
-          var weatherIcons = { 0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️', 45: '🌫️', 48: '🌫️', 51: '🌦️', 53: '🌦️', 55: '🌧️', 61: '🌧️', 63: '🌧️', 65: '🌧️', 80: '🌦️', 81: '🌧️', 82: '⛈️', 95: '⛈️', 96: '⛈️', 99: '⛈️' };
-          var weatherNames = { 0: 'Clear', 1: 'Mostly clear', 2: 'Partly cloudy', 3: 'Overcast', 45: 'Foggy', 48: 'Foggy', 51: 'Light drizzle', 53: 'Drizzle', 55: 'Heavy drizzle', 61: 'Light rain', 63: 'Rain', 65: 'Heavy rain', 80: 'Rain showers', 81: 'Rain showers', 82: 'Heavy showers', 95: 'Thunderstorm', 96: 'Thunderstorm', 99: 'Thunderstorm' };
+          contentEl.innerHTML = '';
+          contentEl.className = 'weather-grid';
 
-          var code = c.weather_code || 0;
-          if (iconEl) iconEl.textContent = weatherIcons[code] || '🌡️';
-          var rainProb = (d.precipitation_probability_max && d.precipitation_probability_max[0]) || 0;
-          contentEl.innerHTML = '<strong>' + Math.round(c.temperature_2m || 30) + '°C</strong> — ' +
-            (weatherNames[code] || 'Unknown') +
-            '<br>High ' + Math.round((d.temperature_2m_max && d.temperature_2m_max[0]) || 32) +
-            '° / Low ' + Math.round((d.temperature_2m_min && d.temperature_2m_min[0]) || 25) +
-            '° · Rain ' + rainProb + '% · Humidity ' + Math.round(c.relative_humidity_2m || 80) + '%';
+          results.forEach(function (r) {
+            if (!r || !r.data || !r.data.current) return;
+            var c = r.data.current;
+            var d = r.data.daily || {};
+            var code = c.weather_code || 0;
+            var rainProb = (d.precipitation_probability_max && d.precipitation_probability_max[0]) || 0;
+
+            var div = document.createElement('div');
+            div.className = 'weather-city';
+            div.innerHTML = '<div class="weather-city-icon">' + (weatherIcons[code] || '🌡️') + '</div>' +
+              '<div class="weather-city-info">' +
+              '<div class="weather-city-name">' + r.city + '</div>' +
+              '<div class="weather-city-temp">' + Math.round(c.temperature_2m) + '°C</div>' +
+              '<div class="weather-city-desc">' + (weatherNames[code] || '') + (rainProb > 20 ? ' · Rain ' + rainProb + '%' : '') + '</div>' +
+              '</div>';
+            contentEl.appendChild(div);
+          });
         } catch (e) {
           console.error('[weather]', e);
           contentEl.textContent = 'Weather unavailable';
