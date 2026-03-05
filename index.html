@@ -1399,6 +1399,36 @@
     .ical-feed-del { border: none; background: none; color: #c0392b; font-size: 0.9rem; cursor: pointer; padding: 2px 6px; }
     /* External cal events on calendar */
     .external-event-dot { width: 6px; height: 6px; border-radius: 50%; background: #3498db; display: inline-block; margin-right: 3px; }
+    /* Weather card */
+    .home-card-weather { border-left: 3px solid #3498db; }
+    /* Year timeline */
+    .year-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; font-size: 0.74rem; }
+    .year-legend-item { display: flex; align-items: center; gap: 4px; }
+    .year-legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+    .year-timeline { position: relative; overflow-x: auto; }
+    .year-months { display: grid; grid-template-columns: repeat(12, 1fr); gap: 0; min-width: 700px; }
+    .year-month-col { border-right: 1px solid rgba(0,0,0,0.06); padding: 4px 2px; min-height: 60px; }
+    .year-month-col:last-child { border-right: none; }
+    .year-month-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: #8c8170; text-align: center; padding-bottom: 4px; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .year-month-col.is-current { background: rgba(255,193,140,0.1); }
+    .year-bars { position: relative; min-width: 700px; margin-top: 4px; }
+    .year-bar {
+      position: absolute; height: 22px; border-radius: 6px; font-size: 0.68rem;
+      color: #fff; font-weight: 600; padding: 2px 6px; overflow: hidden;
+      white-space: nowrap; text-overflow: ellipsis; cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15); transition: opacity 0.15s;
+    }
+    .year-bar:hover { opacity: 0.85; }
+    .year-trip-list { margin-top: 16px; }
+    .year-trip-item {
+      display: flex; align-items: center; gap: 10px; padding: 10px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.04); cursor: pointer;
+    }
+    .year-trip-dot { width: 12px; height: 12px; border-radius: 4px; flex-shrink: 0; }
+    .year-trip-info { flex: 1; }
+    .year-trip-title { font-weight: 700; font-size: 0.88rem; color: #2b2432; }
+    .year-trip-meta { font-size: 0.76rem; color: #9a8b7a; }
+    .year-trip-countdown { font-size: 0.76rem; font-weight: 600; color: var(--accent); white-space: nowrap; }
     .home-family-member {
       display: flex; align-items: center; gap: 8px;
       font-size: 0.86rem; font-weight: 600; color: #5a4f45;
@@ -1606,6 +1636,7 @@
         <div class="segmented" role="tablist" aria-label="Switch view">
           <button type="button" id="toggle-month" class="is-active" role="tab" aria-selected="true">Month</button>
           <button type="button" id="toggle-week" role="tab" aria-selected="false">Week</button>
+          <button type="button" id="toggle-year" role="tab" aria-selected="false">Year</button>
         </div>
       </div>
 
@@ -2026,6 +2057,26 @@
       </section>
     </section>
 
+    <!-- ===== YEAR / TRAVEL VIEW ===== -->
+    <section id="year-view" class="view-shell" aria-label="Year view">
+      <div style="padding:0 16px 16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div>
+            <div style="font-size:1.1rem;font-weight:800;color:#2b2432;" id="year-view-title">2026 Family Travel</div>
+            <div style="font-size:0.78rem;color:#9a8b7a;">Trips, holidays & school breaks at a glance</div>
+          </div>
+          <button type="button" id="year-add-trip-btn" class="btn btn-primary" style="padding:5px 12px;font-size:0.76rem;">+ Add Trip</button>
+        </div>
+        <div class="year-legend" id="year-legend"></div>
+        <div class="year-timeline" id="year-timeline">
+          <!-- Filled by JS -->
+        </div>
+        <div class="year-trip-list" id="year-trip-list">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+    </section>
+
     <!-- ===== HOME VIEW ===== -->
     <section id="home-view" class="view-shell" aria-label="Home">
       <div class="home-container">
@@ -2039,6 +2090,13 @@
           <div class="home-card home-card-events">
             <div class="home-card-label">Today's Events</div>
             <div class="home-card-content" id="home-today-events">Loading...</div>
+          </div>
+          <div class="home-card home-card-weather" id="weather-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div class="home-card-label" style="margin-bottom:0;">Singapore Weather</div>
+              <div id="weather-icon" style="font-size:1.4rem;"></div>
+            </div>
+            <div id="weather-content" style="margin-top:6px;font-size:0.86rem;color:#3d3328;line-height:1.5;">Loading weather...</div>
           </div>
           <div class="home-card home-card-mg" id="morning-general-card">
             <div style="display:flex;align-items:center;justify-content:space-between;">
@@ -2216,7 +2274,7 @@
         <div class="settings-group">
           <div class="settings-group-label">About</div>
           <div class="settings-row settings-row-info">
-            <span>Leng Family OS v1.5</span>
+            <span>Leng Family OS v1.6</span>
             <span class="settings-row-detail">Built with love by Papa</span>
           </div>
         </div>
@@ -2265,6 +2323,64 @@
         <button type="button" class="btn btn-primary" id="em-save-btn">Save</button>
       </div>
       <button type="button" class="em-delete-btn" id="em-delete-btn" style="display:none;">Delete Event</button>
+    </div>
+  </div>
+
+  <!-- Trip Add/Edit Modal -->
+  <div class="event-modal-backdrop" id="trip-modal-backdrop">
+    <div class="event-modal" id="trip-modal">
+      <h2 id="trip-modal-title">Add Trip</h2>
+      <div class="em-row">
+        <label for="trip-title">Trip / Holiday name</label>
+        <input type="text" id="trip-title" placeholder="e.g. Japan Family Trip" />
+      </div>
+      <div class="em-row">
+        <label for="trip-destination">Destination</label>
+        <input type="text" id="trip-destination" placeholder="e.g. Tokyo, Japan" />
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="em-row">
+          <label for="trip-start">Start date</label>
+          <input type="date" id="trip-start" />
+        </div>
+        <div class="em-row">
+          <label for="trip-end">End date</label>
+          <input type="date" id="trip-end" />
+        </div>
+      </div>
+      <div class="em-row">
+        <label for="trip-members">Who's going?</label>
+        <select id="trip-members" multiple size="3" style="height:auto;">
+          <option value="All" selected>Everyone</option>
+          <option value="Hoelon">Papa</option>
+          <option value="Hsin">Mimi</option>
+          <option value="Fly">Mahmah</option>
+          <option value="Xiao">Xiao</option>
+          <option value="Han">Han</option>
+          <option value="Jue">Jue</option>
+        </select>
+      </div>
+      <div class="em-row">
+        <label for="trip-color">Color</label>
+        <select id="trip-color">
+          <option value="#3498db">Blue</option>
+          <option value="#e74c3c">Red</option>
+          <option value="#2ecc71">Green</option>
+          <option value="#f39c12">Orange</option>
+          <option value="#9b59b6">Purple</option>
+          <option value="#1abc9c">Teal</option>
+          <option value="#e91e63">Pink</option>
+        </select>
+      </div>
+      <div class="em-row">
+        <label for="trip-notes">Notes (optional)</label>
+        <input type="text" id="trip-notes" placeholder="e.g. Booked AirAsia" />
+      </div>
+      <div class="em-actions">
+        <button type="button" class="btn" id="trip-cancel-btn">Cancel</button>
+        <button type="button" class="btn btn-primary" id="trip-save-btn">Save</button>
+      </div>
+      <button type="button" class="em-delete-btn" id="trip-delete-btn" style="display:none;">Delete Trip</button>
     </div>
   </div>
 
@@ -2352,6 +2468,7 @@
       const quotesViewEl = document.getElementById('quotes-view');
       const mealsViewEl = document.getElementById('meals-view');
       const settingsViewEl = document.getElementById('settings-view');
+      const yearViewEl = document.getElementById('year-view');
 
       let currentView = 'month'; // 'month' | 'week'
       let currentPage = 'calendar'; // 'home' | 'calendar' | 'meals' | 'quotes' | 'settings'
@@ -2361,6 +2478,7 @@
         if (homeViewEl) homeViewEl.classList.remove('is-active');
         if (monthViewEl) monthViewEl.classList.remove('is-active');
         if (weekViewEl) weekViewEl.classList.remove('is-active');
+        if (yearViewEl) yearViewEl.classList.remove('is-active');
         if (mealsViewEl) mealsViewEl.classList.remove('is-active');
         if (quotesViewEl) quotesViewEl.classList.remove('is-active');
         if (settingsViewEl) settingsViewEl.classList.remove('is-active');
@@ -2368,7 +2486,7 @@
         var topbar = document.querySelector('.topbar');
         var quickAdd = document.querySelector('.quick-add');
         if (topbar) topbar.style.display = (page === 'calendar') ? '' : 'none';
-        if (quickAdd) quickAdd.style.display = (page === 'calendar') ? '' : 'none';
+        if (quickAdd) quickAdd.style.display = (page === 'calendar' && currentView !== 'year') ? '' : 'none';
 
         if (page === 'home') {
           if (homeViewEl) homeViewEl.classList.add('is-active');
@@ -2376,6 +2494,9 @@
         } else if (page === 'calendar') {
           if (currentView === 'week') {
             if (weekViewEl) weekViewEl.classList.add('is-active');
+          } else if (currentView === 'year') {
+            if (yearViewEl) yearViewEl.classList.add('is-active');
+            renderYearView();
           } else {
             if (monthViewEl) monthViewEl.classList.add('is-active');
           }
@@ -2395,10 +2516,13 @@
         if (bottomSettingsBtn) bottomSettingsBtn.classList.toggle('is-active', page === 'settings');
       };
 
+      const toggleYearBtn = document.getElementById('toggle-year');
+
       const setView = function (view) {
-        currentView = view === 'week' ? 'week' : 'month';
+        currentView = (view === 'week') ? 'week' : (view === 'year') ? 'year' : 'month';
         if (monthViewEl) monthViewEl.classList.toggle('is-active', currentView === 'month' && currentPage === 'calendar');
         if (weekViewEl) weekViewEl.classList.toggle('is-active', currentView === 'week' && currentPage === 'calendar');
+        if (yearViewEl) yearViewEl.classList.toggle('is-active', currentView === 'year' && currentPage === 'calendar');
         if (toggleMonthBtn) {
           toggleMonthBtn.classList.toggle('is-active', currentView === 'month');
           toggleMonthBtn.setAttribute('aria-selected', currentView === 'month' ? 'true' : 'false');
@@ -2407,7 +2531,15 @@
           toggleWeekBtn.classList.toggle('is-active', currentView === 'week');
           toggleWeekBtn.setAttribute('aria-selected', currentView === 'week' ? 'true' : 'false');
         }
+        if (toggleYearBtn) {
+          toggleYearBtn.classList.toggle('is-active', currentView === 'year');
+          toggleYearBtn.setAttribute('aria-selected', currentView === 'year' ? 'true' : 'false');
+        }
+        // Hide quick-add in year view
+        var quickAdd = document.querySelector('.quick-add');
+        if (quickAdd) quickAdd.style.display = (currentView === 'year') ? 'none' : '';
         updateNavTitle();
+        if (currentView === 'year') renderYearView();
       };
 
       let currentMonthAnchor = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -3766,6 +3898,11 @@
           await loadEventsForCurrentWeek();
         });
       }
+      if (toggleYearBtn) {
+        toggleYearBtn.addEventListener('click', function () {
+          setView('year');
+        });
+      }
       if (bottomHomeBtn) {
         bottomHomeBtn.addEventListener('click', function () {
           setPage('home');
@@ -5040,7 +5177,286 @@
         }
       })();
 
+      // ===== WEATHER WIDGET =====
+      var loadWeather = async function () {
+        var contentEl = document.getElementById('weather-content');
+        var iconEl = document.getElementById('weather-icon');
+        if (!contentEl) return;
+        try {
+          // Singapore coords: 1.3521, 103.8198
+          var resp = await fetch('https://api.open-meteo.com/v1/forecast?latitude=1.3521&longitude=103.8198&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia/Singapore&forecast_days=1');
+          if (!resp.ok) { contentEl.textContent = 'Weather unavailable'; return; }
+          var data = await resp.json();
+          var c = data.current || {};
+          var d = data.daily || {};
+
+          var weatherIcons = { 0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️', 45: '🌫️', 48: '🌫️', 51: '🌦️', 53: '🌦️', 55: '🌧️', 61: '🌧️', 63: '🌧️', 65: '🌧️', 80: '🌦️', 81: '🌧️', 82: '⛈️', 95: '⛈️', 96: '⛈️', 99: '⛈️' };
+          var weatherNames = { 0: 'Clear', 1: 'Mostly clear', 2: 'Partly cloudy', 3: 'Overcast', 45: 'Foggy', 48: 'Foggy', 51: 'Light drizzle', 53: 'Drizzle', 55: 'Heavy drizzle', 61: 'Light rain', 63: 'Rain', 65: 'Heavy rain', 80: 'Rain showers', 81: 'Rain showers', 82: 'Heavy showers', 95: 'Thunderstorm', 96: 'Thunderstorm', 99: 'Thunderstorm' };
+
+          var code = c.weather_code || 0;
+          if (iconEl) iconEl.textContent = weatherIcons[code] || '🌡️';
+          var rainProb = (d.precipitation_probability_max && d.precipitation_probability_max[0]) || 0;
+          contentEl.innerHTML = '<strong>' + Math.round(c.temperature_2m || 30) + '°C</strong> — ' +
+            (weatherNames[code] || 'Unknown') +
+            '<br>High ' + Math.round((d.temperature_2m_max && d.temperature_2m_max[0]) || 32) +
+            '° / Low ' + Math.round((d.temperature_2m_min && d.temperature_2m_min[0]) || 25) +
+            '° · Rain ' + rainProb + '% · Humidity ' + Math.round(c.relative_humidity_2m || 80) + '%';
+        } catch (e) {
+          console.error('[weather]', e);
+          contentEl.textContent = 'Weather unavailable';
+        }
+      };
+
+      // ===== TRIPS / YEAR VIEW =====
+      var trips = [];
+
+      var loadTrips = async function () {
+        try {
+          var { data, error } = await supabaseClient
+            .from('trips')
+            .select('*')
+            .order('start_date', { ascending: true });
+          if (error) { console.log('[trips] table not ready:', error.message); return; }
+          trips = data || [];
+        } catch (e) {
+          console.log('[trips] load error', e);
+        }
+      };
+
+      var renderYearView = function () {
+        var timelineEl = document.getElementById('year-timeline');
+        var listEl = document.getElementById('year-trip-list');
+        var legendEl = document.getElementById('year-legend');
+        var titleEl = document.getElementById('year-view-title');
+        if (!timelineEl || !listEl) return;
+
+        var year = today.getFullYear();
+        if (titleEl) titleEl.textContent = year + ' Family Travel';
+
+        var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        var yearStart = new Date(year, 0, 1).getTime();
+        var yearEnd = new Date(year + 1, 0, 1).getTime();
+        var yearDays = (yearEnd - yearStart) / 86400000;
+
+        // Legend
+        if (legendEl) {
+          legendEl.innerHTML = '';
+          trips.forEach(function (t) {
+            var item = document.createElement('div');
+            item.className = 'year-legend-item';
+            item.innerHTML = '<div class="year-legend-dot" style="background:' + (t.color || '#3498db') + ';"></div>' +
+              '<span>' + t.title + '</span>';
+            legendEl.appendChild(item);
+          });
+        }
+
+        // Month headers
+        var monthsHtml = '<div class="year-months">';
+        monthNames.forEach(function (name, i) {
+          var isCurrent = (i === today.getMonth());
+          monthsHtml += '<div class="year-month-col' + (isCurrent ? ' is-current' : '') + '"><div class="year-month-label">' + name + '</div></div>';
+        });
+        monthsHtml += '</div>';
+
+        // Trip bars
+        var barsHtml = '<div class="year-bars" style="height:' + Math.max(trips.length * 28 + 10, 40) + 'px;">';
+        trips.forEach(function (t, idx) {
+          var start = new Date(t.start_date + 'T00:00:00').getTime();
+          var end = new Date(t.end_date + 'T23:59:59').getTime();
+          // Clamp to current year
+          var s = Math.max(start, yearStart);
+          var e = Math.min(end, yearEnd);
+          if (s >= yearEnd || e <= yearStart) return;
+
+          var leftPct = ((s - yearStart) / (yearEnd - yearStart)) * 100;
+          var widthPct = ((e - s) / (yearEnd - yearStart)) * 100;
+          widthPct = Math.max(widthPct, 1.5); // minimum visible width
+
+          barsHtml += '<div class="year-bar" data-trip-id="' + t.id + '" style="left:' + leftPct +
+            '%;width:' + widthPct + '%;top:' + (idx * 28) + 'px;background:' + (t.color || '#3498db') + ';">' +
+            t.title + '</div>';
+        });
+        barsHtml += '</div>';
+
+        timelineEl.innerHTML = monthsHtml + barsHtml;
+
+        // Click handlers on bars
+        timelineEl.querySelectorAll('.year-bar').forEach(function (bar) {
+          bar.addEventListener('click', function () {
+            if (!body.classList.contains('is-admin')) return;
+            var id = parseInt(bar.getAttribute('data-trip-id'));
+            openTripModal(id);
+          });
+        });
+
+        // Trip list
+        listEl.innerHTML = '';
+        if (trips.length === 0) {
+          listEl.innerHTML = '<div style="color:#b09273;font-style:italic;font-size:0.82rem;padding:8px 0;">No trips added yet. Tap "+ Add Trip" to plan your next adventure!</div>';
+          return;
+        }
+
+        trips.forEach(function (t) {
+          var item = document.createElement('div');
+          item.className = 'year-trip-item';
+
+          var startD = new Date(t.start_date + 'T00:00:00');
+          var endD = new Date(t.end_date + 'T00:00:00');
+          var diffDays = Math.ceil((endD - startD) / 86400000) + 1;
+          var dateRange = startD.toLocaleDateString('en-SG', { day: 'numeric', month: 'short' }) + ' – ' +
+            endD.toLocaleDateString('en-SG', { day: 'numeric', month: 'short' });
+
+          // Countdown
+          var countdown = '';
+          var daysUntil = Math.ceil((startD - today) / 86400000);
+          if (daysUntil > 0) {
+            countdown = daysUntil + ' days away';
+          } else if (daysUntil >= -diffDays) {
+            countdown = 'Happening now!';
+          } else {
+            countdown = 'Completed';
+          }
+
+          var members = t.members || 'Everyone';
+
+          item.innerHTML = '<div class="year-trip-dot" style="background:' + (t.color || '#3498db') + ';"></div>' +
+            '<div class="year-trip-info">' +
+            '<div class="year-trip-title">' + t.title + '</div>' +
+            '<div class="year-trip-meta">' + (t.destination || '') + ' · ' + dateRange + ' · ' + diffDays + ' days · ' + members + '</div>' +
+            (t.notes ? '<div class="year-trip-meta" style="font-style:italic;">' + t.notes + '</div>' : '') +
+            '</div>' +
+            '<div class="year-trip-countdown">' + countdown + '</div>';
+
+          item.addEventListener('click', function () {
+            if (!body.classList.contains('is-admin')) return;
+            openTripModal(t.id);
+          });
+
+          listEl.appendChild(item);
+        });
+      };
+
+      // ===== TRIP MODAL =====
+      var tripBackdrop = document.getElementById('trip-modal-backdrop');
+      var tripTitleEl = document.getElementById('trip-modal-title');
+      var tripTitleInput = document.getElementById('trip-title');
+      var tripDestInput = document.getElementById('trip-destination');
+      var tripStartInput = document.getElementById('trip-start');
+      var tripEndInput = document.getElementById('trip-end');
+      var tripMembersSelect = document.getElementById('trip-members');
+      var tripColorSelect = document.getElementById('trip-color');
+      var tripNotesInput = document.getElementById('trip-notes');
+      var tripSaveBtn = document.getElementById('trip-save-btn');
+      var tripCancelBtn = document.getElementById('trip-cancel-btn');
+      var tripDeleteBtn = document.getElementById('trip-delete-btn');
+      var tripAddBtn = document.getElementById('year-add-trip-btn');
+      var editingTripId = null;
+
+      var openTripModal = function (id) {
+        editingTripId = id || null;
+        if (tripTitleEl) tripTitleEl.textContent = editingTripId ? 'Edit Trip' : 'Add Trip';
+
+        if (editingTripId) {
+          var t = trips.find(function (tr) { return tr.id === editingTripId; });
+          if (t) {
+            if (tripTitleInput) tripTitleInput.value = t.title || '';
+            if (tripDestInput) tripDestInput.value = t.destination || '';
+            if (tripStartInput) tripStartInput.value = t.start_date || '';
+            if (tripEndInput) tripEndInput.value = t.end_date || '';
+            if (tripColorSelect) tripColorSelect.value = t.color || '#3498db';
+            if (tripNotesInput) tripNotesInput.value = t.notes || '';
+            // Set members
+            if (tripMembersSelect) {
+              Array.from(tripMembersSelect.options).forEach(function (opt) {
+                opt.selected = (t.members || 'Everyone').indexOf(opt.value) > -1 || (t.members === 'Everyone' && opt.value === 'All');
+              });
+            }
+          }
+        } else {
+          if (tripTitleInput) tripTitleInput.value = '';
+          if (tripDestInput) tripDestInput.value = '';
+          if (tripStartInput) tripStartInput.value = '';
+          if (tripEndInput) tripEndInput.value = '';
+          if (tripColorSelect) tripColorSelect.value = '#3498db';
+          if (tripNotesInput) tripNotesInput.value = '';
+        }
+
+        if (tripDeleteBtn) tripDeleteBtn.style.display = editingTripId ? 'block' : 'none';
+        if (tripBackdrop) tripBackdrop.classList.add('is-open');
+      };
+
+      var closeTripModal = function () {
+        if (tripBackdrop) tripBackdrop.classList.remove('is-open');
+        editingTripId = null;
+      };
+
+      if (tripCancelBtn) tripCancelBtn.addEventListener('click', closeTripModal);
+      if (tripBackdrop) tripBackdrop.addEventListener('click', function (e) { if (e.target === tripBackdrop) closeTripModal(); });
+
+      if (tripAddBtn) {
+        tripAddBtn.addEventListener('click', function () {
+          if (!body.classList.contains('is-admin')) {
+            var input = window.prompt('Enter admin password');
+            if (input !== PASSWORD) { if (input !== null) window.alert('Incorrect password.'); return; }
+            isAdmin = true;
+            body.classList.add('is-admin');
+            adminToggle.textContent = 'Admin ON';
+            try { window.localStorage.setItem('leng_admin', 'yes'); } catch(e) {}
+          }
+          openTripModal(null);
+        });
+      }
+
+      if (tripSaveBtn) {
+        tripSaveBtn.addEventListener('click', async function () {
+          var title = tripTitleInput ? tripTitleInput.value.trim() : '';
+          var dest = tripDestInput ? tripDestInput.value.trim() : '';
+          var startDate = tripStartInput ? tripStartInput.value : '';
+          var endDate = tripEndInput ? tripEndInput.value : '';
+          var color = tripColorSelect ? tripColorSelect.value : '#3498db';
+          var notes = tripNotesInput ? tripNotesInput.value.trim() : '';
+          var members = 'Everyone';
+          if (tripMembersSelect) {
+            var sel = Array.from(tripMembersSelect.selectedOptions).map(function (o) { return o.value; });
+            if (sel.indexOf('All') === -1) members = sel.join(', ');
+          }
+
+          if (!title) { window.alert('Enter a trip name.'); return; }
+          if (!startDate || !endDate) { window.alert('Enter both start and end dates.'); return; }
+
+          tripSaveBtn.textContent = 'Saving...';
+          tripSaveBtn.disabled = true;
+
+          var row = { title: title, destination: dest, start_date: startDate, end_date: endDate, color: color, notes: notes, members: members };
+
+          if (editingTripId) {
+            await supabaseClient.from('trips').update(row).eq('id', editingTripId);
+          } else {
+            await supabaseClient.from('trips').insert(row);
+          }
+
+          await loadTrips();
+          renderYearView();
+          tripSaveBtn.textContent = 'Save';
+          tripSaveBtn.disabled = false;
+          closeTripModal();
+        });
+      }
+
+      if (tripDeleteBtn) {
+        tripDeleteBtn.addEventListener('click', async function () {
+          if (!editingTripId) return;
+          if (!window.confirm('Delete this trip?')) return;
+          await supabaseClient.from('trips').delete().eq('id', editingTripId);
+          await loadTrips();
+          renderYearView();
+          closeTripModal();
+        });
+      }
+
       // initial load
+      loadWeather();
+      await loadTrips();
       syncWeekState();
       updateWeekLabelAndButtons();
       await loadEventsForCurrentWeek();
