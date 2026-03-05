@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Leng Family OS v1.6</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Family OS" />
+  <meta name="theme-color" content="#f5b98f" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="apple-touch-icon" href="/icon.svg" />
+  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+  <title>Leng Family OS</title>
   <style>
     :root {
       --bg: #fff9f3;
@@ -1415,6 +1419,23 @@
     .weather-city-temp { font-size: 1rem; font-weight: 800; color: #2b2432; }
     .weather-city-desc { font-size: 0.7rem; color: #9a8b7a; }
     @media (max-width: 400px) { .weather-grid { grid-template-columns: 1fr; } }
+    /* Birthdays */
+    .home-card-birthdays { border-left: 3px solid #e91e63; }
+    .birthdays-list { margin-top: 4px; }
+    .birthday-row {
+      display: flex; align-items: center; gap: 10px; padding: 5px 0;
+    }
+    .birthday-emoji { font-size: 1.2rem; }
+    .birthday-info { flex: 1; }
+    .birthday-name { font-size: 0.86rem; font-weight: 700; color: #2b2432; }
+    .birthday-date { font-size: 0.74rem; color: #9a8b7a; }
+    .birthday-countdown {
+      font-size: 0.74rem; font-weight: 700; white-space: nowrap;
+      padding: 2px 8px; border-radius: 10px;
+    }
+    .birthday-countdown.soon { background: rgba(233,30,99,0.1); color: #e91e63; }
+    .birthday-countdown.today { background: #e91e63; color: #fff; }
+    .birthday-countdown.far { color: #9a8b7a; }
     /* Year timeline */
     .year-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; font-size: 0.74rem; }
     .year-legend-item { display: flex; align-items: center; gap: 4px; }
@@ -2109,6 +2130,10 @@
             <div class="home-card-label">World Weather</div>
             <div id="weather-content" class="weather-grid">Loading weather...</div>
           </div>
+          <div class="home-card home-card-birthdays">
+            <div class="home-card-label">Birthdays & Anniversaries</div>
+            <div id="birthdays-content" class="birthdays-list">Loading...</div>
+          </div>
           <div class="home-card home-card-mg" id="morning-general-card">
             <div style="display:flex;align-items:center;justify-content:space-between;">
               <div class="home-card-label" style="margin-bottom:0;">Morning General</div>
@@ -2285,7 +2310,7 @@
         <div class="settings-group">
           <div class="settings-group-label">About</div>
           <div class="settings-row settings-row-info">
-            <span>Leng Family OS v1.6</span>
+            <span>Leng Family OS v1.7</span>
             <span class="settings-row-detail">Built with love by Papa</span>
           </div>
         </div>
@@ -4308,6 +4333,7 @@
           previewEl.textContent = '"' + lastGeneratedQuote.text.substring(0, 80) + (lastGeneratedQuote.text.length > 80 ? '...' : '') + '"';
         }
         renderLocationGrid();
+        renderBirthdays();
       };
 
       // ===== QUOTES LOGIC =====
@@ -5489,19 +5515,98 @@
         });
       }
 
-      // initial load
-      loadWeather();
-      await loadTrips();
+      // ===== FAMILY BIRTHDAYS =====
+      var familyBirthdays = [
+        { name: 'Hoelon', emoji: '👨', month: 1, day: 1, type: 'Birthday' },
+        { name: 'Hsin (Mimi)', emoji: '👩', month: 1, day: 1, type: 'Birthday' },
+        { name: 'Fly (Mahmah)', emoji: '👵', month: 1, day: 1, type: 'Birthday' },
+        { name: 'Xiao', emoji: '🧑', month: 1, day: 1, type: 'Birthday' },
+        { name: 'Han', emoji: '🧑', month: 1, day: 1, type: 'Birthday' },
+        { name: 'Jue', emoji: '👦', month: 1, day: 1, type: 'Birthday' },
+        { name: 'Hoelon & Mimi', emoji: '💕', month: 1, day: 1, type: 'Anniversary' }
+      ];
+      // ^^^ UPDATE the month/day values above with real dates! (month: 1-12, day: 1-31)
+
+      var renderBirthdays = function () {
+        var el = document.getElementById('birthdays-content');
+        if (!el) return;
+
+        var now = new Date();
+        var thisYear = now.getFullYear();
+
+        // Calculate days until each birthday
+        var upcoming = familyBirthdays.map(function (b) {
+          var nextDate = new Date(thisYear, b.month - 1, b.day);
+          if (nextDate < now) {
+            nextDate = new Date(thisYear + 1, b.month - 1, b.day);
+          }
+          var daysUntil = Math.ceil((nextDate - now) / 86400000);
+          var age = '';
+          if (b.type === 'Birthday' && b.year) {
+            age = ' (turning ' + (nextDate.getFullYear() - b.year) + ')';
+          }
+          return {
+            name: b.name, emoji: b.emoji, type: b.type,
+            date: nextDate, daysUntil: daysUntil, age: age,
+            dateStr: nextDate.toLocaleDateString('en-SG', { day: 'numeric', month: 'short' })
+          };
+        }).sort(function (a, b) { return a.daysUntil - b.daysUntil; });
+
+        el.innerHTML = '';
+
+        // Show next 5 upcoming
+        upcoming.slice(0, 5).forEach(function (b) {
+          var row = document.createElement('div');
+          row.className = 'birthday-row';
+
+          var countdownClass = 'far';
+          var countdownText = b.daysUntil + ' days';
+          if (b.daysUntil === 0) { countdownClass = 'today'; countdownText = 'TODAY!'; }
+          else if (b.daysUntil <= 7) { countdownClass = 'soon'; countdownText = b.daysUntil + 'd away'; }
+          else if (b.daysUntil <= 30) { countdownClass = 'soon'; }
+
+          row.innerHTML = '<div class="birthday-emoji">' + b.emoji + '</div>' +
+            '<div class="birthday-info">' +
+            '<div class="birthday-name">' + b.name + b.age + '</div>' +
+            '<div class="birthday-date">' + b.type + ' · ' + b.dateStr + '</div>' +
+            '</div>' +
+            '<div class="birthday-countdown ' + countdownClass + '">' + countdownText + '</div>';
+          el.appendChild(row);
+        });
+
+        if (upcoming.length === 0) {
+          el.innerHTML = '<div style="color:#b09273;font-style:italic;font-size:0.82rem;">No birthdays set. Edit the familyBirthdays array in the code.</div>';
+        }
+      };
+
+      // initial load — render UI first, defer slow network calls
       syncWeekState();
       updateWeekLabelAndButtons();
-      await loadEventsForCurrentWeek();
-      clearDayDetail();
-      // Load iCal feeds
-      await loadIcalFeeds();
-      await fetchAllExternalEvents();
       setView('month');
       setPage('calendar');
+
+      // Fast: Supabase events
+      await loadEventsForCurrentWeek();
+      clearDayDetail();
       await renderMonth();
+
+      // Background: don't block render
+      loadWeather();
+      renderBirthdays();
+      loadTrips();
+
+      // Deferred: iCal feeds (slowest — external network)
+      setTimeout(async function () {
+        await loadIcalFeeds();
+        await fetchAllExternalEvents();
+        if (currentView === 'month') renderMonthDots();
+        console.log('[perf] deferred iCal load complete');
+      }, 500);
+
+      // PWA service worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(function () {});
+      }
     })();
   </script>
 </body>

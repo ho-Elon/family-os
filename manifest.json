@@ -1,0 +1,22 @@
+{
+  "name": "Leng Family OS",
+  "short_name": "Family OS",
+  "description": "The Leng Family operating system",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff9f3",
+  "theme_color": "#f5b98f",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
