@@ -1436,6 +1436,42 @@
     .birthday-countdown.soon { background: rgba(233,30,99,0.1); color: #e91e63; }
     .birthday-countdown.today { background: #e91e63; color: #fff; }
     .birthday-countdown.far { color: #9a8b7a; }
+    /* NS Countdown */
+    .home-card-ns { border-left: 3px solid #27ae60; }
+    .ns-bar-wrap { margin: 8px 0 4px; }
+    .ns-label { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+    .ns-name { font-weight: 700; font-size: 0.88rem; color: #2b2432; }
+    .ns-days { font-size: 0.76rem; font-weight: 700; color: #27ae60; }
+    .ns-bar { height: 14px; border-radius: 7px; background: rgba(39,174,96,0.12); overflow: hidden; position: relative; }
+    .ns-bar-fill { height: 100%; border-radius: 7px; background: linear-gradient(90deg, #27ae60, #2ecc71); transition: width 0.5s; position: relative; }
+    .ns-bar-pct { position: absolute; right: 6px; top: 0; font-size: 0.62rem; font-weight: 800; color: #fff; line-height: 14px; }
+    .ns-meta { font-size: 0.72rem; color: #9a8b7a; margin-top: 2px; }
+    .igcse-bar-fill { background: linear-gradient(90deg, #e67e22, #f39c12); }
+    /* Family Streaks */
+    .home-card-streaks { border-left: 3px solid #f39c12; }
+    .streak-badge {
+      background: linear-gradient(135deg, #f39c12, #e74c3c); color: #fff;
+      padding: 3px 10px; border-radius: 12px; font-size: 0.76rem; font-weight: 800;
+    }
+    .streak-today { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .streak-member {
+      display: flex; align-items: center; gap: 4px; padding: 4px 8px;
+      border-radius: 10px; font-size: 0.78rem; background: rgba(0,0,0,0.03);
+    }
+    .streak-member.checked { background: rgba(39,174,96,0.1); }
+    .streak-member-emoji { font-size: 1rem; }
+    .streak-member-name { font-weight: 600; color: #2b2432; }
+    .streak-member-mood { font-size: 1rem; }
+    .streak-member.not-checked { opacity: 0.4; }
+    .streak-checkin-row { margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.04); }
+    .streak-emoji-row { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
+    .streak-emoji {
+      width: 38px; height: 38px; border-radius: 10px; border: 2px solid rgba(0,0,0,0.06);
+      background: #fff; font-size: 1.2rem; cursor: pointer; display: flex;
+      align-items: center; justify-content: center; transition: all 0.15s;
+    }
+    .streak-emoji:hover, .streak-emoji:active { border-color: #f39c12; transform: scale(1.1); }
+    .streak-emoji.is-selected { border-color: #f39c12; background: rgba(243,156,18,0.1); transform: scale(1.15); }
     /* Year timeline */
     .year-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; font-size: 0.74rem; }
     .year-legend-item { display: flex; align-items: center; gap: 4px; }
@@ -2134,6 +2170,30 @@
             <div class="home-card-label">Birthdays & Anniversaries</div>
             <div id="birthdays-content" class="birthdays-list">Loading...</div>
           </div>
+          <div class="home-card home-card-ns">
+            <div class="home-card-label">National Service</div>
+            <div id="ns-countdown-content"></div>
+          </div>
+          <div class="home-card home-card-streaks">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div class="home-card-label" style="margin-bottom:0;">Family Streaks 🔥</div>
+              <div id="streak-counter" class="streak-badge">0 days</div>
+            </div>
+            <div id="streak-today" class="streak-today">Loading...</div>
+            <div id="streak-checkin-row" class="streak-checkin-row">
+              <span style="font-size:0.78rem;color:#8c8170;">Your mood today:</span>
+              <div class="streak-emoji-row" id="streak-emoji-row">
+                <button type="button" class="streak-emoji" data-mood="😊">😊</button>
+                <button type="button" class="streak-emoji" data-mood="😴">😴</button>
+                <button type="button" class="streak-emoji" data-mood="💪">💪</button>
+                <button type="button" class="streak-emoji" data-mood="😤">😤</button>
+                <button type="button" class="streak-emoji" data-mood="🥰">🥰</button>
+                <button type="button" class="streak-emoji" data-mood="📚">📚</button>
+                <button type="button" class="streak-emoji" data-mood="🎮">🎮</button>
+                <button type="button" class="streak-emoji" data-mood="🍳">🍳</button>
+              </div>
+            </div>
+          </div>
           <div class="home-card home-card-mg" id="morning-general-card">
             <div style="display:flex;align-items:center;justify-content:space-between;">
               <div class="home-card-label" style="margin-bottom:0;">Morning General</div>
@@ -2310,7 +2370,7 @@
         <div class="settings-group">
           <div class="settings-group-label">About</div>
           <div class="settings-row settings-row-info">
-            <span>Leng Family OS v1.7</span>
+            <span>Leng Family OS v1.8</span>
             <span class="settings-row-detail">Built with love by Papa</span>
           </div>
         </div>
@@ -4334,6 +4394,8 @@
         }
         renderLocationGrid();
         renderBirthdays();
+        renderNSCountdown();
+        renderStreaks();
       };
 
       // ===== QUOTES LOGIC =====
@@ -5515,15 +5577,221 @@
         });
       }
 
+      // ===== NS COUNTDOWN + IGCSE =====
+      var nsData = [
+        { name: 'Xiao', emoji: '🧑', enlistDate: '2024-10-01', ordDate: '2026-10-01' },
+        { name: 'Han', emoji: '🧑', enlistDate: '2025-11-01', ordDate: '2027-11-01' }
+      ];
+      // ^^^ UPDATE enlistDate and ordDate with real dates (YYYY-MM-DD format)
+
+      var igcseDate = '2027-05-01'; // ^^^ UPDATE with Jue's first IGCSE exam date
+
+      var renderNSCountdown = function () {
+        var el = document.getElementById('ns-countdown-content');
+        if (!el) return;
+        el.innerHTML = '';
+        var now = new Date();
+
+        nsData.forEach(function (ns) {
+          var enlist = new Date(ns.enlistDate + 'T00:00:00');
+          var ord = new Date(ns.ordDate + 'T00:00:00');
+          var totalDays = Math.ceil((ord - enlist) / 86400000);
+          var doneDays = Math.ceil((now - enlist) / 86400000);
+          var leftDays = Math.max(0, Math.ceil((ord - now) / 86400000));
+          var pct = Math.min(100, Math.max(0, Math.round((doneDays / totalDays) * 100)));
+
+          var wrap = document.createElement('div');
+          wrap.className = 'ns-bar-wrap';
+          wrap.innerHTML = '<div class="ns-label"><span class="ns-name">' + ns.emoji + ' ' + ns.name + '</span>' +
+            '<span class="ns-days">' + (leftDays > 0 ? leftDays + ' days left' : 'ORD! 🎉') + '</span></div>' +
+            '<div class="ns-bar"><div class="ns-bar-fill" style="width:' + pct + '%;"><span class="ns-bar-pct">' + pct + '%</span></div></div>' +
+            '<div class="ns-meta">Enlisted ' + enlist.toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' }) +
+            ' · ORD ' + ord.toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' }) + '</div>';
+          el.appendChild(wrap);
+        });
+
+        // IGCSE countdown for Jue
+        var igcse = new Date(igcseDate + 'T00:00:00');
+        var igcseDays = Math.max(0, Math.ceil((igcse - now) / 86400000));
+        var igcseTotal = Math.ceil((igcse - new Date('2025-09-01T00:00:00')) / 86400000); // approx school year start
+        var igcseDone = igcseTotal - igcseDays;
+        var igcsePct = Math.min(100, Math.max(0, Math.round((igcseDone / igcseTotal) * 100)));
+
+        var jueWrap = document.createElement('div');
+        jueWrap.className = 'ns-bar-wrap';
+        jueWrap.innerHTML = '<div class="ns-label"><span class="ns-name">👦 Jue — IGCSE</span>' +
+          '<span class="ns-days" style="color:#e67e22;">' + igcseDays + ' days to go</span></div>' +
+          '<div class="ns-bar" style="background:rgba(230,126,34,0.12);"><div class="ns-bar-fill igcse-bar-fill" style="width:' + igcsePct + '%;"><span class="ns-bar-pct">' + igcsePct + '%</span></div></div>' +
+          '<div class="ns-meta">IGCSE exams · ' + igcse.toLocaleDateString('en-SG', { month: 'short', year: 'numeric' }) + '</div>';
+        el.appendChild(jueWrap);
+      };
+
+      // ===== FAMILY STREAKS =====
+      var streakMembers = [
+        { key: 'Hoelon', name: 'Papa', emoji: '👨' },
+        { key: 'Hsin', name: 'Mimi', emoji: '👩' },
+        { key: 'Fly', name: 'Mahmah', emoji: '👵' },
+        { key: 'Xiao', name: 'Xiao', emoji: '🧑' },
+        { key: 'Han', name: 'Han', emoji: '🧑' },
+        { key: 'Jue', name: 'Jue', emoji: '👦' }
+      ];
+
+      var getTodayKey = function () {
+        var d = new Date();
+        return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+      };
+
+      var loadTodayCheckins = async function () {
+        try {
+          var todayKey = getTodayKey();
+          var { data, error } = await supabaseClient
+            .from('streaks')
+            .select('*')
+            .eq('date', todayKey);
+          if (error) { console.log('[streaks] table not ready:', error.message); return []; }
+          return data || [];
+        } catch (e) {
+          console.log('[streaks] load error', e);
+          return [];
+        }
+      };
+
+      var calculateStreak = async function () {
+        try {
+          // Get last 60 days of check-ins
+          var since = new Date();
+          since.setDate(since.getDate() - 60);
+          var sinceKey = since.getFullYear() + '-' + String(since.getMonth() + 1).padStart(2, '0') + '-' + String(since.getDate()).padStart(2, '0');
+
+          var { data, error } = await supabaseClient
+            .from('streaks')
+            .select('date, member')
+            .gte('date', sinceKey)
+            .order('date', { ascending: false });
+
+          if (error || !data) return 0;
+
+          // Group by date
+          var byDate = {};
+          data.forEach(function (r) {
+            if (!byDate[r.date]) byDate[r.date] = {};
+            byDate[r.date][r.member] = true;
+          });
+
+          // Count consecutive days where at least 3 members checked in
+          var streak = 0;
+          var d = new Date();
+          for (var i = 0; i < 60; i++) {
+            var key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+            var members = byDate[key] ? Object.keys(byDate[key]).length : 0;
+            if (members >= 3) {
+              streak++;
+            } else if (i > 0) {
+              break; // streak broken (skip today if no one checked in yet)
+            }
+            d.setDate(d.getDate() - 1);
+          }
+          return streak;
+        } catch (e) {
+          return 0;
+        }
+      };
+
+      var renderStreaks = async function () {
+        var todayEl = document.getElementById('streak-today');
+        var counterEl = document.getElementById('streak-counter');
+        if (!todayEl) return;
+
+        var checkins = await loadTodayCheckins();
+        var checkinMap = {};
+        checkins.forEach(function (c) { checkinMap[c.member] = c.mood; });
+
+        todayEl.innerHTML = '';
+        streakMembers.forEach(function (m) {
+          var checked = !!checkinMap[m.key];
+          var div = document.createElement('div');
+          div.className = 'streak-member' + (checked ? ' checked' : ' not-checked');
+          div.innerHTML = '<span class="streak-member-emoji">' + m.emoji + '</span>' +
+            '<span class="streak-member-name">' + m.name + '</span>' +
+            (checked ? '<span class="streak-member-mood">' + checkinMap[m.key] + '</span>' : '');
+          todayEl.appendChild(div);
+        });
+
+        // Streak counter
+        var streak = await calculateStreak();
+        if (counterEl) {
+          counterEl.textContent = streak > 0 ? '🔥 ' + streak + ' day' + (streak > 1 ? 's' : '') : 'No streak yet';
+        }
+      };
+
+      // Streak check-in: tap an emoji to check in
+      var streakEmojiRow = document.getElementById('streak-emoji-row');
+      if (streakEmojiRow) {
+        streakEmojiRow.addEventListener('click', async function (e) {
+          var btn = e.target.closest('.streak-emoji');
+          if (!btn) return;
+
+          var mood = btn.getAttribute('data-mood');
+          if (!mood) return;
+
+          // Ask who's checking in
+          var memberNames = streakMembers.map(function (m) { return m.name; });
+          var choice = window.prompt('Who is checking in?\n\n' + memberNames.map(function (n, i) { return (i + 1) + '. ' + n; }).join('\n') + '\n\nEnter number or name:');
+          if (!choice) return;
+
+          choice = choice.trim();
+          var member = null;
+          var num = parseInt(choice);
+          if (num >= 1 && num <= streakMembers.length) {
+            member = streakMembers[num - 1];
+          } else {
+            member = streakMembers.find(function (m) {
+              return m.name.toLowerCase() === choice.toLowerCase() || m.key.toLowerCase() === choice.toLowerCase();
+            });
+          }
+          if (!member) { window.alert('Member not found.'); return; }
+
+          // Highlight selected emoji
+          streakEmojiRow.querySelectorAll('.streak-emoji').forEach(function (b) { b.classList.remove('is-selected'); });
+          btn.classList.add('is-selected');
+
+          var todayKey = getTodayKey();
+
+          try {
+            // Upsert: update if exists, insert if not
+            var { data: existing } = await supabaseClient
+              .from('streaks')
+              .select('id')
+              .eq('member', member.key)
+              .eq('date', todayKey)
+              .limit(1);
+
+            if (existing && existing.length > 0) {
+              await supabaseClient.from('streaks').update({ mood: mood }).eq('id', existing[0].id);
+            } else {
+              await supabaseClient.from('streaks').insert({ member: member.key, mood: mood, date: todayKey });
+            }
+
+            await renderStreaks();
+            // Quick feedback
+            btn.classList.add('is-selected');
+            setTimeout(function () { btn.classList.remove('is-selected'); }, 1500);
+          } catch (e) {
+            console.error('[streaks] checkin error', e);
+            window.alert('Check-in failed: ' + e.message);
+          }
+        });
+      }
+
       // ===== FAMILY BIRTHDAYS =====
       var familyBirthdays = [
-        { name: 'Hoelon', emoji: '👨', month: 10, day: 7, type: 'Birthday' },
-        { name: 'Hsin (Mimi)', emoji: '👩', month: 12, day: 14, type: 'Birthday' },
-        { name: 'Fly (Mahmah)', emoji: '👵', month: 11, day: 7, type: 'Birthday' },
-        { name: 'Xiao', emoji: '🧑', month: 11, day: 19, type: 'Birthday' },
-        { name: 'Han', emoji: '🧑', month: 4, day: 11, type: 'Birthday' },
-        { name: 'Jue', emoji: '👦', month: 11, day: 28, type: 'Birthday' },
-        { name: 'Hoelon & Mimi', emoji: '💕', month: 12, day: 11, type: 'Anniversary' }
+        { name: 'Hoelon', emoji: '👨', month: 1, day: 1, type: 'Birthday' },
+        { name: 'Hsin (Mimi)', emoji: '👩', month: 1, day: 1, type: 'Birthday' },
+        { name: 'Fly (Mahmah)', emoji: '👵', month: 1, day: 1, type: 'Birthday' },
+        { name: 'Xiao', emoji: '🧑', month: 1, day: 1, type: 'Birthday' },
+        { name: 'Han', emoji: '🧑', month: 1, day: 1, type: 'Birthday' },
+        { name: 'Jue', emoji: '👦', month: 1, day: 1, type: 'Birthday' },
+        { name: 'Hoelon & Mimi', emoji: '💕', month: 1, day: 1, type: 'Anniversary' }
       ];
       // ^^^ UPDATE the month/day values above with real dates! (month: 1-12, day: 1-31)
 
@@ -5593,6 +5861,8 @@
       // Background: don't block render
       loadWeather();
       renderBirthdays();
+      renderNSCountdown();
+      renderStreaks();
       loadTrips();
 
       // Deferred: iCal feeds (slowest — external network)
