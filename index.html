@@ -2370,7 +2370,7 @@
         <div class="settings-group">
           <div class="settings-group-label">About</div>
           <div class="settings-row settings-row-info">
-            <span>Leng Family OS v1.8</span>
+            <span>Leng Family OS v1.8b</span>
             <span class="settings-row-detail">Built with love by Papa</span>
           </div>
         </div>
@@ -5584,7 +5584,25 @@
       ];
       // ^^^ UPDATE enlistDate and ordDate with real dates (YYYY-MM-DD format)
 
-      var igcseDate = '2027-05-01'; // ^^^ UPDATE with Jue's first IGCSE exam date
+      var igcseDate = '2027-05-01'; // Final IGCSE (next year)
+
+      // Jue's Mid-Course Exams (GA2) - April 2026
+      var jueExams = [
+        { date: '2026-04-20', time: '08:30', subject: 'Chemistry', duration: '1h 30m' },
+        { date: '2026-04-20', time: '08:30', subject: 'Chemistry Triple', duration: '30m' },
+        { date: '2026-04-20', time: '13:30', subject: 'English Language', duration: '1h' },
+        { date: '2026-04-21', time: '08:30', subject: 'Physics', duration: '1h 30m' },
+        { date: '2026-04-21', time: '08:30', subject: 'Physics Triple', duration: '30m' },
+        { date: '2026-04-21', time: '13:30', subject: 'Maths P1', duration: '1h 15m' },
+        { date: '2026-04-22', time: '08:30', subject: 'Biology', duration: '1h 30m' },
+        { date: '2026-04-22', time: '08:30', subject: 'Biology Triple', duration: '30m' },
+        { date: '2026-04-23', time: '08:30', subject: 'Maths P2', duration: '1h 15m' },
+        { date: '2026-04-23', time: '13:30', subject: 'English Literature', duration: '45m' },
+        { date: '2026-04-24', time: '11:30', subject: 'PE', duration: '1h 30m' },
+        { date: '2026-04-24', time: '14:00', subject: 'Economics', duration: '1h 30m' },
+        { date: '2026-04-28', time: '08:30', subject: 'Business', duration: '1h 30m' },
+        { date: '2026-04-29', time: '08:30', subject: 'Latin', duration: '1h' }
+      ];
 
       var renderNSCountdown = function () {
         var el = document.getElementById('ns-countdown-content');
@@ -5610,19 +5628,37 @@
           el.appendChild(wrap);
         });
 
-        // IGCSE countdown for Jue
-        var igcse = new Date(igcseDate + 'T00:00:00');
-        var igcseDays = Math.max(0, Math.ceil((igcse - now) / 86400000));
-        var igcseTotal = Math.ceil((igcse - new Date('2025-09-01T00:00:00')) / 86400000); // approx school year start
-        var igcseDone = igcseTotal - igcseDays;
-        var igcsePct = Math.min(100, Math.max(0, Math.round((igcseDone / igcseTotal) * 100)));
+        // Jue's Exam Countdown
+        var firstExam = new Date('2026-04-20T00:00:00');
+        var examDays = Math.max(0, Math.ceil((firstExam - now) / 86400000));
 
         var jueWrap = document.createElement('div');
         jueWrap.className = 'ns-bar-wrap';
-        jueWrap.innerHTML = '<div class="ns-label"><span class="ns-name">👦 Jue — IGCSE</span>' +
-          '<span class="ns-days" style="color:#e67e22;">' + igcseDays + ' days to go</span></div>' +
-          '<div class="ns-bar" style="background:rgba(230,126,34,0.12);"><div class="ns-bar-fill igcse-bar-fill" style="width:' + igcsePct + '%;"><span class="ns-bar-pct">' + igcsePct + '%</span></div></div>' +
-          '<div class="ns-meta">IGCSE exams · ' + igcse.toLocaleDateString('en-SG', { month: 'short', year: 'numeric' }) + '</div>';
+        var examPct = Math.min(100, Math.max(0, Math.round(((120 - examDays) / 120) * 100)));
+        jueWrap.innerHTML = '<div class="ns-label"><span class="ns-name">👦 Jue — Mid-Course Exams</span>' +
+          '<span class="ns-days" style="color:#e67e22;">' + examDays + ' days to first exam</span></div>' +
+          '<div class="ns-bar" style="background:rgba(230,126,34,0.12);"><div class="ns-bar-fill igcse-bar-fill" style="width:' + examPct + '%;"><span class="ns-bar-pct">' + examDays + 'd</span></div></div>';
+
+        // Show next 3 upcoming exams
+        var upcomingExams = jueExams.filter(function (e) {
+          return new Date(e.date + 'T' + e.time) > now;
+        }).slice(0, 4);
+
+        if (upcomingExams.length > 0) {
+          var examList = '<div style="margin-top:6px;">';
+          upcomingExams.forEach(function (e) {
+            var d = new Date(e.date + 'T00:00:00');
+            var dayStr = d.toLocaleDateString('en-SG', { weekday: 'short', day: 'numeric', month: 'short' });
+            var daysTo = Math.max(0, Math.ceil((d - now) / 86400000));
+            var urgency = daysTo <= 3 ? 'color:#e74c3c;font-weight:700;' : daysTo <= 7 ? 'color:#e67e22;' : '';
+            examList += '<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:0.78rem;">' +
+              '<span style="' + urgency + '">' + e.subject + '</span>' +
+              '<span style="color:#9a8b7a;">' + dayStr + ' ' + e.time + '</span></div>';
+          });
+          examList += '</div>';
+          jueWrap.innerHTML += examList;
+        }
+
         el.appendChild(jueWrap);
       };
 
