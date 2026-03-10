@@ -2255,6 +2255,72 @@
       </div>
     </section>
 
+    <!-- ===== JUE EXAM HUB ===== -->
+    <section id="jue-view" class="view-shell" aria-label="Jue's Study Hub">
+      <div style="padding:16px;">
+        <div style="text-align:center;margin-bottom:16px;">
+          <div style="font-size:1.3rem;font-weight:900;color:#2b2432;">Jue's Exam Hub 📚</div>
+          <div id="jue-hero-countdown" style="font-size:2.2rem;font-weight:900;color:#e67e22;margin:8px 0;"></div>
+          <div style="font-size:0.82rem;color:#9a8b7a;">days until first exam</div>
+          <div id="jue-progress-bar" style="margin:12px auto;max-width:300px;"></div>
+        </div>
+
+        <div class="home-card" style="border-left:3px solid #e74c3c;margin-bottom:12px;">
+          <div class="home-card-label">Exam Schedule</div>
+          <div id="jue-exam-list"></div>
+        </div>
+
+        <div class="home-card" style="border-left:3px solid #9b59b6;margin-bottom:12px;">
+          <div class="home-card-label">Study Tracker</div>
+          <div id="jue-study-tracker">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+              <select id="jue-study-subject" style="flex:1;padding:8px;border-radius:10px;border:1px solid rgba(255,193,140,0.5);font-size:0.86rem;font-family:inherit;">
+                <option value="">Pick a subject...</option>
+                <option value="Chemistry">Chemistry</option>
+                <option value="Physics">Physics</option>
+                <option value="Biology">Biology</option>
+                <option value="Maths">Maths</option>
+                <option value="English Language">English Language</option>
+                <option value="English Literature">English Literature</option>
+                <option value="Economics">Economics</option>
+                <option value="Business">Business</option>
+                <option value="Latin">Latin</option>
+                <option value="PE">PE</option>
+              </select>
+              <button type="button" id="jue-log-study-btn" class="btn btn-primary" style="padding:8px 14px;font-size:0.82rem;white-space:nowrap;">Log Study 📝</button>
+            </div>
+            <div id="jue-study-streak" style="font-size:0.86rem;margin-bottom:8px;"></div>
+            <div id="jue-subject-progress"></div>
+          </div>
+        </div>
+
+        <div class="home-card" style="border-left:3px solid #3498db;margin-bottom:12px;">
+          <div class="home-card-label">Revision Topics</div>
+          <div id="jue-topics" style="font-size:0.82rem;color:#3d3328;line-height:1.5;">
+            <details style="margin-bottom:6px;"><summary style="font-weight:700;cursor:pointer;">Chemistry</summary><div style="padding:4px 0 4px 12px;">1. Introductory Chemistry · 2. Structure & Bonding · 3. Organic Chemistry · 4. Quantitative & Analytical</div></details>
+            <details style="margin-bottom:6px;"><summary style="font-weight:700;cursor:pointer;">Physics</summary><div style="padding:4px 0 4px 12px;">Heat Transfers · Waves · Forces & Motion · Circuit Electricity</div></details>
+            <details style="margin-bottom:6px;"><summary style="font-weight:700;cursor:pointer;">Biology</summary><div style="padding:4px 0 4px 12px;">Fundamental Biology · Digestive System · Plant Biology · Ecology & Environment</div></details>
+            <details style="margin-bottom:6px;"><summary style="font-weight:700;cursor:pointer;">Maths</summary><div style="padding:4px 0 4px 12px;">Units 1–8 (Higher Groups)</div></details>
+            <details style="margin-bottom:6px;"><summary style="font-weight:700;cursor:pointer;">English Language</summary><div style="padding:4px 0 4px 12px;">Paper 1 Section B: Composition (descriptive, narrative, or discursive writing)</div></details>
+            <details style="margin-bottom:6px;"><summary style="font-weight:700;cursor:pointer;">English Literature</summary><div style="padding:4px 0 4px 12px;">Prose study: Of Mice and Men</div></details>
+            <details style="margin-bottom:6px;"><summary style="font-weight:700;cursor:pointer;">Economics</summary><div style="padding:4px 0 4px 12px;">Section 1: Basic economic problem · Section 2: Allocation of resources · Section 3: Money & banking, Households, Workers, Firms</div></details>
+            <details style="margin-bottom:6px;"><summary style="font-weight:700;cursor:pointer;">Business</summary><div style="padding:4px 0 4px 12px;">1.1–1.4 Business objectives, organisations, classification, location · 1.8 What makes business successful · 3.1–3.5 Finance, cash flow, costs, break-even, accounts · 4.1 Market research</div></details>
+            <details style="margin-bottom:6px;"><summary style="font-weight:700;cursor:pointer;">Latin</summary><div style="padding:4px 0 4px 12px;">All grammar and vocab covered in course so far</div></details>
+            <details style="margin-bottom:6px;"><summary style="font-weight:700;cursor:pointer;">PE</summary><div style="padding:4px 0 4px 12px;">Muscular & skeletal systems · Respiratory & CV systems · Exercise effects · Levers, planes & axis · Health, fitness, well-being · Testing, training methods, components · Warm up/cool down · Injuries · PEDs</div></details>
+          </div>
+        </div>
+
+        <div class="home-card" style="border-left:3px solid #27ae60;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="home-card-label" style="margin-bottom:0;">Papa's Message</div>
+          </div>
+          <div style="margin-top:6px;font-size:0.88rem;color:#3d3328;line-height:1.5;font-style:italic;">
+            "Every exam you face now is a step toward the future you want. I believe in you, Jue. Study smart, rest well, and remember — your family is always behind you. 💪❤️"
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== MEALS VIEW ===== -->
     <section id="meals-view" class="view-shell" aria-label="Meal Planner">
       <div class="meals-container">
@@ -2323,7 +2389,7 @@
               &nbsp;&nbsp;&nbsp;Half-term: 25 -- 29 May<br>
               <strong>Summer Break:</strong> 29 Jun -- Aug 2026
             </div>
-            <div style="font-size:0.72rem;color:#9a8b7a;">Source: tts.edu.sg/school-life/term-dates</div>
+            <div style="font-size:0.72rem;color:#9a8b7a;">Source: <a href="https://www.tts.edu.sg/school-life/term-dates" target="_blank" style="color:#3498db;text-decoration:underline;">tts.edu.sg/school-life/term-dates</a></div>
           </div>
         </div>
         <div class="settings-group">
@@ -2370,7 +2436,7 @@
         <div class="settings-group">
           <div class="settings-group-label">About</div>
           <div class="settings-row settings-row-info">
-            <span>Leng Family OS v1.8b</span>
+            <span>Leng Family OS v1.9</span>
             <span class="settings-row-detail">Built with love by Papa</span>
           </div>
         </div>
@@ -2483,6 +2549,7 @@
   <nav class="bottom-nav" aria-label="Bottom navigation">
     <button type="button" id="bottom-home"><span>Home</span></button>
     <button type="button" id="bottom-calendar" class="is-active"><span>Calendar</span></button>
+    <button type="button" id="bottom-jue"><span>Jue 📚</span></button>
     <button type="button" id="bottom-meals"><span>Meals</span></button>
     <button type="button" id="bottom-quotes"><span>Quotes</span></button>
     <button type="button" id="bottom-settings"><span>Settings</span></button>
@@ -2565,6 +2632,8 @@
       const mealsViewEl = document.getElementById('meals-view');
       const settingsViewEl = document.getElementById('settings-view');
       const yearViewEl = document.getElementById('year-view');
+      const jueViewEl = document.getElementById('jue-view');
+      const bottomJueBtn = document.getElementById('bottom-jue');
 
       let currentView = 'month'; // 'month' | 'week'
       let currentPage = 'calendar'; // 'home' | 'calendar' | 'meals' | 'quotes' | 'settings'
@@ -2575,6 +2644,7 @@
         if (monthViewEl) monthViewEl.classList.remove('is-active');
         if (weekViewEl) weekViewEl.classList.remove('is-active');
         if (yearViewEl) yearViewEl.classList.remove('is-active');
+        if (jueViewEl) jueViewEl.classList.remove('is-active');
         if (mealsViewEl) mealsViewEl.classList.remove('is-active');
         if (quotesViewEl) quotesViewEl.classList.remove('is-active');
         if (settingsViewEl) settingsViewEl.classList.remove('is-active');
@@ -2603,10 +2673,14 @@
           if (quotesViewEl) quotesViewEl.classList.add('is-active');
         } else if (page === 'settings') {
           if (settingsViewEl) settingsViewEl.classList.add('is-active');
+        } else if (page === 'jue') {
+          if (jueViewEl) jueViewEl.classList.add('is-active');
+          renderJueView();
         }
 
         if (bottomHomeBtn) bottomHomeBtn.classList.toggle('is-active', page === 'home');
         if (bottomCalendarBtn) bottomCalendarBtn.classList.toggle('is-active', page === 'calendar');
+        if (bottomJueBtn) bottomJueBtn.classList.toggle('is-active', page === 'jue');
         if (bottomMealsBtn) bottomMealsBtn.classList.toggle('is-active', page === 'meals');
         if (bottomQuotesBtn) bottomQuotesBtn.classList.toggle('is-active', page === 'quotes');
         if (bottomSettingsBtn) bottomSettingsBtn.classList.toggle('is-active', page === 'settings');
@@ -4029,6 +4103,11 @@
           setPage('settings');
         });
       }
+      if (bottomJueBtn) {
+        bottomJueBtn.addEventListener('click', function () {
+          setPage('jue');
+        });
+      }
 
       const refreshEventsAfterChange = async function () {
         events = await fetchEventsFromSupabase(currentWeekKey);
@@ -5059,7 +5138,7 @@
           // Selfie or emoji placeholder
           var photoHtml = '';
           if (loc && loc.selfie) {
-            photoHtml = '<img class="family-loc-selfie" src="' + loc.selfie + '" alt="' + m.name + '" />';
+            photoHtml = '<img class="family-loc-selfie" src="' + loc.selfie + '" alt="' + m.name + '" data-photo-member="' + m.name + '" data-photo-time="' + (loc.updated_at || '') + '" data-photo-addr="' + (loc.address || '') + '" style="cursor:pointer;" />';
           } else {
             photoHtml = '<div class="family-loc-selfie-placeholder">' + m.emoji + '</div>';
           }
@@ -5097,8 +5176,42 @@
           var selfieBtn = row.querySelector('[data-selfie="' + m.key + '"]');
           if (selfieBtn) selfieBtn.addEventListener('click', function () { doSelfie(m.key); });
 
+          // Photo viewer
+          var photoImg = row.querySelector('[data-photo-member]');
+          if (photoImg) {
+            photoImg.addEventListener('click', function () {
+              var src = photoImg.src;
+              var name = photoImg.getAttribute('data-photo-member');
+              var time = photoImg.getAttribute('data-photo-time');
+              var addr = photoImg.getAttribute('data-photo-addr');
+              var timeStr = time ? timeAgo(time) : '';
+              showPhotoViewer(src, name, timeStr, addr);
+            });
+          }
+
           gridEl.appendChild(row);
         });
+      };
+
+      // Photo viewer overlay
+      var showPhotoViewer = function (src, name, time, addr) {
+        var existing = document.getElementById('photo-viewer-overlay');
+        if (existing) existing.remove();
+
+        var overlay = document.createElement('div');
+        overlay.id = 'photo-viewer-overlay';
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.85);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;';
+        overlay.innerHTML = '<img src="' + src + '" style="max-width:90%;max-height:60vh;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,0.4);" />' +
+          '<div style="color:#fff;text-align:center;margin-top:12px;">' +
+          '<div style="font-size:1.1rem;font-weight:700;">' + name + '</div>' +
+          (addr ? '<div style="font-size:0.82rem;opacity:0.8;margin-top:4px;">' + addr + '</div>' : '') +
+          (time ? '<div style="font-size:0.78rem;opacity:0.6;margin-top:2px;">' + time + '</div>' : '') +
+          '</div>' +
+          '<button type="button" style="margin-top:16px;padding:8px 24px;border:none;border-radius:12px;background:rgba(255,255,255,0.15);color:#fff;font-size:0.86rem;cursor:pointer;">Close</button>';
+        overlay.addEventListener('click', function (e) {
+          if (e.target === overlay || e.target.tagName === 'BUTTON') overlay.remove();
+        });
+        document.body.appendChild(overlay);
       };
 
       // ===== ICAL FEED MANAGER =====
@@ -5577,12 +5690,127 @@
         });
       }
 
+      // ===== JUE EXAM HUB =====
+      var renderJueView = function () {
+        var now = new Date();
+        var firstExam = new Date('2026-04-20T00:00:00');
+        var examDays = Math.max(0, Math.ceil((firstExam - now) / 86400000));
+
+        var heroEl = document.getElementById('jue-hero-countdown');
+        if (heroEl) heroEl.textContent = examDays;
+
+        var progEl = document.getElementById('jue-progress-bar');
+        if (progEl) {
+          var pct = Math.min(100, Math.max(0, Math.round(((120 - examDays) / 120) * 100)));
+          progEl.innerHTML = '<div class="ns-bar" style="background:rgba(230,126,34,0.12);height:18px;border-radius:9px;">' +
+            '<div class="ns-bar-fill igcse-bar-fill" style="width:' + pct + '%;height:18px;border-radius:9px;"><span class="ns-bar-pct" style="line-height:18px;">' + pct + '% prep time used</span></div></div>';
+        }
+
+        var listEl = document.getElementById('jue-exam-list');
+        if (listEl) {
+          listEl.innerHTML = '';
+          var lastDate = '';
+          jueExams.forEach(function (e) {
+            var d = new Date(e.date + 'T00:00:00');
+            var daysTo = Math.max(0, Math.ceil((d - now) / 86400000));
+            var isPast = d < now;
+            var dateLabel = d.toLocaleDateString('en-SG', { weekday: 'short', day: 'numeric', month: 'short' });
+
+            if (e.date !== lastDate) {
+              lastDate = e.date;
+              var header = document.createElement('div');
+              header.style.cssText = 'font-weight:800;font-size:0.82rem;color:#2b2432;margin-top:10px;padding-bottom:4px;border-bottom:1px solid rgba(0,0,0,0.06);';
+              header.textContent = dateLabel + (daysTo === 0 ? ' -- TODAY' : daysTo <= 3 ? ' -- ' + daysTo + ' days away!' : '');
+              if (daysTo <= 3 && !isPast) header.style.color = '#e74c3c';
+              listEl.appendChild(header);
+            }
+
+            var row = document.createElement('div');
+            row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:0.84rem;';
+            if (isPast) row.style.opacity = '0.4';
+            row.innerHTML = '<div><span style="font-weight:600;' + (daysTo <= 7 && !isPast ? 'color:#e74c3c;' : '') + '">' + e.subject + '</span>' +
+              '<span style="color:#9a8b7a;margin-left:8px;">' + e.duration + '</span></div>' +
+              '<span style="color:#9a8b7a;font-size:0.78rem;">' + e.time + (isPast ? ' done' : '') + '</span>';
+            listEl.appendChild(row);
+          });
+        }
+
+        loadJueStudyData();
+      };
+
+      var loadJueStudyData = async function () {
+        var streakEl = document.getElementById('jue-study-streak');
+        var progressEl = document.getElementById('jue-subject-progress');
+        if (!streakEl) return;
+
+        try {
+          var since = new Date();
+          since.setDate(since.getDate() - 30);
+          var sinceKey = since.getFullYear() + '-' + String(since.getMonth() + 1).padStart(2, '0') + '-' + String(since.getDate()).padStart(2, '0');
+
+          var { data, error } = await supabaseClient.from('study_log').select('*').gte('date', sinceKey).order('date', { ascending: false });
+
+          if (error) {
+            streakEl.innerHTML = '<span style="color:#b09273;font-style:italic;">Study log not set up yet.</span>';
+            return;
+          }
+
+          var logs = data || [];
+          var streak = 0;
+          var d = new Date();
+          for (var i = 0; i < 30; i++) {
+            var key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+            if (logs.some(function (l) { return l.date === key; })) { streak++; } else if (i > 0) { break; }
+            d.setDate(d.getDate() - 1);
+          }
+
+          streakEl.innerHTML = '<span style="font-size:1.1rem;">🔥</span> <strong>' + streak + '-day study streak</strong> -- ' + logs.length + ' sessions this month';
+
+          if (progressEl) {
+            var subjects = {};
+            logs.forEach(function (l) { subjects[l.subject] = (subjects[l.subject] || 0) + 1; });
+            var examSubjects = ['Chemistry', 'Physics', 'Biology', 'Maths', 'English Language', 'English Literature', 'Economics', 'Business', 'Latin', 'PE'];
+            progressEl.innerHTML = '';
+            examSubjects.forEach(function (s) {
+              var count = subjects[s] || 0;
+              var pct = Math.min(100, count * 10);
+              var barColor = count === 0 ? '#e74c3c' : count < 5 ? '#f39c12' : '#27ae60';
+              var row = document.createElement('div');
+              row.style.cssText = 'margin-bottom:4px;';
+              row.innerHTML = '<div style="display:flex;justify-content:space-between;font-size:0.76rem;"><span>' + s + '</span><span style="color:#9a8b7a;">' + count + '</span></div>' +
+                '<div style="height:6px;border-radius:3px;background:rgba(0,0,0,0.06);"><div style="height:6px;border-radius:3px;background:' + barColor + ';width:' + pct + '%;"></div></div>';
+              progressEl.appendChild(row);
+            });
+          }
+        } catch (e) { console.log('[jue] study error', e); }
+      };
+
+      var jueLogBtn = document.getElementById('jue-log-study-btn');
+      if (jueLogBtn) {
+        jueLogBtn.addEventListener('click', async function () {
+          var subjectEl = document.getElementById('jue-study-subject');
+          var subject = subjectEl ? subjectEl.value : '';
+          if (!subject) { window.alert('Pick a subject first!'); return; }
+          var todayKey = getTodayKey();
+          jueLogBtn.textContent = 'Logging...';
+          try {
+            await supabaseClient.from('study_log').insert({ subject: subject, date: todayKey });
+            jueLogBtn.textContent = 'Logged! ✅';
+            if (subjectEl) subjectEl.value = '';
+            await loadJueStudyData();
+            setTimeout(function () { jueLogBtn.textContent = 'Log Study 📝'; }, 2000);
+          } catch (e) {
+            jueLogBtn.textContent = 'Log Study 📝';
+            window.alert('Error: ' + e.message);
+          }
+        });
+      }
+
       // ===== NS COUNTDOWN + IGCSE =====
       var nsData = [
-        { name: 'Xiao', emoji: '🧑', enlistDate: '2024-10-01', ordDate: '2026-10-01' },
-        { name: 'Han', emoji: '🧑', enlistDate: '2025-11-01', ordDate: '2027-11-01' }
+        { name: 'Xiao', emoji: '🧑', enlistDate: '2024-10-01', ordDate: '2026-10-07' },
+        { name: 'Han', emoji: '🧑', enlistDate: '2025-11-01', ordDate: '2027-10-10' }
       ];
-      // ^^^ UPDATE enlistDate and ordDate with real dates (YYYY-MM-DD format)
 
       var igcseDate = '2027-05-01'; // Final IGCSE (next year)
 
@@ -5821,15 +6049,14 @@
 
       // ===== FAMILY BIRTHDAYS =====
       var familyBirthdays = [
-        { name: 'Hoelon', emoji: '👨', month: 1, day: 1, type: 'Birthday' },
-        { name: 'Hsin (Mimi)', emoji: '👩', month: 1, day: 1, type: 'Birthday' },
-        { name: 'Fly (Mahmah)', emoji: '👵', month: 1, day: 1, type: 'Birthday' },
-        { name: 'Xiao', emoji: '🧑', month: 1, day: 1, type: 'Birthday' },
-        { name: 'Han', emoji: '🧑', month: 1, day: 1, type: 'Birthday' },
-        { name: 'Jue', emoji: '👦', month: 1, day: 1, type: 'Birthday' },
-        { name: 'Hoelon & Mimi', emoji: '💕', month: 1, day: 1, type: 'Anniversary' }
+        { name: 'Hoelon', emoji: '👨', month: 10, day: 7, type: 'Birthday' },
+        { name: 'Hsin (Mimi)', emoji: '👩', month: 12, day: 14, type: 'Birthday' },
+        { name: 'Fly (Mahmah)', emoji: '👵', month: 11, day: 7, type: 'Birthday' },
+        { name: 'Xiao', emoji: '🧑', month: 11, day: 19, type: 'Birthday' },
+        { name: 'Han', emoji: '🧑', month: 4, day: 11, type: 'Birthday' },
+        { name: 'Jue', emoji: '👦', month: 11, day: 28, type: 'Birthday' },
+        { name: 'Hoelon & Mimi', emoji: '💕', month: 12, day: 11, type: 'Anniversary' }
       ];
-      // ^^^ UPDATE the month/day values above with real dates! (month: 1-12, day: 1-31)
 
       var renderBirthdays = function () {
         var el = document.getElementById('birthdays-content');
