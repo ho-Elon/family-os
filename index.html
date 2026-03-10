@@ -1408,17 +1408,19 @@
     .external-event-dot { width: 6px; height: 6px; border-radius: 50%; background: #3498db; display: inline-block; margin-right: 3px; }
     /* Weather card */
     .home-card-weather { border-left: 3px solid #3498db; }
-    .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
+    .home-compact-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .home-compact-row .home-card { margin-bottom: 0; }
+    @media (max-width: 720px) { .home-compact-row { grid-template-columns: 1fr; } }
+    .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px; }
     .weather-city {
-      background: rgba(255,255,255,0.6); border-radius: 10px; padding: 8px 10px;
-      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.6); border-radius: 10px; padding: 6px 8px;
+      display: flex; align-items: center; gap: 6px;
     }
-    .weather-city-icon { font-size: 1.3rem; }
+    .weather-city-icon { font-size: 1.1rem; }
     .weather-city-info { flex: 1; }
-    .weather-city-name { font-size: 0.72rem; font-weight: 700; color: #8c8170; text-transform: uppercase; letter-spacing: 0.03em; }
-    .weather-city-temp { font-size: 1rem; font-weight: 800; color: #2b2432; }
-    .weather-city-desc { font-size: 0.7rem; color: #9a8b7a; }
-    @media (max-width: 400px) { .weather-grid { grid-template-columns: 1fr; } }
+    .weather-city-name { font-size: 0.68rem; font-weight: 700; color: #8c8170; text-transform: uppercase; letter-spacing: 0.03em; }
+    .weather-city-temp { font-size: 0.92rem; font-weight: 800; color: #2b2432; }
+    .weather-city-desc { font-size: 0.66rem; color: #9a8b7a; }
     /* Birthdays */
     .home-card-birthdays { border-left: 3px solid #e91e63; }
     .birthdays-list { margin-top: 4px; }
@@ -2162,35 +2164,39 @@
             <div class="home-card-label">Today's Events</div>
             <div class="home-card-content" id="home-today-events">Loading...</div>
           </div>
-          <div class="home-card home-card-weather" id="weather-card">
-            <div class="home-card-label">World Weather</div>
-            <div id="weather-content" class="weather-grid">Loading weather...</div>
-          </div>
-          <div class="home-card home-card-birthdays">
-            <div class="home-card-label">Birthdays & Anniversaries</div>
-            <div id="birthdays-content" class="birthdays-list">Loading...</div>
-          </div>
-          <div class="home-card home-card-ns">
-            <div class="home-card-label">National Service</div>
-            <div id="ns-countdown-content"></div>
-          </div>
-          <div class="home-card home-card-streaks">
-            <div style="display:flex;align-items:center;justify-content:space-between;">
-              <div class="home-card-label" style="margin-bottom:0;">Family Streaks 🔥</div>
-              <div id="streak-counter" class="streak-badge">0 days</div>
+          <div class="home-compact-row">
+            <div class="home-card home-card-weather" id="weather-card">
+              <div class="home-card-label">World Weather</div>
+              <div id="weather-content" class="weather-grid">Loading weather...</div>
             </div>
-            <div id="streak-today" class="streak-today">Loading...</div>
-            <div id="streak-checkin-row" class="streak-checkin-row">
-              <span style="font-size:0.78rem;color:#8c8170;">Your mood today:</span>
-              <div class="streak-emoji-row" id="streak-emoji-row">
-                <button type="button" class="streak-emoji" data-mood="😊">😊</button>
-                <button type="button" class="streak-emoji" data-mood="😴">😴</button>
-                <button type="button" class="streak-emoji" data-mood="💪">💪</button>
-                <button type="button" class="streak-emoji" data-mood="😤">😤</button>
-                <button type="button" class="streak-emoji" data-mood="🥰">🥰</button>
-                <button type="button" class="streak-emoji" data-mood="📚">📚</button>
-                <button type="button" class="streak-emoji" data-mood="🎮">🎮</button>
-                <button type="button" class="streak-emoji" data-mood="🍳">🍳</button>
+            <div class="home-card home-card-birthdays">
+              <div class="home-card-label">Birthdays</div>
+              <div id="birthdays-content" class="birthdays-list">Loading...</div>
+            </div>
+          </div>
+          <div class="home-compact-row">
+            <div class="home-card home-card-ns">
+              <div class="home-card-label">National Service & Exams</div>
+              <div id="ns-countdown-content"></div>
+            </div>
+            <div class="home-card home-card-streaks">
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div class="home-card-label" style="margin-bottom:0;">Family Streaks 🔥</div>
+                <div id="streak-counter" class="streak-badge">0 days</div>
+              </div>
+              <div id="streak-today" class="streak-today">Loading...</div>
+              <div id="streak-checkin-row" class="streak-checkin-row">
+                <span style="font-size:0.78rem;color:#8c8170;">Your mood today:</span>
+                <div class="streak-emoji-row" id="streak-emoji-row">
+                  <button type="button" class="streak-emoji" data-mood="😊">😊</button>
+                  <button type="button" class="streak-emoji" data-mood="😴">😴</button>
+                  <button type="button" class="streak-emoji" data-mood="💪">💪</button>
+                  <button type="button" class="streak-emoji" data-mood="😤">😤</button>
+                  <button type="button" class="streak-emoji" data-mood="🥰">🥰</button>
+                  <button type="button" class="streak-emoji" data-mood="📚">📚</button>
+                  <button type="button" class="streak-emoji" data-mood="🎮">🎮</button>
+                  <button type="button" class="streak-emoji" data-mood="🍳">🍳</button>
+                </div>
               </div>
             </div>
           </div>
@@ -2263,6 +2269,7 @@
           <div id="jue-hero-countdown" style="font-size:2.2rem;font-weight:900;color:#e67e22;margin:8px 0;"></div>
           <div style="font-size:0.82rem;color:#9a8b7a;">days until first exam</div>
           <div id="jue-progress-bar" style="margin:12px auto;max-width:300px;"></div>
+          <button type="button" onclick="setPage('home');window.location.hash='';" style="margin-top:4px;padding:4px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:rgba(255,255,255,0.8);font-size:0.74rem;color:#9a8b7a;cursor:pointer;font-family:inherit;">← Family OS Home</button>
         </div>
 
         <div class="home-card" style="border-left:3px solid #e74c3c;margin-bottom:12px;">
@@ -2423,6 +2430,21 @@
           </div>
         </div>
         <div class="settings-group">
+          <div class="settings-group-label">Chinese Calendar & Auspicious Dates</div>
+          <button type="button" class="settings-row" onclick="window.open('https://www.chinesecalendaronline.com/2026/auspicious-haircut-dates.htm','_blank')">
+            <span>✂️ Auspicious Haircut Dates 2026</span>
+            <span class="settings-row-arrow">&rsaquo;</span>
+          </button>
+          <button type="button" class="settings-row" style="margin-top:6px;" onclick="window.open('https://www.chinesecalendaronline.com/2026/','_blank')">
+            <span>📅 Chinese Lunar Calendar 2026</span>
+            <span class="settings-row-arrow">&rsaquo;</span>
+          </button>
+          <button type="button" class="settings-row" style="margin-top:6px;" onclick="window.open('https://www.mom.gov.sg/employment-practices/public-holidays','_blank')">
+            <span>🇸🇬 Singapore Public Holidays (MOM)</span>
+            <span class="settings-row-arrow">&rsaquo;</span>
+          </button>
+        </div>
+        <div class="settings-group">
           <div class="settings-group-label">Coming Soon</div>
           <div class="settings-row settings-row-info">
             <span>Family Polls & Voting</span>
@@ -2436,7 +2458,7 @@
         <div class="settings-group">
           <div class="settings-group-label">About</div>
           <div class="settings-row settings-row-info">
-            <span>Leng Family OS v1.9</span>
+            <span>Leng Family OS v2.0</span>
             <span class="settings-row-detail">Built with love by Papa</span>
           </div>
         </div>
@@ -5315,12 +5337,54 @@
         console.log('[ical] loaded', icalEvents.length, 'external events');
       };
 
+      // ===== SINGAPORE PUBLIC HOLIDAYS + ASIAN FESTIVALS 2026 =====
+      var publicHolidays = [
+        { date: '2026-01-01', title: "New Year's Day", emoji: '🎉' },
+        { date: '2026-01-29', title: 'Chinese New Year (Day 1)', emoji: '🧧' },
+        { date: '2026-01-30', title: 'Chinese New Year (Day 2)', emoji: '🧧' },
+        { date: '2026-02-17', title: "Chinese New Year (Chap Goh Mei)", emoji: '🏮' },
+        { date: '2026-03-20', title: 'Hari Raya Puasa', emoji: '☪️' },
+        { date: '2026-04-03', title: 'Good Friday', emoji: '✝️' },
+        { date: '2026-05-01', title: 'Labour Day', emoji: '⚒️' },
+        { date: '2026-05-12', title: 'Vesak Day', emoji: '🪷' },
+        { date: '2026-05-27', title: 'Hari Raya Haji', emoji: '☪️' },
+        { date: '2026-08-09', title: 'National Day', emoji: '🇸🇬' },
+        { date: '2026-10-20', title: 'Deepavali', emoji: '🪔' },
+        { date: '2026-12-25', title: 'Christmas Day', emoji: '🎄' },
+        // Ramadan start (approx)
+        { date: '2026-02-18', title: 'Ramadan begins (approx)', emoji: '☪️' },
+        // Mid-Autumn Festival
+        { date: '2026-10-04', title: 'Mid-Autumn Festival', emoji: '🥮' },
+        // Dragon Boat
+        { date: '2026-06-19', title: 'Dragon Boat Festival', emoji: '🐉' },
+        // Qing Ming
+        { date: '2026-04-05', title: 'Qing Ming Festival', emoji: '🪦' },
+        // Hungry Ghost
+        { date: '2026-08-18', title: 'Hungry Ghost Festival', emoji: '👻' },
+      ];
+
+      // Auspicious haircut dates reference
+      var auspiciousHaircutUrl = 'https://www.chinesecalendaronline.com/2026/auspicious-haircut-dates.htm';
+
       // Get external events for a specific date (YYYY-MM-DD)
       var getExternalEventsForDate = function (dateStr) {
-        return icalEvents.filter(function (ev) {
+        var events = icalEvents.filter(function (ev) {
           var start = ev.start.substring(0, 10);
           return start === dateStr;
         });
+        // Add public holidays
+        publicHolidays.forEach(function (h) {
+          if (h.date === dateStr) {
+            events.push({
+              title: h.emoji + ' ' + h.title,
+              start: h.date,
+              allDay: true,
+              source: 'Holiday',
+              external: true
+            });
+          }
+        });
+        return events;
       };
 
       // ===== MORNING GENERAL =====
@@ -6086,7 +6150,7 @@
         el.innerHTML = '';
 
         // Show next 5 upcoming
-        upcoming.slice(0, 5).forEach(function (b) {
+        upcoming.slice(0, 3).forEach(function (b) {
           var row = document.createElement('div');
           row.className = 'birthday-row';
 
@@ -6114,7 +6178,27 @@
       syncWeekState();
       updateWeekLabelAndButtons();
       setView('month');
-      setPage('calendar');
+
+      // URL routing: app.lengleng.com/#jue goes straight to Jue's hub
+      var hashPage = window.location.hash.replace('#', '').toLowerCase();
+      if (hashPage === 'jue') {
+        setPage('jue');
+      } else if (hashPage === 'home') {
+        setPage('home');
+      } else {
+        setPage('calendar');
+      }
+
+      // Listen for hash changes
+      window.addEventListener('hashchange', function () {
+        var h = window.location.hash.replace('#', '').toLowerCase();
+        if (h === 'jue') setPage('jue');
+        else if (h === 'home') setPage('home');
+        else if (h === 'calendar') setPage('calendar');
+        else if (h === 'meals') setPage('meals');
+        else if (h === 'quotes') setPage('quotes');
+        else if (h === 'settings') setPage('settings');
+      });
 
       // Fast: Supabase events
       await loadEventsForCurrentWeek();
