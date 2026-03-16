@@ -1243,7 +1243,7 @@
       bottom: 12px;
       z-index: 18;
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 8px;
       padding: 10px;
       border-radius: 18px;
@@ -2220,6 +2220,11 @@
             <!-- Hidden camera input -->
             <input type="file" id="selfie-input" accept="image/*" capture="user" style="display:none;" />
           </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;">
+            <button type="button" onclick="setPage('meals')" style="flex:1;padding:10px;border-radius:12px;border:1px solid rgba(0,0,0,0.06);background:rgba(255,248,236,0.95);font-family:inherit;font-size:0.82rem;font-weight:700;color:#5a3d1f;cursor:pointer;">🍽️ Meals</button>
+            <button type="button" onclick="setPage('quotes')" style="flex:1;padding:10px;border-radius:12px;border:1px solid rgba(0,0,0,0.06);background:rgba(255,248,236,0.95);font-family:inherit;font-size:0.82rem;font-weight:700;color:#5a3d1f;cursor:pointer;">💬 Quotes</button>
+            <button type="button" onclick="setPage('settings')" style="flex:1;padding:10px;border-radius:12px;border:1px solid rgba(0,0,0,0.06);background:rgba(255,248,236,0.95);font-family:inherit;font-size:0.82rem;font-weight:700;color:#5a3d1f;cursor:pointer;">⚙️ Settings</button>
+          </div>
         </div>
       </div>
     </section>
@@ -2347,6 +2352,161 @@
           <div style="margin-top:6px;font-size:0.88rem;color:#3d3328;line-height:1.5;font-style:italic;">
             "Every exam you face now is a step toward the future you want. I believe in you, Jue. Study smart, rest well, and remember — your family is always behind you. 💪❤️"
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== HAN HUB ===== -->
+    <section id="han-view" class="view-shell" aria-label="Han's Hub">
+      <div style="padding:16px;">
+        <div style="text-align:center;margin-bottom:16px;">
+          <div style="font-size:1.3rem;font-weight:900;color:#2b2432;">Han's Hub 💪</div>
+          <div style="font-size:0.88rem;color:#766a5a;margin-top:4px;">Fitness · University Prep · ORD 10 Oct 2027</div>
+          <button type="button" onclick="setPage('home');window.location.hash='';" style="margin-top:8px;padding:4px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:rgba(255,255,255,0.8);font-size:0.74rem;color:#9a8b7a;cursor:pointer;font-family:inherit;">← Family OS Home</button>
+        </div>
+
+        <div class="home-card" style="border-left:3px solid #27ae60;margin-bottom:12px;">
+          <div class="home-card-label" style="color:#27ae60;">IPPT Score Tracker</div>
+          <div id="han-ippt-best" style="margin-bottom:8px;"></div>
+          <div id="han-ippt-chart" style="margin-bottom:10px;"></div>
+          <details>
+            <summary style="font-weight:700;font-size:0.84rem;cursor:pointer;color:#27ae60;">Log New IPPT Score</summary>
+            <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;gap:6px;">
+                <input type="number" id="han-ippt-pushups" placeholder="Push-ups" style="flex:1;padding:8px;border-radius:10px;border:1px solid rgba(39,174,96,0.3);font-size:0.84rem;font-family:inherit;">
+                <input type="number" id="han-ippt-situps" placeholder="Sit-ups" style="flex:1;padding:8px;border-radius:10px;border:1px solid rgba(39,174,96,0.3);font-size:0.84rem;font-family:inherit;">
+              </div>
+              <input type="text" id="han-ippt-run" placeholder="2.4km time (e.g. 9:30)" style="padding:8px;border-radius:10px;border:1px solid rgba(39,174,96,0.3);font-size:0.84rem;font-family:inherit;">
+              <div style="display:flex;gap:6px;">
+                <input type="number" id="han-ippt-points" placeholder="Total pts" style="flex:1;padding:8px;border-radius:10px;border:1px solid rgba(39,174,96,0.3);font-size:0.84rem;font-family:inherit;">
+                <select id="han-ippt-award" style="flex:1;padding:8px;border-radius:10px;border:1px solid rgba(39,174,96,0.3);font-size:0.84rem;font-family:inherit;">
+                  <option value="Gold">Gold (≥85)</option>
+                  <option value="Silver">Silver (≥75)</option>
+                  <option value="Pass">Pass (≥61)</option>
+                </select>
+              </div>
+              <input type="date" id="han-ippt-date" style="padding:8px;border-radius:10px;border:1px solid rgba(39,174,96,0.3);font-size:0.84rem;font-family:inherit;">
+              <button type="button" id="han-ippt-log-btn" class="btn btn-primary" style="padding:10px;font-size:0.86rem;background:#27ae60;border-color:#27ae60;">Log IPPT Score 🏅</button>
+            </div>
+          </details>
+          <div id="han-ippt-history" style="margin-top:10px;"></div>
+        </div>
+
+        <div class="home-card" style="border-left:3px solid #2ecc71;margin-bottom:12px;">
+          <div class="home-card-label" style="color:#27ae60;">Run Tracker</div>
+          <div id="han-run-weekly" style="margin-bottom:8px;"></div>
+          <details>
+            <summary style="font-weight:700;font-size:0.84rem;cursor:pointer;color:#27ae60;">Log a Run</summary>
+            <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;gap:6px;">
+                <input type="number" step="0.1" id="han-run-distance" placeholder="Distance (km)" style="flex:1;padding:8px;border-radius:10px;border:1px solid rgba(39,174,96,0.3);font-size:0.84rem;font-family:inherit;">
+                <input type="number" step="0.1" id="han-run-time" placeholder="Time (min)" style="flex:1;padding:8px;border-radius:10px;border:1px solid rgba(39,174,96,0.3);font-size:0.84rem;font-family:inherit;">
+              </div>
+              <input type="date" id="han-run-date" style="padding:8px;border-radius:10px;border:1px solid rgba(39,174,96,0.3);font-size:0.84rem;font-family:inherit;">
+              <button type="button" id="han-run-log-btn" class="btn btn-primary" style="padding:10px;font-size:0.86rem;background:#27ae60;border-color:#27ae60;">Log Run 🏃</button>
+            </div>
+          </details>
+          <div id="han-run-history" style="margin-top:10px;"></div>
+        </div>
+
+        <div class="home-card" style="border-left:3px solid #2c3e50;margin-bottom:12px;">
+          <div class="home-card-label" style="color:#2c3e50;">University Deadlines</div>
+          <div id="han-uni-deadlines"></div>
+        </div>
+
+        <div class="home-card" style="border-left:3px solid #27ae60;">
+          <div class="home-card-label" style="color:#27ae60;">University Prep Checklist</div>
+          <div id="han-uni-checklist" style="font-size:0.86rem;line-height:2;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== XIAO HUB ===== -->
+    <section id="xiao-view" class="view-shell" aria-label="Xiao's Hub">
+      <div style="padding:16px;">
+        <div style="text-align:center;margin-bottom:16px;">
+          <div style="font-size:1.3rem;font-weight:900;color:#2b2432;">Xiao's Hub 🎓</div>
+          <div id="xiao-ns-hero" style="font-size:2.2rem;font-weight:900;color:#2c3e50;margin:8px 0;"></div>
+          <div style="font-size:0.82rem;color:#9a8b7a;">days until ORD · 7 Oct 2026</div>
+          <div id="xiao-ns-bar" style="margin:12px auto;max-width:300px;"></div>
+          <button type="button" onclick="setPage('home');window.location.hash='';" style="margin-top:4px;padding:4px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:rgba(255,255,255,0.8);font-size:0.74rem;color:#9a8b7a;cursor:pointer;font-family:inherit;">← Family OS Home</button>
+        </div>
+
+        <div class="home-card" style="border-left:3px solid #3498db;margin-bottom:12px;">
+          <div class="home-card-label" style="color:#2c3e50;">University Applications</div>
+          <div id="xiao-uni-cards"></div>
+        </div>
+
+        <div class="home-card" style="border-left:3px solid #9b59b6;margin-bottom:12px;">
+          <div class="home-card-label" style="color:#9b59b6;">Daily Laufey Moment 🎵</div>
+          <div id="xiao-laufey-card" style="font-size:0.92rem;color:#3d3328;line-height:1.55;font-style:italic;"></div>
+          <div style="margin-top:10px;">
+            <button type="button" id="xiao-laufey-share" class="btn" style="font-size:0.78rem;padding:6px 14px;">Share on WhatsApp 💬</button>
+          </div>
+        </div>
+
+        <div class="home-card" style="border-left:3px solid #2c3e50;">
+          <div class="home-card-label" style="color:#2c3e50;">After ORD: What's Next? 🧪</div>
+          <div style="font-size:0.86rem;color:#3d3328;margin-bottom:8px;">Chemistry degree preparation</div>
+          <div id="xiao-post-ns-checklist" style="font-size:0.86rem;line-height:2;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== MIMI HUB ===== -->
+    <section id="mimi-view" class="view-shell" aria-label="Mimi's Hub">
+      <div style="padding:16px;">
+        <div style="text-align:center;margin-bottom:16px;">
+          <div style="font-size:1.3rem;font-weight:900;color:#2b2432;">Mimi's Hub 🏠</div>
+          <div style="font-size:0.88rem;color:#766a5a;margin-top:4px;">Home · Dinners · Gifting</div>
+          <button type="button" onclick="setPage('home');window.location.hash='';" style="margin-top:8px;padding:4px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:rgba(255,255,255,0.8);font-size:0.74rem;color:#9a8b7a;cursor:pointer;font-family:inherit;">← Family OS Home</button>
+        </div>
+
+        <div class="home-card" style="border-left:3px solid #e91e63;margin-bottom:12px;">
+          <div class="home-card-label" style="color:#e91e63;">Sai Baba Daily Wisdom 🙏</div>
+          <div id="mimi-sai-baba-card" style="font-size:0.95rem;color:#3d3328;line-height:1.6;font-style:italic;text-align:center;padding:12px 0;"></div>
+          <div style="text-align:center;margin-top:8px;">
+            <button type="button" id="mimi-sai-baba-share" class="btn" style="font-size:0.78rem;padding:6px 14px;">Share on WhatsApp 💬</button>
+          </div>
+        </div>
+
+        <div class="home-card" style="border-left:3px solid #e91e63;margin-bottom:12px;">
+          <div class="home-card-label" style="color:#e91e63;">Next 10 Dinners 🍽️</div>
+          <div id="mimi-dinners-list"></div>
+          <details style="margin-top:10px;">
+            <summary style="font-weight:700;font-size:0.84rem;cursor:pointer;color:#e91e63;">Add Dinner Plan</summary>
+            <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+              <input type="date" id="mimi-dinner-date" style="padding:8px;border-radius:10px;border:1px solid rgba(233,30,99,0.3);font-size:0.84rem;font-family:inherit;">
+              <input type="text" id="mimi-dinner-menu" placeholder="What's for dinner?" style="padding:8px;border-radius:10px;border:1px solid rgba(233,30,99,0.3);font-size:0.84rem;font-family:inherit;">
+              <input type="text" id="mimi-dinner-who" placeholder="Who's home? (default: Everyone)" style="padding:8px;border-radius:10px;border:1px solid rgba(233,30,99,0.3);font-size:0.84rem;font-family:inherit;">
+              <button type="button" id="mimi-dinner-add-btn" class="btn btn-primary" style="padding:10px;font-size:0.86rem;background:#e91e63;border-color:#e91e63;">Add Dinner 🍽️</button>
+            </div>
+          </details>
+        </div>
+
+        <div class="home-card" style="border-left:3px solid #9c27b0;margin-bottom:12px;">
+          <div class="home-card-label" style="color:#9c27b0;">✂️ Auspicious Haircut Dates</div>
+          <div id="mimi-haircut-dates" style="font-size:0.86rem;line-height:1.8;"></div>
+          <div style="margin-top:8px;font-size:0.72rem;color:#9a8b7a;">
+            <a href="https://www.chinesecalendaronline.com/2026/auspicious-haircut-dates.htm" target="_blank" style="color:#9c27b0;text-decoration:underline;">Full calendar reference →</a>
+          </div>
+        </div>
+
+        <div class="home-card" style="border-left:3px solid #e91e63;">
+          <div class="home-card-label" style="color:#e91e63;">Family Gifting Tracker 🎁</div>
+          <div id="mimi-gifts-list"></div>
+          <details style="margin-top:10px;">
+            <summary style="font-weight:700;font-size:0.84rem;cursor:pointer;color:#e91e63;">Add Gift</summary>
+            <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+              <input type="text" id="mimi-gift-recipient" placeholder="Recipient" style="padding:8px;border-radius:10px;border:1px solid rgba(233,30,99,0.3);font-size:0.84rem;font-family:inherit;">
+              <input type="text" id="mimi-gift-desc" placeholder="Gift idea" style="padding:8px;border-radius:10px;border:1px solid rgba(233,30,99,0.3);font-size:0.84rem;font-family:inherit;">
+              <div style="display:flex;gap:6px;">
+                <input type="text" id="mimi-gift-occasion" placeholder="Occasion" style="flex:1;padding:8px;border-radius:10px;border:1px solid rgba(233,30,99,0.3);font-size:0.84rem;font-family:inherit;">
+                <input type="text" id="mimi-gift-budget" placeholder="Budget" style="flex:1;padding:8px;border-radius:10px;border:1px solid rgba(233,30,99,0.3);font-size:0.84rem;font-family:inherit;">
+              </div>
+              <button type="button" id="mimi-gift-add-btn" class="btn btn-primary" style="padding:10px;font-size:0.86rem;background:#e91e63;border-color:#e91e63;">Add Gift 🎁</button>
+            </div>
+          </details>
         </div>
       </div>
     </section>
@@ -2481,7 +2641,7 @@
         <div class="settings-group">
           <div class="settings-group-label">About</div>
           <div class="settings-row settings-row-info">
-            <span>Leng Family OS v2.1</span>
+            <span>Leng Family OS v3.0</span>
             <span class="settings-row-detail">Built with love by Papa</span>
           </div>
         </div>
@@ -2595,9 +2755,9 @@
     <button type="button" id="bottom-home"><span>Home</span></button>
     <button type="button" id="bottom-calendar" class="is-active"><span>Calendar</span></button>
     <button type="button" id="bottom-jue"><span>Jue 📚</span></button>
-    <button type="button" id="bottom-meals"><span>Meals</span></button>
-    <button type="button" id="bottom-quotes"><span>Quotes</span></button>
-    <button type="button" id="bottom-settings"><span>Settings</span></button>
+    <button type="button" id="bottom-han"><span>Han 💪</span></button>
+    <button type="button" id="bottom-xiao"><span>Xiao 🎓</span></button>
+    <button type="button" id="bottom-mimi"><span>Mimi 🏠</span></button>
   </nav>
   <!-- UMD build so `window.supabase` is available -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -2679,9 +2839,15 @@
       const yearViewEl = document.getElementById('year-view');
       const jueViewEl = document.getElementById('jue-view');
       const bottomJueBtn = document.getElementById('bottom-jue');
+      const hanViewEl = document.getElementById('han-view');
+      const bottomHanBtn = document.getElementById('bottom-han');
+      const xiaoViewEl = document.getElementById('xiao-view');
+      const bottomXiaoBtn = document.getElementById('bottom-xiao');
+      const mimiViewEl = document.getElementById('mimi-view');
+      const bottomMimiBtn = document.getElementById('bottom-mimi');
 
       let currentView = 'month'; // 'month' | 'week'
-      let currentPage = 'calendar'; // 'home' | 'calendar' | 'meals' | 'quotes' | 'settings'
+      let currentPage = 'calendar'; // 'home' | 'calendar' | 'meals' | 'quotes' | 'settings' | 'jue' | 'han' | 'xiao' | 'mimi'
 
       const setPage = function (page) {
         currentPage = page;
@@ -2690,6 +2856,9 @@
         if (weekViewEl) weekViewEl.classList.remove('is-active');
         if (yearViewEl) yearViewEl.classList.remove('is-active');
         if (jueViewEl) jueViewEl.classList.remove('is-active');
+        if (hanViewEl) hanViewEl.classList.remove('is-active');
+        if (xiaoViewEl) xiaoViewEl.classList.remove('is-active');
+        if (mimiViewEl) mimiViewEl.classList.remove('is-active');
         if (mealsViewEl) mealsViewEl.classList.remove('is-active');
         if (quotesViewEl) quotesViewEl.classList.remove('is-active');
         if (settingsViewEl) settingsViewEl.classList.remove('is-active');
@@ -2721,11 +2890,23 @@
         } else if (page === 'jue') {
           if (jueViewEl) jueViewEl.classList.add('is-active');
           renderJueView();
+        } else if (page === 'han') {
+          if (hanViewEl) hanViewEl.classList.add('is-active');
+          renderHanView();
+        } else if (page === 'xiao') {
+          if (xiaoViewEl) xiaoViewEl.classList.add('is-active');
+          renderXiaoView();
+        } else if (page === 'mimi') {
+          if (mimiViewEl) mimiViewEl.classList.add('is-active');
+          renderMimiView();
         }
 
         if (bottomHomeBtn) bottomHomeBtn.classList.toggle('is-active', page === 'home');
         if (bottomCalendarBtn) bottomCalendarBtn.classList.toggle('is-active', page === 'calendar');
         if (bottomJueBtn) bottomJueBtn.classList.toggle('is-active', page === 'jue');
+        if (bottomHanBtn) bottomHanBtn.classList.toggle('is-active', page === 'han');
+        if (bottomXiaoBtn) bottomXiaoBtn.classList.toggle('is-active', page === 'xiao');
+        if (bottomMimiBtn) bottomMimiBtn.classList.toggle('is-active', page === 'mimi');
         if (bottomMealsBtn) bottomMealsBtn.classList.toggle('is-active', page === 'meals');
         if (bottomQuotesBtn) bottomQuotesBtn.classList.toggle('is-active', page === 'quotes');
         if (bottomSettingsBtn) bottomSettingsBtn.classList.toggle('is-active', page === 'settings');
@@ -4151,6 +4332,21 @@
       if (bottomJueBtn) {
         bottomJueBtn.addEventListener('click', function () {
           setPage('jue');
+        });
+      }
+      if (bottomHanBtn) {
+        bottomHanBtn.addEventListener('click', function () {
+          setPage('han');
+        });
+      }
+      if (bottomXiaoBtn) {
+        bottomXiaoBtn.addEventListener('click', function () {
+          setPage('xiao');
+        });
+      }
+      if (bottomMimiBtn) {
+        bottomMimiBtn.addEventListener('click', function () {
+          setPage('mimi');
         });
       }
 
@@ -6009,6 +6205,562 @@
         });
       }
 
+      // ===== HAN'S HUB =====
+      var renderHanView = async function () {
+        // IPPT
+        await loadHanIppt();
+        await loadHanRuns();
+        renderHanDeadlines();
+        renderHanChecklist();
+      };
+
+      var loadHanIppt = async function () {
+        var bestEl = document.getElementById('han-ippt-best');
+        var chartEl = document.getElementById('han-ippt-chart');
+        var histEl = document.getElementById('han-ippt-history');
+        try {
+          var { data, error } = await supabaseClient.from('ippt_scores').select('*').order('date', { ascending: false }).limit(5);
+          if (error || !data || data.length === 0) {
+            if (bestEl) bestEl.innerHTML = '<div style="font-size:0.86rem;color:#9a8b7a;font-style:italic;">No IPPT scores logged yet. Log your first one below!</div>';
+            if (chartEl) chartEl.innerHTML = '';
+            if (histEl) histEl.innerHTML = '';
+            return;
+          }
+          var best = data.reduce(function (a, b) { return (a.total_points || 0) > (b.total_points || 0) ? a : b; });
+          var awardColor = best.award === 'Gold' ? '#f1c40f' : best.award === 'Silver' ? '#95a5a6' : '#cd7f32';
+          if (bestEl) bestEl.innerHTML = '<div style="display:flex;align-items:center;gap:10px;">' +
+            '<div style="font-size:2rem;font-weight:900;color:#27ae60;">' + (best.total_points || '—') + '</div>' +
+            '<div><div style="font-weight:700;font-size:0.88rem;">Best Score</div>' +
+            '<div style="font-size:0.78rem;color:' + awardColor + ';font-weight:700;">' + (best.award || '') + ' 🏅</div></div></div>';
+
+          // Simple bar chart of last 5
+          if (chartEl) {
+            var bars = data.slice().reverse().map(function (s) {
+              var pct = Math.min(100, Math.round(((s.total_points || 0) / 100) * 100));
+              var color = (s.total_points || 0) >= 85 ? '#27ae60' : (s.total_points || 0) >= 75 ? '#f39c12' : '#e74c3c';
+              var d = new Date(s.date + 'T00:00:00');
+              var label = d.toLocaleDateString('en-SG', { day: 'numeric', month: 'short' });
+              return '<div style="flex:1;text-align:center;">' +
+                '<div style="height:60px;display:flex;align-items:flex-end;justify-content:center;">' +
+                '<div style="width:24px;height:' + Math.max(4, pct * 0.6) + 'px;background:' + color + ';border-radius:4px 4px 0 0;"></div></div>' +
+                '<div style="font-size:0.68rem;color:#9a8b7a;margin-top:2px;">' + label + '</div>' +
+                '<div style="font-size:0.72rem;font-weight:700;">' + (s.total_points || 0) + '</div></div>';
+            }).join('');
+            chartEl.innerHTML = '<div style="display:flex;gap:4px;align-items:flex-end;">' + bars + '</div>';
+          }
+
+          if (histEl) {
+            histEl.innerHTML = '<div style="font-size:0.76rem;color:#9a8b7a;margin-bottom:4px;">Recent scores</div>' +
+              data.map(function (s) {
+                var d = new Date(s.date + 'T00:00:00');
+                return '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:0.82rem;border-bottom:1px solid rgba(0,0,0,0.04);">' +
+                  '<span>' + d.toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' }) + '</span>' +
+                  '<span>PU:' + (s.pushups || '—') + ' SU:' + (s.situps || '—') + ' Run:' + (s.run_time || '—') + '</span>' +
+                  '<span style="font-weight:700;">' + (s.total_points || '—') + 'pts</span></div>';
+              }).join('');
+          }
+        } catch (e) {
+          console.log('[han] ippt error', e);
+          if (bestEl) bestEl.innerHTML = '<span style="color:#9a8b7a;font-style:italic;">IPPT table not set up yet.</span>';
+        }
+      };
+
+      var hanIpptLogBtn = document.getElementById('han-ippt-log-btn');
+      if (hanIpptLogBtn) {
+        hanIpptLogBtn.addEventListener('click', async function () {
+          var pushups = document.getElementById('han-ippt-pushups').value;
+          var situps = document.getElementById('han-ippt-situps').value;
+          var runTime = document.getElementById('han-ippt-run').value;
+          var points = document.getElementById('han-ippt-points').value;
+          var award = document.getElementById('han-ippt-award').value;
+          var date = document.getElementById('han-ippt-date').value || getTodayKey();
+          if (!points) { window.alert('Enter total points'); return; }
+          hanIpptLogBtn.textContent = 'Logging...';
+          try {
+            await supabaseClient.from('ippt_scores').insert({
+              pushups: pushups ? parseInt(pushups) : null,
+              situps: situps ? parseInt(situps) : null,
+              run_time: runTime || null,
+              total_points: parseInt(points),
+              award: award,
+              date: date
+            });
+            hanIpptLogBtn.textContent = 'Logged! ✅';
+            document.getElementById('han-ippt-pushups').value = '';
+            document.getElementById('han-ippt-situps').value = '';
+            document.getElementById('han-ippt-run').value = '';
+            document.getElementById('han-ippt-points').value = '';
+            document.getElementById('han-ippt-date').value = '';
+            await loadHanIppt();
+            setTimeout(function () { hanIpptLogBtn.textContent = 'Log IPPT Score 🏅'; }, 2000);
+          } catch (e) {
+            hanIpptLogBtn.textContent = 'Log IPPT Score 🏅';
+            window.alert('Error: ' + e.message);
+          }
+        });
+      }
+
+      var loadHanRuns = async function () {
+        var weeklyEl = document.getElementById('han-run-weekly');
+        var histEl = document.getElementById('han-run-history');
+        try {
+          var { data, error } = await supabaseClient.from('run_log').select('*').order('date', { ascending: false }).limit(10);
+          if (error || !data || data.length === 0) {
+            if (weeklyEl) weeklyEl.innerHTML = '<div style="font-size:0.86rem;color:#9a8b7a;font-style:italic;">No runs logged yet.</div>';
+            if (histEl) histEl.innerHTML = '';
+            return;
+          }
+          // Weekly total
+          var now = new Date();
+          var weekStart = new Date(now);
+          weekStart.setDate(now.getDate() - now.getDay());
+          var weekKey = weekStart.getFullYear() + '-' + String(weekStart.getMonth() + 1).padStart(2, '0') + '-' + String(weekStart.getDate()).padStart(2, '0');
+          var weekTotal = data.filter(function (r) { return r.date >= weekKey; }).reduce(function (s, r) { return s + (r.distance_km || 0); }, 0);
+          if (weeklyEl) weeklyEl.innerHTML = '<div style="display:flex;align-items:center;gap:10px;">' +
+            '<div style="font-size:2rem;font-weight:900;color:#27ae60;">' + weekTotal.toFixed(1) + '<span style="font-size:0.9rem;"> km</span></div>' +
+            '<div style="font-size:0.82rem;color:#766a5a;">this week</div></div>';
+
+          // Last 5 runs
+          if (histEl) {
+            histEl.innerHTML = '<div style="font-size:0.76rem;color:#9a8b7a;margin-bottom:4px;">Recent runs</div>' +
+              data.slice(0, 5).map(function (r) {
+                var pace = (r.distance_km && r.time_minutes) ? (r.time_minutes / r.distance_km).toFixed(1) : '—';
+                var d = new Date(r.date + 'T00:00:00');
+                return '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:0.82rem;border-bottom:1px solid rgba(0,0,0,0.04);">' +
+                  '<span>' + d.toLocaleDateString('en-SG', { day: 'numeric', month: 'short' }) + '</span>' +
+                  '<span>' + (r.distance_km || '—') + ' km · ' + (r.time_minutes || '—') + ' min</span>' +
+                  '<span style="color:#27ae60;font-weight:600;">' + pace + ' min/km</span></div>';
+              }).join('');
+          }
+        } catch (e) {
+          console.log('[han] run error', e);
+          if (weeklyEl) weeklyEl.innerHTML = '<span style="color:#9a8b7a;font-style:italic;">Run log table not set up yet.</span>';
+        }
+      };
+
+      var hanRunLogBtn = document.getElementById('han-run-log-btn');
+      if (hanRunLogBtn) {
+        hanRunLogBtn.addEventListener('click', async function () {
+          var dist = document.getElementById('han-run-distance').value;
+          var time = document.getElementById('han-run-time').value;
+          var date = document.getElementById('han-run-date').value || getTodayKey();
+          if (!dist) { window.alert('Enter distance'); return; }
+          hanRunLogBtn.textContent = 'Logging...';
+          try {
+            await supabaseClient.from('run_log').insert({
+              distance_km: parseFloat(dist),
+              time_minutes: time ? parseFloat(time) : null,
+              date: date
+            });
+            hanRunLogBtn.textContent = 'Logged! ✅';
+            document.getElementById('han-run-distance').value = '';
+            document.getElementById('han-run-time').value = '';
+            document.getElementById('han-run-date').value = '';
+            await loadHanRuns();
+            setTimeout(function () { hanRunLogBtn.textContent = 'Log Run 🏃'; }, 2000);
+          } catch (e) {
+            hanRunLogBtn.textContent = 'Log Run 🏃';
+            window.alert('Error: ' + e.message);
+          }
+        });
+      }
+
+      var renderHanDeadlines = function () {
+        var el = document.getElementById('han-uni-deadlines');
+        if (!el) return;
+        var now = new Date();
+        var deadlines = [
+          { label: 'SAT Exam', date: null, display: 'Late 2026 (TBD)', note: 'Register when date confirmed' },
+          { label: 'Personal Statement 1st Draft', date: new Date('2026-08-01'), display: '1 Aug 2026' },
+          { label: 'US Common App (Early)', date: new Date('2027-01-01'), display: '1 Jan 2027' },
+          { label: 'UCAS Application', date: new Date('2027-01-15'), display: '15 Jan 2027' },
+          { label: 'US Common App (Regular)', date: new Date('2027-03-01'), display: '1 Mar 2027' }
+        ];
+        el.innerHTML = deadlines.map(function (d) {
+          var days = d.date ? Math.ceil((d.date - now) / 86400000) : null;
+          var urgent = days !== null && days <= 90;
+          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.04);">' +
+            '<div><div style="font-weight:700;font-size:0.88rem;' + (urgent ? 'color:#e74c3c;' : '') + '">' + d.label + '</div>' +
+            '<div style="font-size:0.76rem;color:#9a8b7a;">' + d.display + '</div></div>' +
+            '<div style="font-size:0.82rem;font-weight:700;color:' + (urgent ? '#e74c3c' : '#27ae60') + ';">' +
+            (days !== null ? (days > 0 ? days + 'd' : 'NOW') : 'TBD') + '</div></div>';
+        }).join('');
+      };
+
+      var hanChecklistItems = [
+        'SAT registered',
+        'SAT prep started',
+        'University shortlist done',
+        'Personal statement draft 1',
+        'Teacher references requested'
+      ];
+
+      var renderHanChecklist = function () {
+        var el = document.getElementById('han-uni-checklist');
+        if (!el) return;
+        var saved = {};
+        try { saved = JSON.parse(window.localStorage.getItem('han_checklist') || '{}'); } catch(e) {}
+        el.innerHTML = hanChecklistItems.map(function (item, i) {
+          var checked = saved[i] ? 'checked' : '';
+          return '<label style="display:flex;align-items:center;gap:8px;cursor:pointer;">' +
+            '<input type="checkbox" ' + checked + ' onchange="toggleHanChecklist(' + i + ', this.checked)" style="width:18px;height:18px;accent-color:#27ae60;">' +
+            '<span style="' + (saved[i] ? 'text-decoration:line-through;color:#9a8b7a;' : '') + '">' + item + '</span></label>';
+        }).join('');
+      };
+
+      window.toggleHanChecklist = function (idx, val) {
+        var saved = {};
+        try { saved = JSON.parse(window.localStorage.getItem('han_checklist') || '{}'); } catch(e) {}
+        saved[idx] = val;
+        try { window.localStorage.setItem('han_checklist', JSON.stringify(saved)); } catch(e) {}
+        renderHanChecklist();
+      };
+
+      // ===== XIAO'S HUB =====
+      var laufeyMessages = [
+        "Laufey's music reminds us that quiet moments have their own beauty. What quiet moment will you notice today?",
+        "Like a Laufey melody — today doesn't need to be loud to be meaningful.",
+        "Laufey would say: the cozy evening in is just as valid as the big night out. Rest is productive.",
+        "Some days are for jazz, some are for silence. Both are good. You're doing fine, Xiao.",
+        "Laufey makes music that feels like a warm drink on a cold day. Be that warmth to yourself today.",
+        "Not every day needs to be an adventure. Sometimes the best days are the ones spent doing nothing at all.",
+        "Laufey's world is proof that gentle things can be powerful. Your quiet strength counts.",
+        "Think of today like a Laufey album — no need to rush to the next track. Enjoy where you are.",
+        "Even Laufey started somewhere. Every small step in chemistry is a step toward something beautiful.",
+        "The world is noisy. Laufey's music is a reminder that calm is a superpower. Use yours today.",
+        "Laufey once said music saved her from overthinking. What's your version of that today?",
+        "You don't need to prove anything today. Just exist, like a Sunday morning Laufey playlist.",
+        "Imagine Laufey writing a song about your day. What small, beautiful detail would she notice?",
+        "Some of the best things — like Laufey's voice — are understated. Your quiet effort matters more than you think.",
+        "Laufey's music feels like coming home. Wherever you are today, you belong there.",
+        "Not everything needs to be figured out right now. Even Laufey takes her time between albums.",
+        "Today's vibe: a Laufey track, a good book, and zero pressure. You've earned it.",
+        "Laufey reminds us that vulnerability is not weakness. It's okay to feel everything today.",
+        "Like a Laufey concert — the magic is in the pauses between the notes. Give yourself some pauses today.",
+        "You're in your quiet era, and that's okay. Laufey built a whole career on the beauty of quiet.",
+        "The world doesn't need you to be loud. It needs you to be you. Laufey figured that out early.",
+        "Laufey's playlists are basically a hug in audio form. Wrap yourself in that energy today.",
+        "Chemistry, like music, is about finding the right combination. You'll find yours.",
+        "Laufey went from Iceland to the world stage by being authentically herself. Your time is coming too.",
+        "Today is a good day to listen to something beautiful and let go of everything else."
+      ];
+
+      var xiaoUniData = [
+        { name: 'Yale University', course: 'Chemistry', status: 'Waiting', applied: 'Dec 2025', decision: 'Mar-Apr 2026' },
+        { name: 'Columbia University', course: 'Chemistry', status: 'Waiting', applied: 'Dec 2025', decision: 'Mar-Apr 2026' },
+        { name: 'UCL', course: 'Chemistry', status: 'Waiting', applied: 'Jan 2026', decision: 'Mar-May 2026' }
+      ];
+
+      var renderXiaoView = function () {
+        // NS countdown
+        var now = new Date();
+        var ordDate = new Date('2026-10-07T00:00:00');
+        var enlistDate = new Date('2024-10-01T00:00:00');
+        var daysLeft = Math.max(0, Math.ceil((ordDate - now) / 86400000));
+        var totalDays = Math.ceil((ordDate - enlistDate) / 86400000);
+        var pct = Math.min(100, Math.max(0, Math.round(((totalDays - daysLeft) / totalDays) * 100)));
+
+        var heroEl = document.getElementById('xiao-ns-hero');
+        if (heroEl) heroEl.textContent = daysLeft;
+
+        var barEl = document.getElementById('xiao-ns-bar');
+        if (barEl) {
+          barEl.innerHTML = '<div style="background:rgba(44,62,80,0.12);height:18px;border-radius:9px;">' +
+            '<div style="width:' + pct + '%;height:18px;border-radius:9px;background:linear-gradient(90deg,#2c3e50,#3498db);display:flex;align-items:center;justify-content:center;">' +
+            '<span style="font-size:0.68rem;color:#fff;font-weight:700;line-height:18px;">' + pct + '% complete — you\'re getting there!</span></div></div>';
+        }
+
+        // University cards
+        var cardsEl = document.getElementById('xiao-uni-cards');
+        if (cardsEl) {
+          var saved = {};
+          try { saved = JSON.parse(window.localStorage.getItem('xiao_uni_status') || '{}'); } catch(e) {}
+          cardsEl.innerHTML = xiaoUniData.map(function (u, i) {
+            var st = saved[i] || u.status;
+            var colors = { Waiting: '#f39c12', Applied: '#f39c12', Interview: '#3498db', Offer: '#27ae60', Rejected: '#95a5a6', Accepted: '#2c3e50', Declined: '#95a5a6' };
+            var col = colors[st] || '#f39c12';
+            return '<div style="padding:12px;border-radius:12px;border-left:4px solid ' + col + ';background:rgba(255,248,236,0.6);margin-bottom:8px;">' +
+              '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+              '<div style="font-weight:800;font-size:0.92rem;">' + u.name + '</div>' +
+              '<select onchange="updateXiaoUniStatus(' + i + ', this.value)" style="padding:4px 8px;border-radius:8px;border:1px solid rgba(0,0,0,0.1);font-size:0.76rem;font-family:inherit;background:' + col + ';color:#fff;font-weight:700;">' +
+              ['Applied', 'Waiting', 'Interview', 'Offer', 'Rejected', 'Accepted', 'Declined'].map(function (o) {
+                return '<option value="' + o + '"' + (o === st ? ' selected' : '') + '>' + o + '</option>';
+              }).join('') + '</select></div>' +
+              '<div style="font-size:0.8rem;color:#766a5a;margin-top:4px;">' + u.course + ' · Applied ' + u.applied + ' · Decision: ' + u.decision + '</div></div>';
+          }).join('');
+        }
+
+        // Laufey daily
+        var laufeyEl = document.getElementById('xiao-laufey-card');
+        if (laufeyEl) {
+          var dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+          var idx = dayOfYear % laufeyMessages.length;
+          laufeyEl.textContent = '"' + laufeyMessages[idx] + '"';
+        }
+
+        // Post-NS checklist
+        renderXiaoChecklist();
+      };
+
+      window.updateXiaoUniStatus = function (idx, val) {
+        var saved = {};
+        try { saved = JSON.parse(window.localStorage.getItem('xiao_uni_status') || '{}'); } catch(e) {}
+        saved[idx] = val;
+        try { window.localStorage.setItem('xiao_uni_status', JSON.stringify(saved)); } catch(e) {}
+        renderXiaoView();
+      };
+
+      var xiaoChecklistItems = [
+        'Research UK chemistry programs (Imperial, UCL, Edinburgh, etc.)',
+        'Check A-level requirements',
+        'UCAS registration',
+        'Personal statement brainstorm',
+        'Read "The Disappearing Spoon" or similar popular chemistry book'
+      ];
+
+      var renderXiaoChecklist = function () {
+        var el = document.getElementById('xiao-post-ns-checklist');
+        if (!el) return;
+        var saved = {};
+        try { saved = JSON.parse(window.localStorage.getItem('xiao_checklist') || '{}'); } catch(e) {}
+        el.innerHTML = xiaoChecklistItems.map(function (item, i) {
+          var checked = saved[i] ? 'checked' : '';
+          return '<label style="display:flex;align-items:center;gap:8px;cursor:pointer;">' +
+            '<input type="checkbox" ' + checked + ' onchange="toggleXiaoChecklist(' + i + ', this.checked)" style="width:18px;height:18px;accent-color:#2c3e50;">' +
+            '<span style="' + (saved[i] ? 'text-decoration:line-through;color:#9a8b7a;' : '') + '">' + item + '</span></label>';
+        }).join('');
+      };
+
+      window.toggleXiaoChecklist = function (idx, val) {
+        var saved = {};
+        try { saved = JSON.parse(window.localStorage.getItem('xiao_checklist') || '{}'); } catch(e) {}
+        saved[idx] = val;
+        try { window.localStorage.setItem('xiao_checklist', JSON.stringify(saved)); } catch(e) {}
+        renderXiaoChecklist();
+      };
+
+      // Laufey WhatsApp share
+      var laufeyShareBtn = document.getElementById('xiao-laufey-share');
+      if (laufeyShareBtn) {
+        laufeyShareBtn.addEventListener('click', function () {
+          var el = document.getElementById('xiao-laufey-card');
+          var text = el ? el.textContent : '';
+          var msg = '🎵 Daily Laufey Moment for Xiao:\n\n' + text + '\n\n— From Family OS';
+          window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+        });
+      }
+
+      // ===== MIMI'S HUB =====
+      var saiBabaQuotes = [
+        "Love all, serve all. Help ever, hurt never.",
+        "Life is a song, sing it. Life is a game, play it. Life is a challenge, meet it. Life is a dream, realize it.",
+        "You must be a lotus, unfolding its petals when the sun rises in the sky, unaffected by the slush where it is born or even the water which sustains it.",
+        "Before you speak, ask yourself: Is it kind, is it necessary, is it true, does it improve on the silence?",
+        "The end of education is character.",
+        "Where there is love, there is peace. Where there is peace, there is God.",
+        "Start the day with love, spend the day with love, fill the day with love, end the day with love. This is the way to God.",
+        "Let love be your greatest weapon against hate.",
+        "Do not be misled by what you see around you, or be influenced by what you see. You live in a world which is a playground of illusion.",
+        "God is love. Live in love.",
+        "Hands that serve are holier than lips that pray.",
+        "The secret of happiness is not in doing what one likes, but in liking what one does.",
+        "When you feel you are all alone in this world, and there is nobody to count on, just remember one thing — God is always there for you.",
+        "Cultivate love in your hearts. Love is the key to transformation.",
+        "Be like the sun which shines on all without distinction.",
+        "Duty without love is deplorable. Duty with love is desirable. Love without duty is divine.",
+        "The best way to love God is to love all and serve all.",
+        "Watch your words, they become actions. Watch your actions, they become habits. Watch your habits, they become character. Watch your character, it becomes your destiny.",
+        "You are not one person, but three: the one you think you are, the one others think you are, and the one you really are.",
+        "Unity is divinity, purity is divinity. Live in unity, live in purity.",
+        "Service to man is service to God.",
+        "Peace is not the absence of conflict. It is the ability to handle conflict by peaceful means.",
+        "Do not give way to anger or hatred. Conquer anger with love.",
+        "Always think of God. Let every breath you take remind you of God's grace.",
+        "The body is a temple. Keep it pure and clean for the soul to reside in.",
+        "Have faith and patience. Then I will be always with you, wherever you are.",
+        "Man learns through experience, and the spiritual path is full of different kinds of experiences.",
+        "There is only one caste, the caste of humanity. There is only one religion, the religion of love.",
+        "If there is righteousness in the heart, there will be beauty in the character.",
+        "Love is selflessness. Self is lovelessness."
+      ];
+
+      var auspiciousHaircutDates2026 = [
+        { date: '2026-03-22', note: 'Good for haircuts' },
+        { date: '2026-04-03', note: 'Auspicious day' },
+        { date: '2026-04-15', note: 'Favorable for grooming' },
+        { date: '2026-04-27', note: 'Good for haircuts' },
+        { date: '2026-05-09', note: 'Auspicious day' },
+        { date: '2026-05-21', note: 'Good for haircuts' },
+        { date: '2026-06-02', note: 'Favorable for grooming' },
+        { date: '2026-06-16', note: 'Good for haircuts' },
+        { date: '2026-06-28', note: 'Auspicious day' },
+        { date: '2026-07-10', note: 'Good for haircuts' }
+      ];
+
+      var renderMimiView = async function () {
+        renderSaiBabaQuote();
+        await loadMimiDinners();
+        renderHaircutDates();
+        await loadMimiGifts();
+      };
+
+      var renderSaiBabaQuote = function () {
+        var el = document.getElementById('mimi-sai-baba-card');
+        if (!el) return;
+        var now = new Date();
+        var dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+        var idx = dayOfYear % saiBabaQuotes.length;
+        el.innerHTML = '🙏<br><br>"' + saiBabaQuotes[idx] + '"<br><br><span style="font-size:0.78rem;color:#9a8b7a;">— Sri Sathya Sai Baba</span>';
+      };
+
+      var saiBabaShareBtn = document.getElementById('mimi-sai-baba-share');
+      if (saiBabaShareBtn) {
+        saiBabaShareBtn.addEventListener('click', function () {
+          var now = new Date();
+          var dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+          var quote = saiBabaQuotes[dayOfYear % saiBabaQuotes.length];
+          var msg = '🙏 Sai Baba Daily Wisdom:\n\n"' + quote + '"\n\n— Sri Sathya Sai Baba\n\nFrom Family OS';
+          window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+        });
+      }
+
+      var loadMimiDinners = async function () {
+        var el = document.getElementById('mimi-dinners-list');
+        if (!el) return;
+        try {
+          var todayKey = getTodayKey();
+          var { data, error } = await supabaseClient.from('dinner_plan').select('*').gte('date', todayKey).order('date', { ascending: true }).limit(10);
+          if (error || !data || data.length === 0) {
+            el.innerHTML = '<div style="font-size:0.86rem;color:#9a8b7a;font-style:italic;">No dinners planned yet. Add one below!</div>';
+            return;
+          }
+          el.innerHTML = data.map(function (d) {
+            var dt = new Date(d.date + 'T00:00:00');
+            var isToday = d.date === todayKey;
+            return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.04);' + (isToday ? 'background:rgba(233,30,99,0.06);padding:8px;border-radius:8px;margin:-4px;' : '') + '">' +
+              '<div><div style="font-weight:700;font-size:0.88rem;' + (isToday ? 'color:#e91e63;' : '') + '">' + (isToday ? '🍽️ Tonight: ' : '') + d.menu + '</div>' +
+              '<div style="font-size:0.74rem;color:#9a8b7a;">' + dt.toLocaleDateString('en-SG', { weekday: 'short', day: 'numeric', month: 'short' }) + ' · ' + (d.who_home || 'Everyone') + '</div></div>' +
+              '<button type="button" onclick="deleteMimiDinner(' + d.id + ')" style="border:none;background:none;color:#c0392b;font-size:0.8rem;cursor:pointer;padding:4px;">✕</button></div>';
+          }).join('');
+        } catch (e) {
+          console.log('[mimi] dinner error', e);
+          el.innerHTML = '<span style="color:#9a8b7a;font-style:italic;">Dinner table not set up yet.</span>';
+        }
+      };
+
+      window.deleteMimiDinner = async function (id) {
+        if (!window.confirm('Remove this dinner?')) return;
+        try {
+          await supabaseClient.from('dinner_plan').delete().eq('id', id);
+          await loadMimiDinners();
+        } catch (e) { window.alert('Error: ' + e.message); }
+      };
+
+      var mimiDinnerAddBtn = document.getElementById('mimi-dinner-add-btn');
+      if (mimiDinnerAddBtn) {
+        mimiDinnerAddBtn.addEventListener('click', async function () {
+          var date = document.getElementById('mimi-dinner-date').value;
+          var menu = document.getElementById('mimi-dinner-menu').value;
+          var who = document.getElementById('mimi-dinner-who').value || 'Everyone';
+          if (!date || !menu) { window.alert('Enter date and menu'); return; }
+          mimiDinnerAddBtn.textContent = 'Adding...';
+          try {
+            await supabaseClient.from('dinner_plan').insert({ date: date, menu: menu, who_home: who });
+            mimiDinnerAddBtn.textContent = 'Added! ✅';
+            document.getElementById('mimi-dinner-date').value = '';
+            document.getElementById('mimi-dinner-menu').value = '';
+            document.getElementById('mimi-dinner-who').value = '';
+            await loadMimiDinners();
+            setTimeout(function () { mimiDinnerAddBtn.textContent = 'Add Dinner 🍽️'; }, 2000);
+          } catch (e) {
+            mimiDinnerAddBtn.textContent = 'Add Dinner 🍽️';
+            window.alert('Error: ' + e.message);
+          }
+        });
+      }
+
+      var renderHaircutDates = function () {
+        var el = document.getElementById('mimi-haircut-dates');
+        if (!el) return;
+        var now = new Date();
+        var soon = new Date(now);
+        soon.setDate(soon.getDate() + 7);
+        var todayKey = getTodayKey();
+        var soonKey = soon.getFullYear() + '-' + String(soon.getMonth() + 1).padStart(2, '0') + '-' + String(soon.getDate()).padStart(2, '0');
+
+        // Only show future dates
+        var future = auspiciousHaircutDates2026.filter(function (d) { return d.date >= todayKey; });
+        if (future.length === 0) {
+          el.innerHTML = '<div style="color:#9a8b7a;font-style:italic;">No upcoming auspicious dates — check chinesecalendaronline.com</div>';
+          return;
+        }
+        el.innerHTML = future.map(function (d) {
+          var dt = new Date(d.date + 'T00:00:00');
+          var isSoon = d.date >= todayKey && d.date <= soonKey;
+          return '<div style="display:flex;align-items:center;gap:8px;padding:4px 0;' + (isSoon ? 'background:rgba(39,174,96,0.08);padding:4px 8px;border-radius:8px;margin:-2px -8px;' : '') + '">' +
+            (isSoon ? '<span style="color:#27ae60;font-weight:700;">✂️</span>' : '<span style="color:#9a8b7a;">✂️</span>') +
+            '<span style="' + (isSoon ? 'font-weight:700;color:#27ae60;' : '') + '">' + dt.toLocaleDateString('en-SG', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) + '</span></div>';
+        }).join('');
+      };
+
+      var loadMimiGifts = async function () {
+        var el = document.getElementById('mimi-gifts-list');
+        if (!el) return;
+        try {
+          var { data, error } = await supabaseClient.from('gifts').select('*').order('created_at', { ascending: false });
+          if (error || !data || data.length === 0) {
+            el.innerHTML = '<div style="font-size:0.86rem;color:#9a8b7a;font-style:italic;">No gifts tracked yet. Add one below!</div>';
+            return;
+          }
+          var statusColors = { Planned: '#f39c12', Bought: '#3498db', Wrapped: '#9b59b6', Sent: '#27ae60' };
+          el.innerHTML = data.map(function (g) {
+            var col = statusColors[g.status] || '#f39c12';
+            return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.04);">' +
+              '<div><div style="font-weight:700;font-size:0.88rem;">' + g.gift + ' → ' + g.recipient + '</div>' +
+              '<div style="font-size:0.74rem;color:#9a8b7a;">' + (g.occasion || '') + (g.budget ? ' · ' + g.budget : '') + '</div></div>' +
+              '<select onchange="updateGiftStatus(' + g.id + ', this.value)" style="padding:4px 6px;border-radius:8px;border:1px solid rgba(0,0,0,0.1);font-size:0.74rem;font-family:inherit;background:' + col + ';color:#fff;font-weight:700;">' +
+              ['Planned', 'Bought', 'Wrapped', 'Sent'].map(function (s) {
+                return '<option value="' + s + '"' + (s === g.status ? ' selected' : '') + '>' + s + '</option>';
+              }).join('') + '</select></div>';
+          }).join('');
+        } catch (e) {
+          console.log('[mimi] gifts error', e);
+          el.innerHTML = '<span style="color:#9a8b7a;font-style:italic;">Gifts table not set up yet.</span>';
+        }
+      };
+
+      window.updateGiftStatus = async function (id, status) {
+        try {
+          await supabaseClient.from('gifts').update({ status: status }).eq('id', id);
+          await loadMimiGifts();
+        } catch (e) { window.alert('Error: ' + e.message); }
+      };
+
+      var mimiGiftAddBtn = document.getElementById('mimi-gift-add-btn');
+      if (mimiGiftAddBtn) {
+        mimiGiftAddBtn.addEventListener('click', async function () {
+          var recipient = document.getElementById('mimi-gift-recipient').value;
+          var gift = document.getElementById('mimi-gift-desc').value;
+          var occasion = document.getElementById('mimi-gift-occasion').value;
+          var budget = document.getElementById('mimi-gift-budget').value;
+          if (!recipient || !gift) { window.alert('Enter recipient and gift'); return; }
+          mimiGiftAddBtn.textContent = 'Adding...';
+          try {
+            await supabaseClient.from('gifts').insert({ recipient: recipient, gift: gift, occasion: occasion, budget: budget });
+            mimiGiftAddBtn.textContent = 'Added! ✅';
+            document.getElementById('mimi-gift-recipient').value = '';
+            document.getElementById('mimi-gift-desc').value = '';
+            document.getElementById('mimi-gift-occasion').value = '';
+            document.getElementById('mimi-gift-budget').value = '';
+            await loadMimiGifts();
+            setTimeout(function () { mimiGiftAddBtn.textContent = 'Add Gift 🎁'; }, 2000);
+          } catch (e) {
+            mimiGiftAddBtn.textContent = 'Add Gift 🎁';
+            window.alert('Error: ' + e.message);
+          }
+        });
+      }
+
       // ===== NS COUNTDOWN + IGCSE =====
       var nsData = [
         { name: 'Xiao', emoji: '🧑', enlistDate: '2024-10-01', ordDate: '2026-10-07' },
@@ -6320,23 +7072,13 @@
 
       // URL routing: app.lengleng.com/#jue goes straight to Jue's hub
       var hashPage = window.location.hash.replace('#', '').toLowerCase();
-      if (hashPage === 'jue') {
-        setPage('jue');
-      } else if (hashPage === 'home') {
-        setPage('home');
-      } else {
-        setPage('calendar');
-      }
+      var hashRoutes = { jue: 'jue', han: 'han', xiao: 'xiao', mimi: 'mimi', home: 'home', calendar: 'calendar', meals: 'meals', quotes: 'quotes', settings: 'settings' };
+      setPage(hashRoutes[hashPage] || 'calendar');
 
       // Listen for hash changes
       window.addEventListener('hashchange', function () {
         var h = window.location.hash.replace('#', '').toLowerCase();
-        if (h === 'jue') setPage('jue');
-        else if (h === 'home') setPage('home');
-        else if (h === 'calendar') setPage('calendar');
-        else if (h === 'meals') setPage('meals');
-        else if (h === 'quotes') setPage('quotes');
-        else if (h === 'settings') setPage('settings');
+        if (hashRoutes[h]) setPage(hashRoutes[h]);
       });
 
       // Fast: Supabase events
