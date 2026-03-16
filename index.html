@@ -2301,6 +2301,29 @@
           </div>
         </div>
 
+        <div class="home-card" style="border-left:3px solid #e74c3c;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="home-card-label" style="margin-bottom:0;">Daily Quiz 🧠</div>
+            <select id="quiz-subject-select" style="padding:5px 8px;border-radius:8px;border:1px solid rgba(255,193,140,0.5);font-size:0.78rem;font-family:inherit;">
+              <option value="Chemistry">Chemistry</option>
+              <option value="Physics">Physics</option>
+              <option value="Biology">Biology</option>
+              <option value="Maths">Maths</option>
+              <option value="English Language">English Language</option>
+              <option value="English Literature">English Literature</option>
+              <option value="Economics">Economics</option>
+              <option value="Business">Business</option>
+              <option value="Latin">Latin</option>
+              <option value="PE">PE</option>
+            </select>
+          </div>
+          <div style="margin-top:8px;">
+            <button type="button" id="quiz-generate-btn" class="btn btn-primary" style="width:100%;padding:10px;font-size:0.88rem;">Quiz Me! 🎯</button>
+          </div>
+          <div id="quiz-questions" style="margin-top:10px;"></div>
+          <div id="quiz-score" style="margin-top:8px;text-align:center;font-size:0.82rem;"></div>
+        </div>
+
         <div class="home-card" style="border-left:3px solid #3498db;margin-bottom:12px;">
           <div class="home-card-label">Revision Topics</div>
           <div id="jue-topics" style="font-size:0.82rem;color:#3d3328;line-height:1.5;">
@@ -2458,7 +2481,7 @@
         <div class="settings-group">
           <div class="settings-group-label">About</div>
           <div class="settings-row settings-row-info">
-            <span>Leng Family OS v2.0</span>
+            <span>Leng Family OS v2.1</span>
             <span class="settings-row-detail">Built with love by Papa</span>
           </div>
         </div>
@@ -5867,6 +5890,122 @@
             jueLogBtn.textContent = 'Log Study 📝';
             window.alert('Error: ' + e.message);
           }
+        });
+      }
+
+      // Quiz generate button
+      var quizBtn = document.getElementById('quiz-generate-btn');
+      var quizQuestionsEl = document.getElementById('quiz-questions');
+      var quizScoreEl = document.getElementById('quiz-score');
+      var quizSubjectSelect = document.getElementById('quiz-subject-select');
+
+      if (quizBtn) {
+        quizBtn.addEventListener('click', async function () {
+          var subject = quizSubjectSelect ? quizSubjectSelect.value : 'Chemistry';
+          quizBtn.textContent = 'Generating questions...';
+          quizBtn.disabled = true;
+          if (quizQuestionsEl) quizQuestionsEl.innerHTML = '<div style="color:#9a8b7a;font-style:italic;text-align:center;padding:8px;">Loading your quiz...</div>';
+          if (quizScoreEl) quizScoreEl.innerHTML = '';
+
+          try {
+            var resp = await fetch('/api/quiz', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ subject: subject })
+            });
+            if (!resp.ok) throw new Error('API error: ' + resp.status);
+            var data = await resp.json();
+
+            if (data.questions && data.questions.length > 0) {
+              quizQuestionsEl.innerHTML = '';
+              var correct = 0;
+              var total = data.questions.length;
+              var revealed = 0;
+
+              data.questions.forEach(function (q, idx) {
+                var card = document.createElement('div');
+                card.style.cssText = 'background:rgba(255,255,255,0.7);border-radius:12px;padding:12px;margin-bottom:8px;';
+
+                var qText = document.createElement('div');
+                qText.style.cssText = 'font-size:0.88rem;font-weight:600;color:#2b2432;margin-bottom:8px;';
+                qText.textContent = (idx + 1) + '. ' + q.q;
+                card.appendChild(qText);
+
+                var answerDiv = document.createElement('div');
+                answerDiv.style.cssText = 'display:none;background:rgba(39,174,96,0.08);border-radius:8px;padding:8px 10px;font-size:0.82rem;color:#2d5a2e;line-height:1.4;margin-bottom:8px;';
+                answerDiv.textContent = q.a;
+                card.appendChild(answerDiv);
+
+                var btnRow = document.createElement('div');
+                btnRow.style.cssText = 'display:flex;gap:6px;';
+
+                var showBtn = document.createElement('button');
+                showBtn.type = 'button';
+                showBtn.textContent = 'Show Answer';
+                showBtn.style.cssText = 'padding:6px 12px;border:1px solid rgba(0,0,0,0.08);border-radius:8px;background:#fff;font-size:0.78rem;cursor:pointer;font-family:inherit;';
+                showBtn.addEventListener('click', function () {
+                  answerDiv.style.display = 'block';
+                  showBtn.style.display = 'none';
+                  scoreRow.style.display = 'flex';
+                });
+                btnRow.appendChild(showBtn);
+
+                var scoreRow = document.createElement('div');
+                scoreRow.style.cssText = 'display:none;gap:6px;margin-top:6px;';
+
+                var gotItBtn = document.createElement('button');
+                gotItBtn.type = 'button';
+                gotItBtn.textContent = '✅ Got it!';
+                gotItBtn.style.cssText = 'padding:6px 12px;border:none;border-radius:8px;background:rgba(39,174,96,0.15);color:#27ae60;font-size:0.78rem;cursor:pointer;font-family:inherit;font-weight:600;';
+                gotItBtn.addEventListener('click', function () {
+                  correct++;
+                  revealed++;
+                  scoreRow.innerHTML = '<span style="color:#27ae60;font-weight:600;font-size:0.78rem;">Correct! Well done 🎉</span>';
+                  updateQuizScore(correct, revealed, total);
+                });
+
+                var missedBtn = document.createElement('button');
+                missedBtn.type = 'button';
+                missedBtn.textContent = '❌ Need to revise';
+                missedBtn.style.cssText = 'padding:6px 12px;border:none;border-radius:8px;background:rgba(231,76,60,0.1);color:#e74c3c;font-size:0.78rem;cursor:pointer;font-family:inherit;font-weight:600;';
+                missedBtn.addEventListener('click', function () {
+                  revealed++;
+                  scoreRow.innerHTML = '<span style="color:#e67e22;font-weight:600;font-size:0.78rem;">Keep revising — you\'ll get it next time 💪</span>';
+                  updateQuizScore(correct, revealed, total);
+                });
+
+                scoreRow.appendChild(gotItBtn);
+                scoreRow.appendChild(missedBtn);
+
+                card.appendChild(btnRow);
+                card.appendChild(scoreRow);
+                quizQuestionsEl.appendChild(card);
+              });
+
+              var updateQuizScore = function (c, r, t) {
+                if (r === t && quizScoreEl) {
+                  var pct = Math.round((c / t) * 100);
+                  var emoji = pct === 100 ? '🏆' : pct >= 66 ? '⭐' : '📖';
+                  quizScoreEl.innerHTML = '<strong>' + emoji + ' Score: ' + c + '/' + t + ' (' + pct + '%)</strong>' +
+                    '<br><button type="button" onclick="document.getElementById(\'quiz-generate-btn\').click();" style="margin-top:6px;padding:6px 16px;border:1px solid rgba(0,0,0,0.08);border-radius:8px;background:#fff;font-size:0.78rem;cursor:pointer;font-family:inherit;">Quiz me again! 🔄</button>';
+                }
+              };
+
+              // Also log this as a study session
+              try {
+                await supabaseClient.from('study_log').insert({ subject: subject, date: getTodayKey() });
+                await loadJueStudyData();
+              } catch (e) { /* silent */ }
+            } else {
+              quizQuestionsEl.innerHTML = '<div style="color:#e74c3c;">Could not generate questions. Try again.</div>';
+            }
+          } catch (e) {
+            console.error('[quiz]', e);
+            quizQuestionsEl.innerHTML = '<div style="color:#e74c3c;">Error: ' + e.message + '</div>';
+          }
+
+          quizBtn.textContent = 'Quiz Me! 🎯';
+          quizBtn.disabled = false;
         });
       }
 
