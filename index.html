@@ -1260,7 +1260,7 @@
       background: rgba(255, 248, 236, 0.96);
       font-family: inherit;
       font-weight: 850;
-      font-size: 0.8rem;
+      font-size: 0.68rem;
       color: #5a3d1f;
       cursor: pointer;
       display: inline-flex;
@@ -1268,7 +1268,9 @@
       justify-content: center;
       letter-spacing: 0.01em;
       -webkit-tap-highlight-color: transparent;
+      padding: 0 2px;
     }
+    .bottom-nav .nav-icon { display: none; font-size: 1.1rem; }
 
     .bottom-nav button.is-active {
       background: var(--accent);
@@ -1315,13 +1317,10 @@
       }
     }
 
-    @media (max-width: 380px) {
-      .bottom-nav button {
-        font-size: 1.1rem;
-      }
-      .bottom-nav button span {
-        display: none;
-      }
+    @media (max-width: 420px) {
+      .bottom-nav .nav-label { display: none; }
+      .bottom-nav .nav-icon { display: inline; }
+      .bottom-nav button { font-size: 1.1rem; }
     }
     /* ===== HOME VIEW ===== */
     .home-container { padding: 8px 0; }
@@ -2274,7 +2273,10 @@
           <div id="jue-hero-countdown" style="font-size:2.2rem;font-weight:900;color:#e67e22;margin:8px 0;"></div>
           <div style="font-size:0.82rem;color:#9a8b7a;">days until first exam</div>
           <div id="jue-progress-bar" style="margin:12px auto;max-width:300px;"></div>
-          <button type="button" onclick="setPage('home');window.location.hash='';" style="margin-top:4px;padding:4px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:rgba(255,255,255,0.8);font-size:0.74rem;color:#9a8b7a;cursor:pointer;font-family:inherit;">← Family OS Home</button>
+          <div style="display:flex;justify-content:center;gap:8px;margin-top:4px;">
+            <button type="button" onclick="setPage('home');window.location.hash='';" style="padding:4px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:rgba(255,255,255,0.8);font-size:0.74rem;color:#9a8b7a;cursor:pointer;font-family:inherit;">← Home</button>
+            <button type="button" onclick="setPage('settings')" style="padding:4px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:rgba(255,255,255,0.8);font-size:0.74rem;color:#9a8b7a;cursor:pointer;font-family:inherit;">⚙️</button>
+          </div>
         </div>
 
         <div class="home-card" style="border-left:3px solid #e74c3c;margin-bottom:12px;">
@@ -2362,7 +2364,10 @@
         <div style="text-align:center;margin-bottom:16px;">
           <div style="font-size:1.3rem;font-weight:900;color:#2b2432;">Han's Hub 💪</div>
           <div style="font-size:0.88rem;color:#766a5a;margin-top:4px;">Fitness · University Prep · ORD 10 Oct 2027</div>
-          <button type="button" onclick="setPage('home');window.location.hash='';" style="margin-top:8px;padding:4px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:rgba(255,255,255,0.8);font-size:0.74rem;color:#9a8b7a;cursor:pointer;font-family:inherit;">← Family OS Home</button>
+          <div style="display:flex;justify-content:center;gap:8px;margin-top:8px;">
+            <button type="button" onclick="setPage('home');window.location.hash='';" style="padding:4px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:rgba(255,255,255,0.8);font-size:0.74rem;color:#9a8b7a;cursor:pointer;font-family:inherit;">← Home</button>
+            <button type="button" onclick="setPage('settings')" style="padding:4px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:rgba(255,255,255,0.8);font-size:0.74rem;color:#9a8b7a;cursor:pointer;font-family:inherit;">⚙️</button>
+          </div>
         </div>
 
         <div class="home-card" style="border-left:3px solid #27ae60;margin-bottom:12px;">
@@ -2394,6 +2399,8 @@
 
         <div class="home-card" style="border-left:3px solid #2ecc71;margin-bottom:12px;">
           <div class="home-card-label" style="color:#27ae60;">Run Tracker</div>
+          <div style="font-size:0.76rem;color:#9a8b7a;margin-bottom:6px;">Sync: Open Strava → copy your run stats here, or log manually</div>
+          <a href="https://www.strava.com/athlete/training" target="_blank" style="display:inline-block;padding:5px 12px;border-radius:8px;background:#fc4c02;color:#fff;font-size:0.76rem;font-weight:700;text-decoration:none;margin-bottom:10px;">Open Strava →</a>
           <div id="han-run-weekly" style="margin-bottom:8px;"></div>
           <details>
             <summary style="font-weight:700;font-size:0.84rem;cursor:pointer;color:#27ae60;">Log a Run</summary>
@@ -2429,11 +2436,15 @@
           <div id="xiao-ns-hero" style="font-size:2.2rem;font-weight:900;color:#2c3e50;margin:8px 0;"></div>
           <div style="font-size:0.82rem;color:#9a8b7a;">days until ORD · 7 Oct 2026</div>
           <div id="xiao-ns-bar" style="margin:12px auto;max-width:300px;"></div>
-          <button type="button" onclick="setPage('home');window.location.hash='';" style="margin-top:4px;padding:4px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:rgba(255,255,255,0.8);font-size:0.74rem;color:#9a8b7a;cursor:pointer;font-family:inherit;">← Family OS Home</button>
+          <div style="display:flex;justify-content:center;gap:8px;margin-top:4px;">
+            <button type="button" onclick="setPage('home');window.location.hash='';" style="padding:4px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:rgba(255,255,255,0.8);font-size:0.74rem;color:#9a8b7a;cursor:pointer;font-family:inherit;">← Home</button>
+            <button type="button" onclick="setPage('settings')" style="padding:4px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:rgba(255,255,255,0.8);font-size:0.74rem;color:#9a8b7a;cursor:pointer;font-family:inherit;">⚙️</button>
+          </div>
         </div>
 
         <div class="home-card" style="border-left:3px solid #3498db;margin-bottom:12px;">
-          <div class="home-card-label" style="color:#2c3e50;">University Applications</div>
+          <div class="home-card-label" style="color:#2c3e50;">University Applications — Waiting for Results</div>
+          <div style="font-size:0.78rem;color:#e67e22;font-weight:600;margin-bottom:8px;">Results could arrive any day now! 🤞</div>
           <div id="xiao-uni-cards"></div>
         </div>
 
@@ -2446,8 +2457,8 @@
         </div>
 
         <div class="home-card" style="border-left:3px solid #2c3e50;">
-          <div class="home-card-label" style="color:#2c3e50;">After ORD: What's Next? 🧪</div>
-          <div style="font-size:0.86rem;color:#3d3328;margin-bottom:8px;">Chemistry degree preparation</div>
+          <div class="home-card-label" style="color:#2c3e50;">While You Wait 🎯</div>
+          <div style="font-size:0.86rem;color:#3d3328;margin-bottom:8px;">Things to do during NS while uni decisions come in</div>
           <div id="xiao-post-ns-checklist" style="font-size:0.86rem;line-height:2;"></div>
         </div>
       </div>
@@ -2459,7 +2470,11 @@
         <div style="text-align:center;margin-bottom:16px;">
           <div style="font-size:1.3rem;font-weight:900;color:#2b2432;">Mimi's Hub 🏠</div>
           <div style="font-size:0.88rem;color:#766a5a;margin-top:4px;">Home · Dinners · Gifting</div>
-          <button type="button" onclick="setPage('home');window.location.hash='';" style="margin-top:8px;padding:4px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:rgba(255,255,255,0.8);font-size:0.74rem;color:#9a8b7a;cursor:pointer;font-family:inherit;">← Family OS Home</button>
+          <div style="display:flex;justify-content:center;gap:8px;margin-top:8px;">
+            <button type="button" onclick="setPage('home');window.location.hash='';" style="padding:4px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:rgba(255,255,255,0.8);font-size:0.74rem;color:#9a8b7a;cursor:pointer;font-family:inherit;">← Home</button>
+            <button type="button" onclick="setPage('meals')" style="padding:4px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:rgba(255,255,255,0.8);font-size:0.74rem;color:#9a8b7a;cursor:pointer;font-family:inherit;">🍽️ Meals</button>
+            <button type="button" onclick="setPage('settings')" style="padding:4px 14px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:rgba(255,255,255,0.8);font-size:0.74rem;color:#9a8b7a;cursor:pointer;font-family:inherit;">⚙️</button>
+          </div>
         </div>
 
         <div class="home-card" style="border-left:3px solid #e91e63;margin-bottom:12px;">
@@ -2471,10 +2486,10 @@
         </div>
 
         <div class="home-card" style="border-left:3px solid #e91e63;margin-bottom:12px;">
-          <div class="home-card-label" style="color:#e91e63;">Next 10 Dinners 🍽️</div>
+          <div class="home-card-label" style="color:#e91e63;">Upcoming Dinners 🍽️</div>
           <div id="mimi-dinners-list"></div>
           <details style="margin-top:10px;">
-            <summary style="font-weight:700;font-size:0.84rem;cursor:pointer;color:#e91e63;">Add Dinner Plan</summary>
+            <summary style="font-weight:700;font-size:0.84rem;cursor:pointer;color:#e91e63;">Add Dinner to Calendar</summary>
             <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px;">
               <input type="date" id="mimi-dinner-date" style="padding:8px;border-radius:10px;border:1px solid rgba(233,30,99,0.3);font-size:0.84rem;font-family:inherit;">
               <input type="text" id="mimi-dinner-menu" placeholder="What's for dinner?" style="padding:8px;border-radius:10px;border:1px solid rgba(233,30,99,0.3);font-size:0.84rem;font-family:inherit;">
@@ -2492,13 +2507,36 @@
           </div>
         </div>
 
+        <div class="home-card" style="border-left:3px solid #e91e63;margin-bottom:12px;">
+          <div class="home-card-label" style="color:#e91e63;">Saved Recipients 📋</div>
+          <div id="mimi-recipients-list"></div>
+          <details style="margin-top:8px;">
+            <summary style="font-weight:700;font-size:0.84rem;cursor:pointer;color:#e91e63;">Add Recipient</summary>
+            <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+              <input type="text" id="mimi-recip-name" placeholder="Name" style="padding:8px;border-radius:10px;border:1px solid rgba(233,30,99,0.3);font-size:0.84rem;font-family:inherit;">
+              <input type="text" id="mimi-recip-address" placeholder="Address" style="padding:8px;border-radius:10px;border:1px solid rgba(233,30,99,0.3);font-size:0.84rem;font-family:inherit;">
+              <div style="display:flex;gap:6px;">
+                <input type="text" id="mimi-recip-phone" placeholder="Phone" style="flex:1;padding:8px;border-radius:10px;border:1px solid rgba(233,30,99,0.3);font-size:0.84rem;font-family:inherit;">
+                <input type="text" id="mimi-recip-notes" placeholder="Notes" style="flex:1;padding:8px;border-radius:10px;border:1px solid rgba(233,30,99,0.3);font-size:0.84rem;font-family:inherit;">
+              </div>
+              <button type="button" id="mimi-recip-add-btn" class="btn btn-primary" style="padding:10px;font-size:0.86rem;background:#e91e63;border-color:#e91e63;">Save Recipient 📋</button>
+            </div>
+          </details>
+        </div>
+
         <div class="home-card" style="border-left:3px solid #e91e63;">
           <div class="home-card-label" style="color:#e91e63;">Family Gifting Tracker 🎁</div>
           <div id="mimi-gifts-list"></div>
+          <div style="margin-top:8px;">
+            <button type="button" id="mimi-gift-driver-btn" class="btn" style="font-size:0.78rem;padding:6px 14px;background:#25d366;color:#fff;border-color:#25d366;">Send List to Driver (WhatsApp) 🚗</button>
+          </div>
           <details style="margin-top:10px;">
             <summary style="font-weight:700;font-size:0.84rem;cursor:pointer;color:#e91e63;">Add Gift</summary>
             <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px;">
-              <input type="text" id="mimi-gift-recipient" placeholder="Recipient" style="padding:8px;border-radius:10px;border:1px solid rgba(233,30,99,0.3);font-size:0.84rem;font-family:inherit;">
+              <select id="mimi-gift-recipient" style="padding:8px;border-radius:10px;border:1px solid rgba(233,30,99,0.3);font-size:0.84rem;font-family:inherit;">
+                <option value="">Select recipient or type below...</option>
+              </select>
+              <input type="text" id="mimi-gift-recipient-custom" placeholder="Or type new recipient name" style="padding:8px;border-radius:10px;border:1px solid rgba(233,30,99,0.3);font-size:0.84rem;font-family:inherit;">
               <input type="text" id="mimi-gift-desc" placeholder="Gift idea" style="padding:8px;border-radius:10px;border:1px solid rgba(233,30,99,0.3);font-size:0.84rem;font-family:inherit;">
               <div style="display:flex;gap:6px;">
                 <input type="text" id="mimi-gift-occasion" placeholder="Occasion" style="flex:1;padding:8px;border-radius:10px;border:1px solid rgba(233,30,99,0.3);font-size:0.84rem;font-family:inherit;">
@@ -2641,7 +2679,7 @@
         <div class="settings-group">
           <div class="settings-group-label">About</div>
           <div class="settings-row settings-row-info">
-            <span>Leng Family OS v3.0</span>
+            <span>Leng Family OS v3.1</span>
             <span class="settings-row-detail">Built with love by Papa</span>
           </div>
         </div>
@@ -2752,12 +2790,12 @@
   </div>
 
   <nav class="bottom-nav" aria-label="Bottom navigation">
-    <button type="button" id="bottom-home"><span>Home</span></button>
-    <button type="button" id="bottom-calendar" class="is-active"><span>Calendar</span></button>
-    <button type="button" id="bottom-jue"><span>Jue 📚</span></button>
-    <button type="button" id="bottom-han"><span>Han 💪</span></button>
-    <button type="button" id="bottom-xiao"><span>Xiao 🎓</span></button>
-    <button type="button" id="bottom-mimi"><span>Mimi 🏠</span></button>
+    <button type="button" id="bottom-home"><span class="nav-label">Home</span><span class="nav-icon">🏠</span></button>
+    <button type="button" id="bottom-calendar" class="is-active"><span class="nav-label">Cal</span><span class="nav-icon">📅</span></button>
+    <button type="button" id="bottom-jue"><span class="nav-label">Jue📚</span><span class="nav-icon">📚</span></button>
+    <button type="button" id="bottom-han"><span class="nav-label">Han💪</span><span class="nav-icon">💪</span></button>
+    <button type="button" id="bottom-xiao"><span class="nav-label">Xiao🎓</span><span class="nav-icon">🎓</span></button>
+    <button type="button" id="bottom-mimi"><span class="nav-label">Mimi🏠</span><span class="nav-icon">🏡</span></button>
   </nav>
   <!-- UMD build so `window.supabase` is available -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -6207,11 +6245,22 @@
 
       // ===== HAN'S HUB =====
       var renderHanView = async function () {
-        // IPPT
         await loadHanIppt();
         await loadHanRuns();
         renderHanDeadlines();
         renderHanChecklist();
+      };
+
+      var ipptCompareArrow = function (curr, prev, lower) {
+        if (curr == null || prev == null) return '';
+        if (lower) { // lower is better (run time)
+          if (curr < prev) return ' <span style="color:#27ae60;">↑</span>';
+          if (curr > prev) return ' <span style="color:#e74c3c;">↓</span>';
+        } else {
+          if (curr > prev) return ' <span style="color:#27ae60;">↑</span>';
+          if (curr < prev) return ' <span style="color:#e74c3c;">↓</span>';
+        }
+        return ' <span style="color:#9a8b7a;">→</span>';
       };
 
       var loadHanIppt = async function () {
@@ -6219,46 +6268,62 @@
         var chartEl = document.getElementById('han-ippt-chart');
         var histEl = document.getElementById('han-ippt-history');
         try {
-          var { data, error } = await supabaseClient.from('ippt_scores').select('*').order('date', { ascending: false }).limit(5);
+          var { data, error } = await supabaseClient.from('ippt_scores').select('*').order('date', { ascending: false }).limit(10);
           if (error || !data || data.length === 0) {
             if (bestEl) bestEl.innerHTML = '<div style="font-size:0.86rem;color:#9a8b7a;font-style:italic;">No IPPT scores logged yet. Log your first one below!</div>';
             if (chartEl) chartEl.innerHTML = '';
             if (histEl) histEl.innerHTML = '';
             return;
           }
-          var best = data.reduce(function (a, b) { return (a.total_points || 0) > (b.total_points || 0) ? a : b; });
-          var awardColor = best.award === 'Gold' ? '#f1c40f' : best.award === 'Silver' ? '#95a5a6' : '#cd7f32';
-          if (bestEl) bestEl.innerHTML = '<div style="display:flex;align-items:center;gap:10px;">' +
-            '<div style="font-size:2rem;font-weight:900;color:#27ae60;">' + (best.total_points || '—') + '</div>' +
-            '<div><div style="font-weight:700;font-size:0.88rem;">Best Score</div>' +
-            '<div style="font-size:0.78rem;color:' + awardColor + ';font-weight:700;">' + (best.award || '') + ' 🏅</div></div></div>';
 
-          // Simple bar chart of last 5
+          // Latest vs previous comparison
+          var latest = data[0];
+          var prev = data.length > 1 ? data[1] : null;
+          var awardColors = { Gold: '#FFD700', Silver: '#C0C0C0', Pass: '#27ae60', Fail: '#e74c3c' };
+          var latCol = awardColors[latest.award] || '#27ae60';
+
+          if (bestEl) {
+            var html = '<div style="padding:10px;border-radius:10px;background:rgba(39,174,96,0.06);margin-bottom:8px;">' +
+              '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+              '<div style="font-size:0.72rem;color:#9a8b7a;">LATEST</div>' +
+              '<div style="font-size:0.72rem;color:#9a8b7a;">' + new Date(latest.date + 'T00:00:00').toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' }) + '</div></div>' +
+              '<div style="display:flex;align-items:center;gap:8px;margin-top:4px;">' +
+              '<span style="font-size:1.8rem;font-weight:900;color:' + latCol + ';">' + (latest.total_points || '—') + 'pts</span>' +
+              '<span style="font-size:0.82rem;font-weight:700;color:' + latCol + ';">(' + (latest.award || '') + ')</span></div>' +
+              '<div style="font-size:0.82rem;margin-top:6px;color:#3d3328;">' +
+              'Push-ups: <strong>' + (latest.pushups || '—') + '</strong>' + (prev ? ipptCompareArrow(latest.pushups, prev.pushups, false) : '') +
+              ' &nbsp; Sit-ups: <strong>' + (latest.situps || '—') + '</strong>' + (prev ? ipptCompareArrow(latest.situps, prev.situps, false) : '') +
+              ' &nbsp; 2.4km: <strong>' + (latest.run_time || '—') + '</strong></div></div>';
+
+            if (prev) {
+              var prevCol = awardColors[prev.award] || '#9a8b7a';
+              html += '<div style="padding:8px 10px;border-radius:8px;background:rgba(0,0,0,0.02);margin-top:4px;font-size:0.8rem;color:#766a5a;">' +
+                '<span style="font-size:0.68rem;color:#9a8b7a;">PREVIOUS</span> &nbsp;' +
+                '<strong style="color:' + prevCol + ';">' + (prev.total_points || '—') + 'pts (' + (prev.award || '') + ')</strong> — ' +
+                new Date(prev.date + 'T00:00:00').toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' }) +
+                '<br>PU:' + (prev.pushups || '—') + ' SU:' + (prev.situps || '—') + ' Run:' + (prev.run_time || '—') + '</div>';
+            }
+            bestEl.innerHTML = html;
+          }
+
+          // Bar chart of last 5
           if (chartEl) {
-            var bars = data.slice().reverse().map(function (s) {
+            var chartData = data.slice(0, 5).reverse();
+            var bars = chartData.map(function (s) {
               var pct = Math.min(100, Math.round(((s.total_points || 0) / 100) * 100));
-              var color = (s.total_points || 0) >= 85 ? '#27ae60' : (s.total_points || 0) >= 75 ? '#f39c12' : '#e74c3c';
+              var color = awardColors[s.award] || ((s.total_points || 0) >= 85 ? '#FFD700' : (s.total_points || 0) >= 75 ? '#C0C0C0' : (s.total_points || 0) >= 61 ? '#27ae60' : '#e74c3c');
               var d = new Date(s.date + 'T00:00:00');
               var label = d.toLocaleDateString('en-SG', { day: 'numeric', month: 'short' });
               return '<div style="flex:1;text-align:center;">' +
                 '<div style="height:60px;display:flex;align-items:flex-end;justify-content:center;">' +
-                '<div style="width:24px;height:' + Math.max(4, pct * 0.6) + 'px;background:' + color + ';border-radius:4px 4px 0 0;"></div></div>' +
+                '<div style="width:28px;height:' + Math.max(6, pct * 0.6) + 'px;background:' + color + ';border-radius:4px 4px 0 0;"></div></div>' +
                 '<div style="font-size:0.68rem;color:#9a8b7a;margin-top:2px;">' + label + '</div>' +
                 '<div style="font-size:0.72rem;font-weight:700;">' + (s.total_points || 0) + '</div></div>';
             }).join('');
             chartEl.innerHTML = '<div style="display:flex;gap:4px;align-items:flex-end;">' + bars + '</div>';
           }
 
-          if (histEl) {
-            histEl.innerHTML = '<div style="font-size:0.76rem;color:#9a8b7a;margin-bottom:4px;">Recent scores</div>' +
-              data.map(function (s) {
-                var d = new Date(s.date + 'T00:00:00');
-                return '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:0.82rem;border-bottom:1px solid rgba(0,0,0,0.04);">' +
-                  '<span>' + d.toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' }) + '</span>' +
-                  '<span>PU:' + (s.pushups || '—') + ' SU:' + (s.situps || '—') + ' Run:' + (s.run_time || '—') + '</span>' +
-                  '<span style="font-weight:700;">' + (s.total_points || '—') + 'pts</span></div>';
-              }).join('');
-          }
+          if (histEl) histEl.innerHTML = '';
         } catch (e) {
           console.log('[han] ippt error', e);
           if (bestEl) bestEl.innerHTML = '<span style="color:#9a8b7a;font-style:italic;">IPPT table not set up yet.</span>';
@@ -6304,26 +6369,32 @@
         var weeklyEl = document.getElementById('han-run-weekly');
         var histEl = document.getElementById('han-run-history');
         try {
-          var { data, error } = await supabaseClient.from('run_log').select('*').order('date', { ascending: false }).limit(10);
+          var { data, error } = await supabaseClient.from('run_log').select('*').order('date', { ascending: false }).limit(30);
           if (error || !data || data.length === 0) {
             if (weeklyEl) weeklyEl.innerHTML = '<div style="font-size:0.86rem;color:#9a8b7a;font-style:italic;">No runs logged yet.</div>';
             if (histEl) histEl.innerHTML = '';
             return;
           }
-          // Weekly total
           var now = new Date();
+          // Weekly total
           var weekStart = new Date(now);
           weekStart.setDate(now.getDate() - now.getDay());
           var weekKey = weekStart.getFullYear() + '-' + String(weekStart.getMonth() + 1).padStart(2, '0') + '-' + String(weekStart.getDate()).padStart(2, '0');
           var weekTotal = data.filter(function (r) { return r.date >= weekKey; }).reduce(function (s, r) { return s + (r.distance_km || 0); }, 0);
-          if (weeklyEl) weeklyEl.innerHTML = '<div style="display:flex;align-items:center;gap:10px;">' +
-            '<div style="font-size:2rem;font-weight:900;color:#27ae60;">' + weekTotal.toFixed(1) + '<span style="font-size:0.9rem;"> km</span></div>' +
-            '<div style="font-size:0.82rem;color:#766a5a;">this week</div></div>';
+          // Monthly total
+          var monthKey = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-01';
+          var monthTotal = data.filter(function (r) { return r.date >= monthKey; }).reduce(function (s, r) { return s + (r.distance_km || 0); }, 0);
 
-          // Last 5 runs
+          if (weeklyEl) weeklyEl.innerHTML = '<div style="display:flex;align-items:center;gap:16px;">' +
+            '<div><div style="font-size:1.8rem;font-weight:900;color:#27ae60;">' + weekTotal.toFixed(1) + '<span style="font-size:0.8rem;"> km</span></div>' +
+            '<div style="font-size:0.72rem;color:#766a5a;">this week</div></div>' +
+            '<div><div style="font-size:1.8rem;font-weight:900;color:#2ecc71;">' + monthTotal.toFixed(1) + '<span style="font-size:0.8rem;"> km</span></div>' +
+            '<div style="font-size:0.72rem;color:#766a5a;">this month</div></div></div>';
+
+          // Last 10 runs
           if (histEl) {
-            histEl.innerHTML = '<div style="font-size:0.76rem;color:#9a8b7a;margin-bottom:4px;">Recent runs</div>' +
-              data.slice(0, 5).map(function (r) {
+            histEl.innerHTML = '<div style="font-size:0.76rem;color:#9a8b7a;margin-bottom:4px;">Last 10 runs</div>' +
+              data.slice(0, 10).map(function (r) {
                 var pace = (r.distance_km && r.time_minutes) ? (r.time_minutes / r.distance_km).toFixed(1) : '—';
                 var d = new Date(r.date + 'T00:00:00');
                 return '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:0.82rem;border-bottom:1px solid rgba(0,0,0,0.04);">' +
@@ -6369,21 +6440,33 @@
         var el = document.getElementById('han-uni-deadlines');
         if (!el) return;
         var now = new Date();
+        var startRef = new Date('2026-03-17'); // today as baseline
         var deadlines = [
-          { label: 'SAT Exam', date: null, display: 'Late 2026 (TBD)', note: 'Register when date confirmed' },
-          { label: 'Personal Statement 1st Draft', date: new Date('2026-08-01'), display: '1 Aug 2026' },
-          { label: 'US Common App (Early)', date: new Date('2027-01-01'), display: '1 Jan 2027' },
-          { label: 'UCAS Application', date: new Date('2027-01-15'), display: '15 Jan 2027' },
-          { label: 'US Common App (Regular)', date: new Date('2027-03-01'), display: '1 Mar 2027' }
+          { label: 'SAT Exam', date: null, display: 'Late 2026 (TBD)' },
+          { label: 'Personal Statement 1st Draft', date: new Date('2026-08-01'), display: '1 Aug 2026', start: startRef },
+          { label: 'US Common App (Early)', date: new Date('2027-01-01'), display: '1 Jan 2027', start: startRef },
+          { label: 'UCAS Application', date: new Date('2027-01-15'), display: '15 Jan 2027', start: startRef },
+          { label: 'US Common App (Regular)', date: new Date('2027-03-01'), display: '1 Mar 2027', start: startRef }
         ];
         el.innerHTML = deadlines.map(function (d) {
-          var days = d.date ? Math.ceil((d.date - now) / 86400000) : null;
-          var urgent = days !== null && days <= 90;
-          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.04);">' +
-            '<div><div style="font-weight:700;font-size:0.88rem;' + (urgent ? 'color:#e74c3c;' : '') + '">' + d.label + '</div>' +
-            '<div style="font-size:0.76rem;color:#9a8b7a;">' + d.display + '</div></div>' +
-            '<div style="font-size:0.82rem;font-weight:700;color:' + (urgent ? '#e74c3c' : '#27ae60') + ';">' +
-            (days !== null ? (days > 0 ? days + 'd' : 'NOW') : 'TBD') + '</div></div>';
+          if (!d.date) {
+            return '<div style="padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.04);">' +
+              '<div style="font-weight:700;font-size:0.88rem;">' + d.label + '</div>' +
+              '<div style="font-size:0.76rem;color:#9a8b7a;">' + d.display + ' — TBD</div></div>';
+          }
+          var days = Math.max(0, Math.ceil((d.date - now) / 86400000));
+          var totalDays = Math.ceil((d.date - d.start) / 86400000);
+          var elapsed = totalDays - days;
+          var pct = Math.min(100, Math.max(0, Math.round((elapsed / totalDays) * 100)));
+          var barColor = days > 60 ? '#27ae60' : days > 30 ? '#f39c12' : '#e74c3c';
+          return '<div style="padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.04);">' +
+            '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+            '<div style="font-weight:700;font-size:0.88rem;' + (days <= 30 ? 'color:#e74c3c;' : '') + '">' + d.label + '</div>' +
+            '<div style="font-size:0.86rem;font-weight:800;color:' + barColor + ';">' + days + 'd</div></div>' +
+            '<div style="font-size:0.72rem;color:#9a8b7a;margin:2px 0;">' + d.display + '</div>' +
+            '<div class="ns-bar" style="background:rgba(0,0,0,0.06);height:14px;border-radius:7px;">' +
+            '<div style="width:' + pct + '%;height:14px;border-radius:7px;background:' + barColor + ';display:flex;align-items:center;justify-content:center;">' +
+            '<span style="font-size:0.6rem;color:#fff;font-weight:700;line-height:14px;">' + pct + '%</span></div></div></div>';
         }).join('');
       };
 
@@ -6418,37 +6501,42 @@
 
       // ===== XIAO'S HUB =====
       var laufeyMessages = [
-        "Laufey's music reminds us that quiet moments have their own beauty. What quiet moment will you notice today?",
+        "Some days, the bravest thing you can do is rest. Laufey would understand.",
+        "A jazz record, a cup of tea, and nowhere to be. That's not wasting time — that's recharging.",
+        "You were head boy once. That confidence is still in you, just hibernating. It'll wake up when it's ready.",
+        "The anxiety you feel before big moments? That's your body getting ready to rise. You always do.",
         "Like a Laufey melody — today doesn't need to be loud to be meaningful.",
         "Laufey would say: the cozy evening in is just as valid as the big night out. Rest is productive.",
-        "Some days are for jazz, some are for silence. Both are good. You're doing fine, Xiao.",
-        "Laufey makes music that feels like a warm drink on a cold day. Be that warmth to yourself today.",
         "Not every day needs to be an adventure. Sometimes the best days are the ones spent doing nothing at all.",
         "Laufey's world is proof that gentle things can be powerful. Your quiet strength counts.",
         "Think of today like a Laufey album — no need to rush to the next track. Enjoy where you are.",
         "Even Laufey started somewhere. Every small step in chemistry is a step toward something beautiful.",
         "The world is noisy. Laufey's music is a reminder that calm is a superpower. Use yours today.",
-        "Laufey once said music saved her from overthinking. What's your version of that today?",
-        "You don't need to prove anything today. Just exist, like a Sunday morning Laufey playlist.",
-        "Imagine Laufey writing a song about your day. What small, beautiful detail would she notice?",
+        "You don't need to prove anything today. Just exist, like a Sunday morning playlist.",
         "Some of the best things — like Laufey's voice — are understated. Your quiet effort matters more than you think.",
         "Laufey's music feels like coming home. Wherever you are today, you belong there.",
         "Not everything needs to be figured out right now. Even Laufey takes her time between albums.",
         "Today's vibe: a Laufey track, a good book, and zero pressure. You've earned it.",
         "Laufey reminds us that vulnerability is not weakness. It's okay to feel everything today.",
-        "Like a Laufey concert — the magic is in the pauses between the notes. Give yourself some pauses today.",
         "You're in your quiet era, and that's okay. Laufey built a whole career on the beauty of quiet.",
         "The world doesn't need you to be loud. It needs you to be you. Laufey figured that out early.",
-        "Laufey's playlists are basically a hug in audio form. Wrap yourself in that energy today.",
         "Chemistry, like music, is about finding the right combination. You'll find yours.",
         "Laufey went from Iceland to the world stage by being authentically herself. Your time is coming too.",
-        "Today is a good day to listen to something beautiful and let go of everything else."
+        "Today is a good day to listen to something beautiful and let go of everything else.",
+        "Small wins still count. Read one page, learn one fact, cook one meal. That's a day well spent.",
+        "Laufey's playlists are basically a hug in audio form. Wrap yourself in that energy today.",
+        "The wait for uni results is hard. But you've already done the hardest part — you applied. Now breathe.",
+        "Imagine Laufey writing a song about your day. What small, beautiful detail would she notice?",
+        "Han's out running, Jue's studying — and you're recharging. Every member of the team has a role.",
+        "One day you'll look back at this NS chapter and realise it taught you patience. That's a chemistry skill too.",
+        "Try one small thing today: a walk, a sketch, a YouTube lecture on molecular bonds. Tiny momentum counts.",
+        "Like a Laufey concert — the magic is in the pauses between the notes. Give yourself some pauses today."
       ];
 
       var xiaoUniData = [
         { name: 'Yale University', course: 'Chemistry', status: 'Waiting', applied: 'Dec 2025', decision: 'Mar-Apr 2026' },
         { name: 'Columbia University', course: 'Chemistry', status: 'Waiting', applied: 'Dec 2025', decision: 'Mar-Apr 2026' },
-        { name: 'UCL', course: 'Chemistry', status: 'Waiting', applied: 'Jan 2026', decision: 'Mar-May 2026' }
+        { name: 'UCL', course: 'Chemistry (via UCAS)', status: 'Waiting', applied: 'Jan 2026', decision: 'Mar-May 2026' }
       ];
 
       var renderXiaoView = function () {
@@ -6511,11 +6599,13 @@
       };
 
       var xiaoChecklistItems = [
-        'Research UK chemistry programs (Imperial, UCL, Edinburgh, etc.)',
-        'Check A-level requirements',
-        'UCAS registration',
-        'Personal statement brainstorm',
-        'Read "The Disappearing Spoon" or similar popular chemistry book'
+        'Read "The Disappearing Spoon" (popular chemistry book)',
+        'Start an online chemistry course (MIT OpenCourseWare, Coursera)',
+        'Research accommodation for university (if offer received)',
+        'Practice cooking 3 new recipes (Han can teach you!)',
+        'Read 5 books from your shelf',
+        'Journal: write down one thing you\'re grateful for daily',
+        'Plan a post-ORD trip with friends'
       ];
 
       var renderXiaoChecklist = function () {
@@ -6585,22 +6675,32 @@
       ];
 
       var auspiciousHaircutDates2026 = [
-        { date: '2026-03-22', note: 'Good for haircuts' },
-        { date: '2026-04-03', note: 'Auspicious day' },
-        { date: '2026-04-15', note: 'Favorable for grooming' },
-        { date: '2026-04-27', note: 'Good for haircuts' },
-        { date: '2026-05-09', note: 'Auspicious day' },
-        { date: '2026-05-21', note: 'Good for haircuts' },
-        { date: '2026-06-02', note: 'Favorable for grooming' },
-        { date: '2026-06-16', note: 'Good for haircuts' },
-        { date: '2026-06-28', note: 'Auspicious day' },
-        { date: '2026-07-10', note: 'Good for haircuts' }
+        { date: '2026-03-23', note: 'Sun' },
+        { date: '2026-03-27', note: 'Thu' },
+        { date: '2026-04-02', note: 'Thu' },
+        { date: '2026-04-06', note: 'Mon' },
+        { date: '2026-04-15', note: 'Wed' },
+        { date: '2026-04-19', note: 'Sun' },
+        { date: '2026-05-01', note: 'Fri' },
+        { date: '2026-05-04', note: 'Mon' },
+        { date: '2026-05-14', note: 'Thu' },
+        { date: '2026-05-18', note: 'Mon' },
+        { date: '2026-06-03', note: 'Wed' },
+        { date: '2026-06-07', note: 'Sun' },
+        { date: '2026-06-15', note: 'Mon' },
+        { date: '2026-06-26', note: 'Fri' },
+        { date: '2026-07-05', note: 'Sun' },
+        { date: '2026-07-09', note: 'Thu' },
+        { date: '2026-07-20', note: 'Mon' },
+        { date: '2026-07-28', note: 'Tue' }
       ];
 
       var renderMimiView = async function () {
         renderSaiBabaQuote();
         await loadMimiDinners();
         renderHaircutDates();
+        await loadMimiRecipients();
+        renderMimiRecipients();
         await loadMimiGifts();
       };
 
@@ -6624,27 +6724,55 @@
         });
       }
 
+      var DINNER_KEYWORDS = /dinner|lunch|supper|kaoru|cook|meal|makan|eat|chicken|fish|rice|pasta|laksa|nasi|curry|soup|bbq|grill|steamboat|hotpot/i;
+
       var loadMimiDinners = async function () {
         var el = document.getElementById('mimi-dinners-list');
         if (!el) return;
         try {
           var todayKey = getTodayKey();
-          var { data, error } = await supabaseClient.from('dinner_plan').select('*').gte('date', todayKey).order('date', { ascending: true }).limit(10);
-          if (error || !data || data.length === 0) {
-            el.innerHTML = '<div style="font-size:0.86rem;color:#9a8b7a;font-style:italic;">No dinners planned yet. Add one below!</div>';
+          var results = [];
+
+          // 1. Pull from dinner_plan table
+          var dp = await supabaseClient.from('dinner_plan').select('*').gte('date', todayKey).order('date', { ascending: true }).limit(10);
+          if (dp.data) {
+            dp.data.forEach(function (d) {
+              results.push({ date: d.date, title: d.menu, who: d.who_home || 'Everyone', source: 'dinner_plan', id: d.id });
+            });
+          }
+
+          // 2. Pull from events table (food-related keywords)
+          var ev = await supabaseClient.from('events').select('*').gte('day_key', todayKey).order('day_key', { ascending: true }).limit(50);
+          if (ev.data) {
+            ev.data.forEach(function (e) {
+              if (DINNER_KEYWORDS.test(e.title || '')) {
+                // Don't duplicate if already in dinner_plan for same date
+                var dup = results.some(function (r) { return r.date === e.day_key && r.title.toLowerCase() === (e.title || '').toLowerCase(); });
+                if (!dup) results.push({ date: e.day_key, title: e.title, who: e.member || 'Family', source: 'events', id: e.id });
+              }
+            });
+          }
+
+          // Sort by date, limit 10
+          results.sort(function (a, b) { return a.date.localeCompare(b.date); });
+          results = results.slice(0, 10);
+
+          if (results.length === 0) {
+            el.innerHTML = '<div style="font-size:0.86rem;color:#9a8b7a;font-style:italic;">No upcoming dinners found. Add one below or add dinner events to the calendar!</div>';
             return;
           }
-          el.innerHTML = data.map(function (d) {
+          el.innerHTML = results.map(function (d) {
             var dt = new Date(d.date + 'T00:00:00');
             var isToday = d.date === todayKey;
+            var sourceTag = d.source === 'events' ? '<span style="font-size:0.64rem;background:rgba(52,152,219,0.15);color:#3498db;padding:1px 5px;border-radius:4px;margin-left:4px;">calendar</span>' : '';
             return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.04);' + (isToday ? 'background:rgba(233,30,99,0.06);padding:8px;border-radius:8px;margin:-4px;' : '') + '">' +
-              '<div><div style="font-weight:700;font-size:0.88rem;' + (isToday ? 'color:#e91e63;' : '') + '">' + (isToday ? '🍽️ Tonight: ' : '') + d.menu + '</div>' +
-              '<div style="font-size:0.74rem;color:#9a8b7a;">' + dt.toLocaleDateString('en-SG', { weekday: 'short', day: 'numeric', month: 'short' }) + ' · ' + (d.who_home || 'Everyone') + '</div></div>' +
-              '<button type="button" onclick="deleteMimiDinner(' + d.id + ')" style="border:none;background:none;color:#c0392b;font-size:0.8rem;cursor:pointer;padding:4px;">✕</button></div>';
+              '<div><div style="font-weight:700;font-size:0.88rem;' + (isToday ? 'color:#e91e63;' : '') + '">' + (isToday ? '🍽️ Tonight: ' : '') + d.title + sourceTag + '</div>' +
+              '<div style="font-size:0.74rem;color:#9a8b7a;">' + dt.toLocaleDateString('en-SG', { weekday: 'short', day: 'numeric', month: 'short' }) + ' · ' + d.who + '</div></div>' +
+              (d.source === 'dinner_plan' ? '<button type="button" onclick="deleteMimiDinner(' + d.id + ')" style="border:none;background:none;color:#c0392b;font-size:0.8rem;cursor:pointer;padding:4px;">✕</button>' : '') + '</div>';
           }).join('');
         } catch (e) {
           console.log('[mimi] dinner error', e);
-          el.innerHTML = '<span style="color:#9a8b7a;font-style:italic;">Dinner table not set up yet.</span>';
+          el.innerHTML = '<span style="color:#9a8b7a;font-style:italic;">Loading dinners...</span>';
         }
       };
 
@@ -6665,7 +6793,10 @@
           if (!date || !menu) { window.alert('Enter date and menu'); return; }
           mimiDinnerAddBtn.textContent = 'Adding...';
           try {
+            // Add to both dinner_plan AND events table
             await supabaseClient.from('dinner_plan').insert({ date: date, menu: menu, who_home: who });
+            var weekKey = formatWeekKey(getSundayOfWeek(new Date(date + 'T00:00:00')));
+            await supabaseClient.from('events').insert({ member: 'Family', day_key: date, week_key: weekKey, title: 'Dinner: ' + menu, time: '19:00' });
             mimiDinnerAddBtn.textContent = 'Added! ✅';
             document.getElementById('mimi-dinner-date').value = '';
             document.getElementById('mimi-dinner-menu').value = '';
@@ -6703,11 +6834,93 @@
         }).join('');
       };
 
+      // Gift recipients
+      var mimiRecipients = [];
+
+      var loadMimiRecipients = async function () {
+        try {
+          var { data } = await supabaseClient.from('gift_recipients').select('*').order('name');
+          mimiRecipients = data || [];
+        } catch (e) { mimiRecipients = []; }
+      };
+
+      var renderMimiRecipients = function () {
+        var el = document.getElementById('mimi-recipients-list');
+        if (!el) return;
+        if (mimiRecipients.length === 0) {
+          el.innerHTML = '<div style="font-size:0.82rem;color:#9a8b7a;font-style:italic;">No saved recipients yet.</div>';
+          return;
+        }
+        el.innerHTML = mimiRecipients.map(function (r) {
+          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(0,0,0,0.04);font-size:0.82rem;">' +
+            '<div><strong>' + r.name + '</strong>' +
+            (r.address ? '<div style="font-size:0.72rem;color:#766a5a;">' + r.address + '</div>' : '') +
+            (r.phone ? '<div style="font-size:0.72rem;color:#766a5a;">' + r.phone + '</div>' : '') +
+            (r.notes ? '<div style="font-size:0.68rem;color:#9a8b7a;font-style:italic;">' + r.notes + '</div>' : '') + '</div>' +
+            '<button type="button" onclick="deleteMimiRecipient(' + r.id + ')" style="border:none;background:none;color:#c0392b;font-size:0.8rem;cursor:pointer;">✕</button></div>';
+        }).join('');
+
+        // Update the gift recipient dropdown
+        var sel = document.getElementById('mimi-gift-recipient');
+        if (sel) {
+          var val = sel.value;
+          sel.innerHTML = '<option value="">Select saved recipient...</option>' +
+            mimiRecipients.map(function (r) {
+              return '<option value="' + r.name + '">' + r.name + '</option>';
+            }).join('');
+          sel.value = val;
+        }
+      };
+
+      window.deleteMimiRecipient = async function (id) {
+        if (!window.confirm('Remove this recipient?')) return;
+        try {
+          await supabaseClient.from('gift_recipients').delete().eq('id', id);
+          await loadMimiRecipients();
+          renderMimiRecipients();
+        } catch (e) { window.alert('Error: ' + e.message); }
+      };
+
+      var recipAddBtn = document.getElementById('mimi-recip-add-btn');
+      if (recipAddBtn) {
+        recipAddBtn.addEventListener('click', async function () {
+          var name = document.getElementById('mimi-recip-name').value;
+          if (!name) { window.alert('Enter name'); return; }
+          recipAddBtn.textContent = 'Saving...';
+          try {
+            await supabaseClient.from('gift_recipients').insert({
+              name: name,
+              address: document.getElementById('mimi-recip-address').value || '',
+              phone: document.getElementById('mimi-recip-phone').value || '',
+              notes: document.getElementById('mimi-recip-notes').value || ''
+            });
+            document.getElementById('mimi-recip-name').value = '';
+            document.getElementById('mimi-recip-address').value = '';
+            document.getElementById('mimi-recip-phone').value = '';
+            document.getElementById('mimi-recip-notes').value = '';
+            recipAddBtn.textContent = 'Saved! ✅';
+            await loadMimiRecipients();
+            renderMimiRecipients();
+            setTimeout(function () { recipAddBtn.textContent = 'Save Recipient 📋'; }, 2000);
+          } catch (e) {
+            recipAddBtn.textContent = 'Save Recipient 📋';
+            window.alert('Error: ' + e.message);
+          }
+        });
+      }
+
+      // Gifts
+      var mimiGiftsData = [];
+
       var loadMimiGifts = async function () {
         var el = document.getElementById('mimi-gifts-list');
         if (!el) return;
+        // Also load recipients for dropdown
+        await loadMimiRecipients();
+        renderMimiRecipients();
         try {
           var { data, error } = await supabaseClient.from('gifts').select('*').order('created_at', { ascending: false });
+          mimiGiftsData = data || [];
           if (error || !data || data.length === 0) {
             el.innerHTML = '<div style="font-size:0.86rem;color:#9a8b7a;font-style:italic;">No gifts tracked yet. Add one below!</div>';
             return;
@@ -6736,10 +6949,29 @@
         } catch (e) { window.alert('Error: ' + e.message); }
       };
 
+      // Send to driver button
+      var driverBtn = document.getElementById('mimi-gift-driver-btn');
+      if (driverBtn) {
+        driverBtn.addEventListener('click', function () {
+          var wrapped = mimiGiftsData.filter(function (g) { return g.status === 'Wrapped'; });
+          if (wrapped.length === 0) { window.alert('No gifts marked as "Wrapped" to send.'); return; }
+          var lines = wrapped.map(function (g) {
+            var recip = mimiRecipients.find(function (r) { return r.name === g.recipient; });
+            var addr = recip && recip.address ? '\n   Address: ' + recip.address : '';
+            var phone = recip && recip.phone ? '\n   Phone: ' + recip.phone : '';
+            return '🎁 ' + g.gift + ' → ' + g.recipient + addr + phone;
+          });
+          var msg = '📦 Gift Delivery List (' + wrapped.length + ' items)\n\n' + lines.join('\n\n') + '\n\n— Sent from Family OS';
+          window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+        });
+      }
+
       var mimiGiftAddBtn = document.getElementById('mimi-gift-add-btn');
       if (mimiGiftAddBtn) {
         mimiGiftAddBtn.addEventListener('click', async function () {
-          var recipient = document.getElementById('mimi-gift-recipient').value;
+          var recipientSel = document.getElementById('mimi-gift-recipient').value;
+          var recipientCustom = document.getElementById('mimi-gift-recipient-custom').value;
+          var recipient = recipientSel || recipientCustom;
           var gift = document.getElementById('mimi-gift-desc').value;
           var occasion = document.getElementById('mimi-gift-occasion').value;
           var budget = document.getElementById('mimi-gift-budget').value;
@@ -6749,6 +6981,7 @@
             await supabaseClient.from('gifts').insert({ recipient: recipient, gift: gift, occasion: occasion, budget: budget });
             mimiGiftAddBtn.textContent = 'Added! ✅';
             document.getElementById('mimi-gift-recipient').value = '';
+            document.getElementById('mimi-gift-recipient-custom').value = '';
             document.getElementById('mimi-gift-desc').value = '';
             document.getElementById('mimi-gift-occasion').value = '';
             document.getElementById('mimi-gift-budget').value = '';
