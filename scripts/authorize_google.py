@@ -14,7 +14,9 @@ import sys
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
-CREDENTIALS_FILE = os.path.join(os.path.dirname(__file__), "..", "google-credentials.json")
+PROJECT_ROOT = os.path.join(os.path.dirname(__file__), "..")
+CREDENTIALS_FILE = os.path.join(PROJECT_ROOT, "google-credentials.json")
+TOKEN_FILE = os.path.join(PROJECT_ROOT, "token.json")
 
 
 def main():
@@ -26,15 +28,20 @@ def main():
     flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_FILE, SCOPES)
     creds = flow.run_local_server(port=0)
 
+    # Save token.json for local use by the agent
+    with open(TOKEN_FILE, "w") as f:
+        f.write(creds.to_json())
+
     print("\n" + "=" * 60)
     print("Authorization successful!")
     print("=" * 60)
-    print("\nAdd these to your .env file and Vercel environment variables:\n")
+    print(f"\nSaved credentials to {TOKEN_FILE}")
+    print("The agent will use this file automatically for local runs.")
+    print("\nFor Vercel deployment, add these environment variables:\n")
 
     # Read client ID/secret from the credentials file
     with open(CREDENTIALS_FILE) as f:
         client_config = json.load(f)
-        # Handle both "installed" and "web" credential types
         config = client_config.get("installed") or client_config.get("web", {})
 
     print(f'GOOGLE_CLIENT_ID={config.get("client_id", "")}')

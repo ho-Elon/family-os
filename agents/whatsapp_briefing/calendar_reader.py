@@ -12,17 +12,36 @@ SGT = timezone(timedelta(hours=8))
 SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
 
 
+TOKEN_FILE = os.path.join(os.path.dirname(__file__), "..", "..", "token.json")
+
+
 def _get_credentials() -> Credentials:
-    """Build credentials from environment variables (refresh token flow)."""
-    creds = Credentials(
-        token=None,
-        refresh_token=os.environ["GOOGLE_REFRESH_TOKEN"],
-        token_uri="https://oauth2.googleapis.com/token",
-        client_id=os.environ["GOOGLE_CLIENT_ID"],
-        client_secret=os.environ["GOOGLE_CLIENT_SECRET"],
-        scopes=SCOPES,
-    )
-    creds.refresh(Request())
+    """Load credentials from token.json if available, else fall back to env vars."""
+    creds = None
+
+    # Try token.json first (created by authorize_google.py)
+    if os.path.exists(TOKEN_FILE):
+        creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
+
+    # Fall back to env vars (for Vercel / production)
+    if creds is None:
+        creds = Credentials(
+            token=None,
+            refresh_token=os.environ["GOOGLE_REFRESH_TOKEN"],
+            token_uri="https://oauth2.googleapis.com/token",
+            client_id=os.environ["GOOGLE_CLIENT_ID"],
+            client_secret=os.environ["GOOGLE_CLIENT_SECRET"],
+            scopes=SCOPES,
+        )
+
+    # Refresh if expired or no access token yet
+    if not creds.valid:
+        creds.refresh(Request())
+        # Update token.json with refreshed credentials
+        if os.path.exists(os.path.dirname(TOKEN_FILE)):
+            with open(TOKEN_FILE, "w") as f:
+                f.write(creds.to_json())
+
     return creds
 
 
