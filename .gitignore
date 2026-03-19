@@ -1,0 +1,25 @@
+# Environment
+.env
+.env.local
+
+# Google credentials
+google-credentials.json
+token.json
+cal-ids.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# Vercel
+.vercel/
+
+# OS
+.DS_Store
+Thumbs.db
