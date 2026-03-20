@@ -67,7 +67,7 @@ def _parse_event(event: dict) -> dict:
     # All-day events use 'date', timed events use 'dateTime'
     if "dateTime" in start:
         dt = datetime.fromisoformat(start["dateTime"])
-        time_str = dt.strftime("%-I:%M %p")
+        time_str = dt.strftime("%I:%M %p").lstrip("0")
         all_day = False
     else:
         time_str = "All day"

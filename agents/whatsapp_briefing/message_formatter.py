@@ -14,7 +14,7 @@ def format_briefing(events_by_calendar: dict[str, list[dict]]) -> str:
     Returns:
         Formatted message string.
     """
-    tomorrow = (datetime.now(SGT) + timedelta(days=1)).strftime("%A, %B %-d")
+    tomorrow = (datetime.now(SGT) + timedelta(days=1)).strftime("%A, %B %d").replace(" 0", " ")
 
     lines = [
         f"Good evening, Lengs! Here's what's coming up tomorrow ({tomorrow}):",

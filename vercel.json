@@ -3,6 +3,14 @@
     {
       "path": "/api/nightly_briefing",
       "schedule": "0 13 * * *"
+    },
+    {
+      "path": "/api/morning_brief",
+      "schedule": "0 23 * * *"
+    },
+    {
+      "path": "/api/thursday_reminder",
+      "schedule": "15 22 * * 3"
     }
   ]
 }
