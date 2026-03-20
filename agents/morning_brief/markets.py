@@ -35,15 +35,14 @@ def get_fx_moves() -> list[dict]:
 
     results = []
     for pair_label, symbol in FX_PAIRS.items():
-        spark = data.get("spark", {}).get("result", [])
-        match = next((s for s in spark if s.get("symbol") == symbol), None)
-        if not match:
+        entry = data.get(symbol)
+        if not entry:
             results.append({"pair": pair_label, "price": None, "change_pct": None})
             continue
 
-        meta = match.get("response", [{}])[0].get("meta", {})
-        price = meta.get("regularMarketPrice")
-        prev_close = meta.get("previousClose") or meta.get("chartPreviousClose")
+        closes = entry.get("close", [])
+        price = closes[-1] if closes else None
+        prev_close = entry.get("chartPreviousClose")
 
         change_pct = None
         if price and prev_close:
