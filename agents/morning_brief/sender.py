@@ -1,4 +1,4 @@
-"""Send WhatsApp message to Han only, reusing Twilio credentials."""
+"""Send WhatsApp message to Hoelon only, reusing Twilio credentials."""
 
 import os
 
@@ -7,8 +7,8 @@ from twilio.rest import Client
 MY_NUMBER = "+6586116668"
 
 
-def send_to_han(message: str) -> str:
-    """Send a WhatsApp message to Han's number only.
+def send_to_hoelon(message: str) -> str:
+    """Send a WhatsApp message to Hoelon's number only.
 
     Returns:
         Twilio message SID.

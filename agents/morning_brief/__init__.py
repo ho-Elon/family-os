@@ -1,14 +1,14 @@
 """Personal 7am Morning Brief Agent.
 
 Reads today's calendar, overnight FX moves, and Singapore weather,
-then sends a clean personal briefing to Han via WhatsApp.
+then sends a clean personal briefing to Hoelon via WhatsApp.
 """
 
 from .calendar_today import get_today_events
 from .markets import get_fx_moves
 from .weather import get_singapore_weather
 from .formatter import format_morning_brief
-from .sender import send_to_han
+from .sender import send_to_hoelon
 
 
 def run() -> dict:
@@ -33,7 +33,7 @@ def run() -> dict:
     print("--- END PREVIEW ---")
 
     print("[5/5] Sending via WhatsApp...")
-    sid = send_to_han(message)
+    sid = send_to_hoelon(message)
     print(f"  -> Sent! SID: {sid}")
 
     return {"message": message, "sid": sid}
@@ -42,5 +42,5 @@ def run() -> dict:
 def send_thursday_reminder() -> dict:
     """Send the Thursday volleyball reminder."""
     message = "Jue has volleyball today. Billy departs 6:30am."
-    sid = send_to_han(message)
+    sid = send_to_hoelon(message)
     return {"message": message, "sid": sid}
