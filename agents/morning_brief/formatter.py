@@ -13,7 +13,7 @@ def format_morning_brief(
     """Format all morning brief data into a single message."""
     today = datetime.now(SGT).strftime("%A, %B %d").replace(" 0", " ")
 
-    lines = [f"Good morning, Han. Here's your brief for {today}.", ""]
+    lines = [f"Good morning, Hoelon. Here's your brief for {today}.", ""]
 
     # --- Markets overnight ---
     lines.append("*Markets Overnight*")

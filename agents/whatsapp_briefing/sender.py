@@ -16,7 +16,11 @@ def send_whatsapp(message: str) -> list[str]:
         os.environ["TWILIO_AUTH_TOKEN"],
     )
     from_number = os.environ["TWILIO_WHATSAPP_FROM"]  # e.g. "whatsapp:+14155238886"
-    recipients = os.environ["WHATSAPP_NUMBERS"].split(",")
+    recipients = [
+        "+6586116668",          # Hoelon
+        # "+6581234567",        # Mimi — re-enable when ready
+        # "+6589876543",        # Mahmah — re-enable when ready
+    ]
 
     sids = []
     for number in recipients:
